@@ -3,7 +3,8 @@
 import Base from '../layouts/Base.astro';
 import Button from '../components/Button.astro';
 import Tag from '../components/Tag.astro';
-import Placeholder from '../components/Placeholder.astro';
+import { Image } from 'astro:assets';
+import portrait from '../assets/about/aldi.jpg';
 import { site } from '../data/site.js';
 
 const steps = [
@@ -44,7 +45,7 @@ const tools = ['Figma', 'Whimsical', 'Webflow', 'Maze', 'Photoshop', 'Canva'];
         <Button href={site.linkedin} variant={site.resume ? 'secondary' : 'primary'} external icon={!site.resume}>LinkedIn</Button>
       </div>
     </div>
-    <div class="a-photo" data-speed="0.92"><Placeholder label="Portrait photo of Aldi" ratio="11 / 14" kind="photo" /></div>
+    <div class="a-photo" data-speed="0.92"><Image src={portrait} alt="Portrait of Aldi Pratama Putra" widths={[440, 709]} sizes="(max-width: 640px) 90vw, 440px" class="portrait" loading="eager" /></div>
   </section>
 
   <section class="section wrap" aria-labelledby="how">
@@ -85,6 +86,8 @@ const tools = ['Figma', 'Whimsical', 'Webflow', 'Maze', 'Photoshop', 'Canva'];
 <style>
   .a-hero { padding-top: 168px; padding-bottom: var(--section); display: grid; grid-template-columns: 1fr 440px; gap: 80px; align-items: end; }
   .a-text { display: grid; gap: 32px; justify-items: start; }
+  .a-photo { border-radius: 24px; overflow: hidden; }
+  .portrait { width: 100%; height: auto; aspect-ratio: 11 / 14; object-fit: cover; object-position: 45% 30%; }
   .a-title { font-weight: inherit; }
   .l { display: inline-flex; flex-wrap: wrap; align-items: baseline; column-gap: clamp(12px, 1.9vw, 28px); }
   .ctas { display: flex; flex-wrap: wrap; gap: 12px; }

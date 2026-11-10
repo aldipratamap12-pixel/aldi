@@ -3,7 +3,7 @@
 // Hover: image zooms 1.03, the rule turns dark, the title turns cobalt, the arrow button fills.
 import Icon from './Icon.astro';
 import Tag from './Tag.astro';
-import Placeholder from './Placeholder.astro';
+import Mockup from './Mockup.astro';
 import DevMarker from './DevMarker.astro';
 interface Props { project: any; }
 const { project: p } = Astro.props;
@@ -11,7 +11,7 @@ const { project: p } = Astro.props;
 <article class="card" data-reveal>
   <a href={`/work/${p.slug}`} class="hit" aria-label={`${p.name}: read the case study`}></a>
   <div class="media">
-    <div class="zoom"><Placeholder label={`${p.name} cover`} ratio="3 / 2" kind={p.cover.kind} note={false} /></div>
+    <div class="zoom"><Mockup slug={p.slug} alt={`${p.name}: ${p.cover.note}`} kind={p.cover.kind} /></div>
     <span class="arrow" aria-hidden="true"><Icon name="arrow-up-right" /></span>
     <div class="marker"><DevMarker permission={p.permission} /></div>
   </div>
@@ -31,7 +31,9 @@ const { project: p } = Astro.props;
   .hit { position: absolute; inset: 0; z-index: 2; border-radius: 24px; }
   .media { position: relative; border-radius: 24px; overflow: hidden; }
   .zoom { transition: transform 600ms var(--ease-out); }
-  .zoom :global(.ph) { border-radius: 24px; }
+  .zoom :global(.ph), .zoom :global(.mk) { border-radius: 24px; }
+  .zoom :global(.mk-img) { transition: transform 600ms var(--ease-out); }
+  .card:hover .zoom :global(.mk-img) { transform: translateY(-6px); }
   .card:hover .zoom { transform: scale(1.03); }
   .arrow { position: absolute; right: 20px; bottom: 20px; width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center;
     background: var(--color-bg-surface); border: 1px solid var(--color-border-default); transition: background-color 250ms var(--ease-out), color 250ms var(--ease-out), border-color 250ms var(--ease-out); }

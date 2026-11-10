@@ -7,6 +7,7 @@ import Placeholder from '../../components/Placeholder.astro';
 import Tag from '../../components/Tag.astro';
 import DevMarker from '../../components/DevMarker.astro';
 import Icon from '../../components/Icon.astro';
+import Mockup from '../../components/Mockup.astro';
 import { visibleProjects, nextProject, showLink } from '../../data/projects.js';
 
 export function getStaticPaths() {
@@ -18,6 +19,8 @@ const sections = [
   ['context', 'Context'], ['problem', 'Problem'], ['role', 'My role'], ['process', 'Process'], ['solution', 'Solution'], ['result', 'Result'],
 ];
 const links = p.links.filter(showLink);
+// Section images do not exist yet. Their placeholders show in `npm run dev` only, so the live site never shows an empty box.
+const showSectionImages = import.meta.env.DEV;
 ---
 <Base title={p.name} description={p.summary} active="work">
   <header class="cs-head wrap">
@@ -45,7 +48,7 @@ const links = p.links.filter(showLink);
   </header>
 
   <div class="wrap cover" data-speed="0.94">
-    <Placeholder label={`${p.cover.note}`} ratio="16 / 9" tone="dark" kind={p.cover.kind} />
+    <Mockup slug={p.slug} alt={`${p.name}: ${p.cover.note}`} ratio="16 / 9" tone="dark" size="cover" kind={p.cover.kind} eager />
   </div>
 
   <ol class="wrap tiles">
@@ -90,7 +93,7 @@ const links = p.links.filter(showLink);
             <li data-reveal><span class="t-label-m c-accent">0{i + 1}</span><div><h3 class="t-h4">{t}</h3><p class="t-body-m c-secondary">{b}</p></div></li>
           ))}
         </ol>
-        {p.processImage && (
+        {showSectionImages && p.processImage && (
           <figure data-reveal><Placeholder label={p.processImage.alt} /><figcaption class="t-body-s c-secondary">{p.processImage.caption}</figcaption></figure>
         )}
       </section>
@@ -105,7 +108,7 @@ const links = p.links.filter(showLink);
             {s.chips && <ul class="chips" data-reveal>{s.chips.map((c) => <li><Tag>{c}</Tag></li>)}</ul>}
             {s.list && <dl class="list">{s.list.map(([b, r]) => <div data-reveal><dt class="t-body-m t-strong">{b}</dt><dd class="t-body-m c-secondary">{r}</dd></div>)}</dl>}
             {s.cards && <ul class="tools">{s.cards.map(([n, d]) => <li data-reveal><p class="t-body-m t-strong">{n}</p><p class="t-body-s c-secondary">{d}</p></li>)}</ul>}
-            {s.img && (
+            {showSectionImages && s.img && (
               <figure data-reveal><Placeholder label={s.img.alt} ratio={s.img.tall ? '4 / 3' : '16 / 10'} kind={p.cover.kind === 'mobile' ? 'mobile' : 'web'} /><figcaption class="t-body-s c-secondary">{s.img.caption}</figcaption></figure>
             )}
           </div>
@@ -152,7 +155,7 @@ const links = p.links.filter(showLink);
   .meta > div { display: grid; gap: 8px; padding-top: 16px; align-content: start; }
 
   .cover { padding-bottom: 48px; }
-  .cover :global(.ph) { border-radius: 24px; }
+  .cover :global(.ph), .cover :global(.mk) { border-radius: 24px; }
   .tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; padding-bottom: var(--section); }
 
   .body { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 7fr) minmax(0, 1fr); column-gap: var(--col-gap); padding-bottom: var(--section); }

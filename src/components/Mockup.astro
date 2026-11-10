@@ -1,0 +1,28 @@
+---
+// Project mockup (laptop + phone) from the old Webflow case studies, background removed.
+// Images are small (about 600px wide), so they are shown at or below their own size, centered on a brand background.
+// Falls back to the wireframe placeholder when a project has no image yet.
+import { Image } from 'astro:assets';
+import Placeholder from './Placeholder.astro';
+interface Props { slug: string; alt: string; tone?: 'light' | 'dark'; ratio?: string; size?: 'card' | 'cover'; kind?: 'web' | 'mobile'; eager?: boolean; }
+const { slug, alt, tone = 'light', ratio = '3 / 2', size = 'card', kind = 'web', eager = false } = Astro.props;
+const images = import.meta.glob<{ default: ImageMetadata }>('../assets/projects/*.png', { eager: true });
+const img = images[`../assets/projects/${slug}.png`]?.default;
+---
+{img ? (
+  <div class:list={['mk', `mk--${tone}`, `mk--${size}`]} style={`aspect-ratio: ${ratio}`}>
+    <Image src={img} alt={alt} widths={[Math.round(img.width / 2), img.width]} sizes={size === 'cover' ? `(max-width: 640px) 90vw, ${img.width}px` : '(max-width: 860px) 90vw, 45vw'}
+      loading={eager ? 'eager' : 'lazy'} decoding="async" class="mk-img" />
+  </div>
+) : (
+  <Placeholder label={alt} ratio={ratio} tone={tone} kind={kind} note={size === 'cover'} />
+)}
+
+<style>
+  .mk { position: relative; width: 100%; border-radius: 24px; overflow: hidden; display: grid; place-items: center; }
+  .mk--light { background: radial-gradient(120% 90% at 50% 100%, var(--paper-300), var(--color-bg-subtle) 60%); }
+  .mk--dark { background: radial-gradient(90% 80% at 50% 100%, #3a3935, var(--color-border-inverse) 55%, #24231f); }
+  .mk-img { width: auto; height: auto; max-width: 84%; max-height: 82%; object-fit: contain;
+    filter: drop-shadow(0 24px 32px rgb(20 20 20 / 0.18)); }
+  .mk--cover .mk-img { max-width: min(84%, var(--w, 900px)); }
+</style>
