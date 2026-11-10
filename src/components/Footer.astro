@@ -1,0 +1,62 @@
+---
+// Figma component "Footer": dark contact section. Email is the main action (click copies it, with a toast).
+// No Instagram, no phone number. Copy comes from the approved LinkedIn text.
+import Icon from './Icon.astro';
+import { site } from '../data/site.js';
+---
+<footer class="footer dark on-dark" id="contact">
+  <div class="wrap">
+    <p class="t-label-m c-accent" data-reveal>Contact</p>
+    <h2 class="title" data-split>
+      <span class="line-mask"><span class="t-display">Let's</span></span>
+      <span class="line-mask"><span class="t-display-serif c-accent">talk.</span></span>
+    </h2>
+    <div class="details">
+      <p class="t-body-l c-secondary measure-s" data-reveal>Send me the brief in writing. I'll reply with questions and a scope. Open to remote UI/UX roles and freelance projects.</p>
+      <div class="links" data-reveal>
+        <a class="email" href={`mailto:${site.email}`} data-copy-email={site.email}>
+          <span>{site.email}</span><Icon name="arrow-up-right" />
+        </a>
+        <div class="other">
+          <a class="link" href={site.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn <Icon name="arrow-up-right" size={16} /><span class="visually-hidden">(opens in a new tab)</span></a>
+          {site.resume && <a class="link" href={site.resume} target="_blank" rel="noopener">Resume (PDF) <Icon name="arrow-up-right" size={16} /></a>}
+        </div>
+      </div>
+    </div>
+    <div class="bottom">
+      <p class="t-label-s c-secondary">© 2026 {site.name}</p>
+      <p class="t-label-s c-secondary">{site.location} · {site.timezone}</p>
+      <a class="t-label-s top" href="#top">Back to top ↑</a>
+    </div>
+  </div>
+  <div class="toast" role="status" aria-live="polite" data-toast></div>
+</footer>
+
+<style>
+  .footer { padding-top: var(--section); padding-bottom: 40px; }
+  .title { margin-top: 32px; display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 24px; font-weight: inherit; }
+  .details { margin-top: 48px; display: flex; flex-wrap: wrap; gap: 48px 80px; justify-content: space-between; align-items: flex-start; }
+  .measure-s { max-width: 520px; }
+  .links { display: grid; gap: 16px; }
+  .email { display: inline-flex; align-items: center; gap: 12px; text-decoration: none; font-weight: 600;
+    font-size: clamp(20px, 1.95vw, 28px); line-height: 1.2; letter-spacing: -0.01em; color: var(--color-text-inverse);
+    background: linear-gradient(var(--color-accent-on-dark), var(--color-accent-on-dark)) left bottom / 0 2px no-repeat;
+    padding-bottom: 4px; transition: background-size 350ms var(--ease-out); }
+  .email:hover { background-size: 100% 2px; }
+  .email :global(svg) { color: var(--color-text-accent-on-dark); transition: transform 200ms var(--ease-out); }
+  .email:hover :global(svg) { transform: translate(3px, -3px); }
+  .other { display: flex; gap: 24px; }
+  .other .link { min-height: 44px; }
+  .bottom { margin-top: 80px; padding-top: 24px; border-top: 1px solid var(--color-border-inverse);
+    display: flex; flex-wrap: wrap; gap: 12px 24px; justify-content: space-between; }
+  .top { color: var(--color-text-inverse); text-decoration: none; }
+  .top:hover { color: var(--color-text-accent-on-dark); }
+  .toast { position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 20px); opacity: 0; pointer-events: none;
+    background: var(--color-bg-surface); color: var(--color-text-primary); padding: 10px 16px; border-radius: var(--radius-full);
+    font-size: 15px; font-weight: 600; box-shadow: 0 8px 24px rgb(0 0 0 / 0.2); transition: opacity 250ms var(--ease-out), transform 250ms var(--ease-out); }
+  .toast.show { opacity: 1; transform: translate(-50%, 0); }
+  @media (max-width: 640px) {
+    .title { flex-direction: column; row-gap: 0; }
+    .bottom { flex-direction: column; margin-top: 48px; }
+  }
+</style>

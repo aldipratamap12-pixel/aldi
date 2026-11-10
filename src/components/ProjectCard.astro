@@ -1,0 +1,51 @@
+---
+// Figma component "Project card". The whole card is one link.
+// Hover: image zooms 1.03, the rule turns dark, the title turns cobalt, the arrow button fills.
+import Icon from './Icon.astro';
+import Tag from './Tag.astro';
+import Placeholder from './Placeholder.astro';
+import DevMarker from './DevMarker.astro';
+interface Props { project: any; }
+const { project: p } = Astro.props;
+---
+<article class="card" data-reveal>
+  <a href={`/work/${p.slug}`} class="hit" aria-label={`${p.name}: read the case study`}></a>
+  <div class="media">
+    <div class="zoom"><Placeholder label={`${p.name} cover`} ratio="3 / 2" kind={p.cover.kind} note={false} /></div>
+    <span class="arrow" aria-hidden="true"><Icon name="arrow-up-right" /></span>
+    <div class="marker"><DevMarker permission={p.permission} /></div>
+  </div>
+  <div class="body">
+    <span class="t-label-m c-secondary num">{p.num}</span>
+    <div class="text">
+      <h3 class="t-h3 title">{p.name}</h3>
+      <p class="t-body-m c-secondary pretty">{p.card.summary}</p>
+      <p class="t-body-s">{p.card.meta}</p>
+      <ul class="tags" aria-label="Tags">{p.card.tags.map((t) => <li><Tag>{t}</Tag></li>)}</ul>
+    </div>
+  </div>
+</article>
+
+<style>
+  .card { position: relative; display: grid; gap: 24px; }
+  .hit { position: absolute; inset: 0; z-index: 2; border-radius: 24px; }
+  .media { position: relative; border-radius: 24px; overflow: hidden; }
+  .zoom { transition: transform 600ms var(--ease-out); }
+  .zoom :global(.ph) { border-radius: 24px; }
+  .card:hover .zoom { transform: scale(1.03); }
+  .arrow { position: absolute; right: 20px; bottom: 20px; width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center;
+    background: var(--color-bg-surface); border: 1px solid var(--color-border-default); transition: background-color 250ms var(--ease-out), color 250ms var(--ease-out), border-color 250ms var(--ease-out); }
+  .arrow :global(svg) { transition: transform 250ms var(--ease-out); }
+  .card:hover .arrow { background: var(--color-accent-default); color: var(--color-text-on-accent); border-color: var(--color-accent-default); }
+  .card:hover .arrow :global(svg) { transform: translate(2px, -2px); }
+  .marker { position: absolute; left: 20px; top: 20px; z-index: 3; }
+  .body { display: flex; gap: 24px; padding-top: 24px; border-top: 1px solid var(--color-border-default); transition: border-color 300ms var(--ease-out); }
+  .card:hover .body { border-top-color: var(--color-border-strong); }
+  .num { padding-top: 6px; }
+  .text { display: grid; gap: 12px; }
+  .title { transition: color 250ms var(--ease-out); }
+  .card:hover .title { color: var(--color-text-accent); }
+  .tags { display: flex; flex-wrap: wrap; gap: 8px; }
+  .hit:focus-visible { outline-offset: 6px; }
+  @media (max-width: 640px) { .tags { display: none; } .body { gap: 16px; } }
+</style>

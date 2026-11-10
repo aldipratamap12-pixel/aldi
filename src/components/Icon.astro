@@ -1,0 +1,14 @@
+---
+// Stroke icons, same paths as the Figma icon components (20px grid).
+interface Props { name: 'arrow-right' | 'arrow-up-right' | 'menu' | 'close'; size?: number; }
+const { name, size = 20 } = Astro.props;
+const paths = {
+  'arrow-right': 'M2 10h16M12 4l6 6-6 6',
+  'arrow-up-right': 'M5 15L15 5M7 5h8v8',
+  menu: 'M3 7h14M3 13h14',
+  close: 'M5 5l10 10M15 5L5 15',
+};
+---
+<svg width={size} height={size} viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
+  <path d={paths[name]} stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" />
+</svg>

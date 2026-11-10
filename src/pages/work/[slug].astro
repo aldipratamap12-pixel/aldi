@@ -1,0 +1,212 @@
+---
+// Case study template (Figma page "Case study"): header, cover, proof tiles, sticky TOC + 6 sections, next project.
+import Base from '../../layouts/Base.astro';
+import Button from '../../components/Button.astro';
+import ProofTile from '../../components/ProofTile.astro';
+import Placeholder from '../../components/Placeholder.astro';
+import Tag from '../../components/Tag.astro';
+import DevMarker from '../../components/DevMarker.astro';
+import Icon from '../../components/Icon.astro';
+import { visibleProjects, nextProject, showLink } from '../../data/projects.js';
+
+export function getStaticPaths() {
+  return visibleProjects.map((p) => ({ params: { slug: p.slug }, props: { p } }));
+}
+const { p } = Astro.props;
+const next = nextProject(p.slug);
+const sections = [
+  ['context', 'Context'], ['problem', 'Problem'], ['role', 'My role'], ['process', 'Process'], ['solution', 'Solution'], ['result', 'Result'],
+];
+const links = p.links.filter(showLink);
+---
+<Base title={p.name} description={p.summary} active="work">
+  <header class="cs-head wrap">
+    <div class="crumb" data-reveal>
+      <a class="t-label-m back" href="/#work">← Work</a>
+      <span class="t-label-m c-accent">/ Case study {p.num}</span>
+      <DevMarker permission={p.permission} />
+    </div>
+    <h1 class="title" data-split>
+      <span class="line-mask"><span class="t-display">{p.title}</span></span>
+      <span class="line-mask"><span class="t-h1-serif c-accent">{p.subtitle}</span></span>
+    </h1>
+    <p class="t-body-l c-secondary measure pretty" data-reveal>{p.summary}</p>
+    <dl class="meta">
+      {p.meta.map(([k, v]) => (
+        <div class="rule-top" data-reveal><dt class="t-label-s c-secondary">{k}</dt><dd class="t-body-s">{v}</dd></div>
+      ))}
+      {links.map((l) => (
+        <div class="rule-top" data-reveal>
+          <dt class="t-label-s c-secondary">{l.kind}</dt>
+          <dd class="t-body-s"><a class="link c-accent" href={l.href} target="_blank" rel="noopener noreferrer">{l.label}<Icon name="arrow-up-right" size={16} /><span class="visually-hidden">(opens in a new tab)</span></a></dd>
+        </div>
+      ))}
+    </dl>
+  </header>
+
+  <div class="wrap cover" data-speed="0.94">
+    <Placeholder label={`${p.cover.note}`} ratio="16 / 9" tone="dark" kind={p.cover.kind} />
+  </div>
+
+  <ol class="wrap tiles">
+    {p.tiles.map(([t, b], i) => <ProofTile index={i + 1} title={t} body={b} />)}
+  </ol>
+
+  <div class="wrap body">
+    <nav class="toc" aria-label="On this page" data-toc>
+      <p class="t-label-s c-secondary">On this page</p>
+      <ol>
+        {sections.map(([id, label], i) => (
+          <li><a href={`#${id}`} class:list={{ active: i === 0 }}><span class="bar" aria-hidden="true"></span><span class="t-label-s n">0{i + 1}</span><span class="t-body-s">{label}</span></a></li>
+        ))}
+      </ol>
+    </nav>
+
+    <article class="content">
+      <section id="context" class="sec">
+        <p class="t-label-m c-accent">01 / Context</p>
+        <h2 class="t-h2 balance" data-reveal>{p.context[0]}</h2>
+        {p.context.slice(1).map((t) => <p class="t-body-l c-secondary" data-reveal>{t}</p>)}
+      </section>
+
+      <section id="problem" class="sec">
+        <p class="t-label-m c-accent">02 / Problem</p>
+        <h2 class="t-h2 balance" data-reveal>{p.problemHead}</h2>
+        <dl class="list">{p.problem.map(([b, r]) => <div data-reveal><dt class="t-body-m t-strong">{b}</dt><dd class="t-body-m c-secondary">{r}</dd></div>)}</dl>
+        {p.problemNote && <p class="t-body-m c-secondary" data-reveal>{p.problemNote}</p>}
+      </section>
+
+      <section id="role" class="sec">
+        <p class="t-label-m c-accent">03 / My role</p>
+        <h2 class="t-h2 balance" data-reveal>{p.roleHead}</h2>
+        <dl class="list">{p.role.map(([b, r]) => <div data-reveal><dt class="t-body-m t-strong">{b}</dt><dd class="t-body-m c-secondary">{r}</dd></div>)}</dl>
+      </section>
+
+      <section id="process" class="sec">
+        <p class="t-label-m c-accent">04 / Process</p>
+        <h2 class="t-h2 balance" data-reveal>{p.processHead}</h2>
+        <ol class="steps">
+          {p.process.map(([t, b], i) => (
+            <li data-reveal><span class="t-label-m c-accent">0{i + 1}</span><div><h3 class="t-h4">{t}</h3><p class="t-body-m c-secondary">{b}</p></div></li>
+          ))}
+        </ol>
+        {p.processImage && (
+          <figure data-reveal><Placeholder label={p.processImage.alt} /><figcaption class="t-body-s c-secondary">{p.processImage.caption}</figcaption></figure>
+        )}
+      </section>
+
+      <section id="solution" class="sec">
+        <p class="t-label-m c-accent">05 / Solution</p>
+        <h2 class="t-h2 balance" data-reveal>{p.solutionHead}</h2>
+        {p.solution.map((s) => (
+          <div class="sub">
+            <h3 class="t-h3" data-reveal>{s.t}</h3>
+            {s.b && <p class="t-body-m c-secondary" data-reveal>{s.b}</p>}
+            {s.chips && <ul class="chips" data-reveal>{s.chips.map((c) => <li><Tag>{c}</Tag></li>)}</ul>}
+            {s.list && <dl class="list">{s.list.map(([b, r]) => <div data-reveal><dt class="t-body-m t-strong">{b}</dt><dd class="t-body-m c-secondary">{r}</dd></div>)}</dl>}
+            {s.cards && <ul class="tools">{s.cards.map(([n, d]) => <li data-reveal><p class="t-body-m t-strong">{n}</p><p class="t-body-s c-secondary">{d}</p></li>)}</ul>}
+            {s.img && (
+              <figure data-reveal><Placeholder label={s.img.alt} ratio={s.img.tall ? '4 / 3' : '16 / 10'} kind={p.cover.kind === 'mobile' ? 'mobile' : 'web'} /><figcaption class="t-body-s c-secondary">{s.img.caption}</figcaption></figure>
+            )}
+          </div>
+        ))}
+      </section>
+
+      <section id="result" class="sec">
+        <p class="t-label-m c-accent">06 / Result</p>
+        <h2 class="t-h2" data-reveal>What I handed over.</h2>
+        <ul class="stats">
+          {p.stats.map(([n, l]) => <li class="rule-top" data-reveal><p class="t-h1" data-count>{n}</p><p class="t-body-s c-secondary">{l}</p></li>)}
+        </ul>
+        {p.resultList.length > 0 && <dl class="list">{p.resultList.map(([b, r]) => <div data-reveal><dt class="t-body-m t-strong">{b}</dt><dd class="t-body-m c-secondary">{r}</dd></div>)}</dl>}
+        <blockquote class="quote" data-reveal>
+          <p class="t-label-s c-accent">What I took from it</p>
+          <p class="t-h1-serif">{p.quote[0]}</p>
+          <p class="t-body-l c-secondary">{p.quote[1]}</p>
+        </blockquote>
+      </section>
+    </article>
+  </div>
+
+  {next && (
+    <a class="next" href={`/work/${next.slug}`}>
+      <div class="wrap next-in">
+        <div>
+          <p class="t-label-m c-accent">Next project</p>
+          <p class="t-display next-title">{next.name}</p>
+          <p class="t-body-l c-secondary">{next.card.summary}</p>
+        </div>
+        <span class="circle" aria-hidden="true"><Icon name="arrow-right" size={40} /></span>
+      </div>
+    </a>
+  )}
+</Base>
+
+<style>
+  .cs-head { padding-top: 168px; padding-bottom: 64px; display: grid; gap: 24px; }
+  .crumb { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+  .back { text-decoration: none; color: var(--color-text-secondary); }
+  .back:hover { color: var(--color-text-accent); }
+  .title { font-weight: inherit; display: grid; }
+  .meta { margin-top: 24px; display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 24px; }
+  .meta > div { display: grid; gap: 8px; padding-top: 16px; align-content: start; }
+
+  .cover { padding-bottom: 48px; }
+  .cover :global(.ph) { border-radius: 24px; }
+  .tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; padding-bottom: var(--section); }
+
+  .body { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 7fr) minmax(0, 1fr); column-gap: var(--col-gap); padding-bottom: var(--section); }
+  .toc { position: sticky; top: 120px; align-self: start; display: grid; gap: 12px; }
+  .toc a { display: flex; align-items: center; gap: 12px; padding-block: 8px; text-decoration: none; color: var(--color-text-secondary); transition: color 200ms var(--ease-out); }
+  .toc .bar { width: 12px; height: 2px; border-radius: 1px; background: var(--color-border-default); transition: width 250ms var(--ease-out), background-color 250ms var(--ease-out); }
+  .toc a:hover, .toc a.active { color: var(--color-text-primary); }
+  .toc a.active .bar { width: 24px; background: var(--color-accent-default); }
+  .toc a.active .n { color: var(--color-text-accent); }
+
+  .content { display: grid; gap: 120px; min-width: 0; }
+  .sec { display: grid; gap: 24px; scroll-margin-top: 96px; }
+  .sub { display: grid; gap: 12px; padding-top: 16px; }
+  .sub + .sub { margin-top: 16px; }
+  figure { display: grid; gap: 12px; margin-top: 8px; }
+
+  .list { border-bottom: 1px solid var(--color-border-strong); }
+  .list > div { display: grid; grid-template-columns: 220px 1fr; gap: 24px; padding-block: 16px; border-top: 1px solid var(--color-border-strong); }
+  .steps { border-bottom: 1px solid var(--color-border-strong); }
+  .steps li { display: grid; grid-template-columns: 32px 1fr; gap: 32px; padding-block: 24px; border-top: 1px solid var(--color-border-strong); }
+  .steps li div { display: grid; gap: 8px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .tools { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .tools li { display: grid; gap: 8px; align-content: start; padding: 20px; border-radius: var(--radius-md); background: var(--color-bg-surface); border: 1px solid var(--color-border-default); }
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px 16px; }
+  .stats li { display: grid; gap: 8px; padding-top: 16px; align-content: start; }
+  .quote { margin: 16px 0 0; padding: 8px 0 8px 32px; border-left: 2px solid var(--color-accent-default); display: grid; gap: 16px; }
+
+  .next { display: block; text-decoration: none; border-top: 1px solid var(--color-border-strong); }
+  .next-in { display: flex; align-items: center; justify-content: space-between; gap: 32px; padding-block: 96px; }
+  .next-title { margin-block: 12px; transition: transform 400ms var(--ease-out); }
+  .next:hover .next-title { transform: translateX(12px); }
+  .circle { flex: none; width: 120px; height: 120px; border-radius: 50%; display: grid; place-items: center;
+    background: var(--color-accent-default); color: var(--color-text-on-accent); transition: transform 400ms var(--ease-out); }
+  .next:hover .circle { transform: scale(1.08); }
+
+  @media (max-width: 1024px) {
+    .tiles { grid-template-columns: repeat(2, 1fr); }
+    .body { grid-template-columns: 1fr; }
+    .toc { display: none; }
+  }
+  @media (max-width: 640px) {
+    .cs-head { padding-top: 112px; gap: 20px; }
+    .meta { grid-template-columns: 1fr; gap: 0; }
+    .meta > div { grid-template-columns: 100px 1fr; padding-block: 12px; }
+    .tiles { grid-template-columns: repeat(4, 260px); overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; padding-bottom: 8px; }
+    .tiles :global(li) { scroll-snap-align: start; }
+    .content { gap: 80px; }
+    .list > div { grid-template-columns: 1fr; gap: 4px; padding-block: 14px; }
+    .steps li { gap: 16px; }
+    .tools, .stats { grid-template-columns: 1fr 1fr; }
+    .tools { grid-template-columns: 1fr; }
+    .next-in { padding-block: 56px; }
+    .circle { width: 64px; height: 64px; }
+    .circle :global(svg) { width: 24px; height: 24px; }
+  }
+</style>

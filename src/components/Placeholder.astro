@@ -1,0 +1,47 @@
+---
+// Image placeholder until Aldi exports the real screens. Draws a small wireframe so the page never shows an empty box.
+// Replace with <img src alt> when the image exists.
+interface Props { label: string; ratio?: string; tone?: 'light' | 'dark'; kind?: 'web' | 'mobile' | 'photo'; note?: boolean; }
+const { label, ratio = '16 / 10', tone = 'light', kind = 'web', note = true } = Astro.props;
+---
+<div class:list={['ph', `ph--${tone}`, `ph--${kind}`]} style={`aspect-ratio: ${ratio}`} role="img" aria-label={`Placeholder: ${label}`}>
+  {kind === 'photo' ? (
+    <span class="t-label-s note">[PERLU DATA] {label}</span>
+  ) : (
+    <>
+      <div class="screen">
+        <div class="side"></div>
+        <div class="lines"><i></i><i></i><i></i><i></i><i></i></div>
+      </div>
+      {kind === 'web' && <div class="phone"><i></i><i></i><i></i></div>}
+      {note && <span class="t-label-s note">Image: {label}</span>}
+    </>
+  )}
+</div>
+
+<style>
+  .ph { position: relative; width: 100%; border-radius: 20px; overflow: hidden; }
+  .ph--light { background: var(--color-bg-subtle); }
+  .ph--dark { background: var(--color-border-inverse); }
+  .note { position: absolute; left: 24px; top: 20px; color: var(--color-text-secondary); }
+  .ph--dark .note { color: var(--color-text-inverse-muted); }
+  .screen { position: absolute; left: 7.5%; top: 14%; width: 62%; height: 74%; border-radius: 12px; background: var(--color-bg-surface);
+    border: 1px solid var(--color-border-default); display: flex; gap: 6%; padding: 3%; }
+  .side { width: 22%; border-radius: 8px; background: var(--color-bg-page); }
+  .lines { flex: 1; display: grid; align-content: start; gap: 10%; padding-top: 4%; }
+  .lines i { display: block; height: 6px; border-radius: 3px; background: var(--color-border-default); }
+  .lines i:first-child { width: 30%; background: var(--color-accent-default); }
+  .lines i:nth-child(2n) { width: 70%; }
+  .phone { position: absolute; right: 7.5%; top: 24%; width: 17%; height: 64%; border-radius: 18px; background: var(--color-bg-surface);
+    border: 1px solid var(--color-border-default); display: grid; align-content: start; gap: 10px; padding: 18% 12%; }
+  .phone i { display: block; height: 6px; border-radius: 3px; background: var(--color-border-default); }
+  .ph--mobile .screen { left: 50%; width: 30%; height: 80%; top: 12%; transform: translateX(-50%); border-radius: 24px; }
+  .ph--mobile .side { display: none; }
+  .ph--photo { display: grid; place-items: center; }
+  @media (max-width: 640px) {
+    .phone { display: none; }
+    .screen { width: 85%; top: 22%; height: 68%; }
+    .ph--mobile .screen { width: 50%; }
+    .note { left: 16px; top: 14px; }
+  }
+</style>

@@ -1,0 +1,226 @@
+---
+import Base from '../layouts/Base.astro';
+import Button from '../components/Button.astro';
+import HeroVisual from '../components/HeroVisual.astro';
+import ProofTile from '../components/ProofTile.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import Placeholder from '../components/Placeholder.astro';
+import Icon from '../components/Icon.astro';
+import { site } from '../data/site.js';
+import { featured, otherProjects, showLink } from '../data/projects.js';
+
+// Facts: from cv.md (300+ = FastTrack 100+ pages + MineVISPERA ~100 + IoT 100+; 6 projects listed in cv.md).
+const facts = [
+  ['300+', 'screens and pages designed', 'Across HRIS, CRM, IoT, legal-tech and mining projects.'],
+  ['6', 'client projects since 2025', 'Via software houses, an internship, and my own studio.'],
+  ['14 days', 'for 100+ mobile screens', 'Super App IoT: 3 modules, from wireframe to handoff.'],
+];
+const pillars = [
+  ['Sort out the structure.', 'Before I design a screen, I map who uses it, what they need to get done, and where each piece of information goes.', 'IoT app: devices from 7 brands, organized as Home → Room → Device instead of by brand.'],
+  ['Design for scanning.', 'Internal tools are used for hours every day. I aim for clear hierarchy and clear status, not decoration.', 'MineVISPERA: dense tables and dashboards redesigned without changing the business logic.'],
+  ['Make it ready to build.', 'A design is done when developers can build it without guessing. Every project gets a component library.', 'MineVISPERA handoff: hi-fi mockups, component library, UX copy and walkthrough prototypes.'],
+];
+const left = otherProjects.filter((_, i) => i % 2 === 0);
+const right = otherProjects.filter((_, i) => i % 2 === 1);
+---
+<Base active="work">
+  <!-- HERO -->
+  <section class="hero wrap" data-hero>
+    <p class="meta t-label-m" data-reveal><span class="dot" aria-hidden="true"></span><span class="m-long">{site.role} · {site.location} · Open to remote roles and freelance</span><span class="m-short">{site.role} · Open to work</span></p>
+    <h1 class="headline" data-split>
+      <span class="line-mask"><span class="t-display">Complex systems,</span></span>
+      <span class="line-mask"><span class="l2"><span class="t-display-serif c-accent">made</span> <span class="t-display">clear.</span></span></span>
+    </h1>
+    <div class="sub">
+      <p class="t-body-l c-secondary pretty" data-reveal>{site.positioning}</p>
+      <div class="ctas" data-reveal>
+        <Button href="#work">See my work</Button>
+        <Button href={`mailto:${site.email}`} variant="secondary" icon={false}>Email me</Button>
+      </div>
+    </div>
+    <div class="visual" data-speed="0.92"><HeroVisual /></div>
+  </section>
+
+  <!-- FACTS -->
+  <section class="facts wrap" aria-label="In numbers">
+    {facts.map(([n, l, s]) => (
+      <div class="fact rule-top" data-reveal>
+        <p class="t-h1" data-count>{n}</p>
+        <p class="t-body-m t-strong">{l}</p>
+        <p class="t-body-s c-secondary">{s}</p>
+      </div>
+    ))}
+  </section>
+
+  <!-- FEATURED -->
+  {featured && (
+    <section class="featured dark on-dark section" id="work" aria-labelledby="featured-title">
+      <div class="wrap">
+        <div class="f-head">
+          <div>
+            <p class="t-label-m c-accent" data-reveal>Featured project · {featured.num}</p>
+            <h2 class="f-title" id="featured-title" data-split>
+              <span class="line-mask"><span class="t-h1">FastTrack Legal.</span></span>
+              <span class="line-mask"><span><span class="t-h1">100+ pages, </span><span class="t-h1-serif c-accent">one clear structure.</span></span></span>
+            </h2>
+          </div>
+          <dl class="f-meta" data-reveal>
+            <div><dt class="t-label-s c-secondary">Type</dt><dd class="t-body-s">Legal services website + 5 tools</dd></div>
+            <div><dt class="t-label-s c-secondary">Role</dt><dd class="t-body-s">UI/UX Designer</dd></div>
+            <div><dt class="t-label-s c-secondary">Time</dt><dd class="t-body-s">3 months, 2026</dd></div>
+            <div><dt class="t-label-s c-secondary">Platform</dt><dd class="t-body-s">Web, desktop and mobile</dd></div>
+          </dl>
+        </div>
+        <a class="f-media" href={`/work/${featured.slug}`} aria-label="FastTrack Legal: read the case study" data-speed="0.94">
+          <Placeholder label="FastTrack screens" ratio="2 / 1" tone="dark" />
+          <span class="f-arrow" aria-hidden="true"><Icon name="arrow-up-right" /></span>
+        </a>
+        <ol class="tiles">
+          {featured.tiles.map(([t, b], i) => <ProofTile index={i + 1} title={t} body={b} tone="dark" />)}
+        </ol>
+        <div class="f-ctas" data-reveal>
+          <Button href={`/work/${featured.slug}`}>Read the case study</Button>
+          {featured.links.filter(showLink).map((l) => (
+            <a class="link" href={l.href} target="_blank" rel="noopener noreferrer">Visit {l.label} <Icon name="arrow-up-right" size={16} /><span class="visually-hidden">(opens in a new tab)</span></a>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- SELECTED WORK -->
+  {otherProjects.length > 0 && (
+    <section class="work section wrap" aria-labelledby="work-title">
+      <div class="w-head">
+        <div>
+          <p class="t-label-m c-accent" data-reveal>Selected work · 02–0{otherProjects.length + 1}</p>
+          <h2 id="work-title" class="w-title" data-split>
+            <span class="line-mask"><span class="t-display">Selected</span></span>
+            <span class="line-mask"><span class="t-display-serif c-accent">work.</span></span>
+          </h2>
+        </div>
+        <p class="t-body-m c-secondary w-intro" data-reveal>Business systems I designed in 2025: dashboards, HR, IoT, CRM, and one law firm website.</p>
+      </div>
+      <div class="zigzag">
+        <div class="col">{left.map((p) => <ProjectCard project={p} />)}</div>
+        <div class="col col--offset" data-speed="1.08">{right.map((p) => <ProjectCard project={p} />)}</div>
+      </div>
+    </section>
+  )}
+
+  <!-- HOW I WORK -->
+  <section class="how section wrap" aria-labelledby="how-title">
+    <p class="t-label-m c-accent" data-reveal>How I work</p>
+    <h2 id="how-title" class="how-title" data-split>
+      <span class="line-mask"><span><span class="t-h1">Structure first, </span><span class="t-h1-serif c-accent">then screens.</span></span></span>
+    </h2>
+    <ol class="pillars">
+      {pillars.map(([t, b, proof], i) => (
+        <li class="pillar rule-top" data-reveal>
+          <span class="t-label-m c-accent">0{i + 1}</span>
+          <h3 class="t-h3">{t}</h3>
+          <p class="t-body-m c-secondary grow">{b}</p>
+          <div class="proof"><span class="t-label-s c-accent">Proof</span><p class="t-body-s">{proof}</p></div>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <!-- ABOUT SHORT -->
+  <section class="about-short wrap" aria-labelledby="about-title">
+    <div class="photo" data-speed="0.92"><Placeholder label="Portrait photo of Aldi" ratio="5 / 6" kind="photo" /></div>
+    <div class="a-text">
+      <p class="t-label-m c-accent" data-reveal>About</p>
+      <h2 id="about-title" class="t-h1" data-reveal>Hi, I'm Aldi.</h2>
+      <p class="t-body-l measure" data-reveal>I'm a UI/UX designer in Depok, Indonesia. Most of my work is on business systems: HRIS, CRM and order management, IoT apps, and dashboards for operations teams.</p>
+      <p class="t-body-m c-secondary measure" data-reveal>I also founded Jendela Cakra Digital, the studio where I take on UI/UX projects for clients. My background is in Communication (Universitas Budi Luhur), and I learned UI/UX at Hacktiv8.</p>
+      <div data-reveal><Button href="/about" variant="ghost">More about me</Button></div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* hero */
+  .hero { padding-top: 168px; padding-bottom: 96px; display: grid; gap: 32px; }
+  .meta { display: flex; align-items: center; gap: 16px; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--color-accent-default); flex: none;
+    box-shadow: 0 0 0 0 rgb(43 68 255 / 0.4); animation: pulse 2.4s infinite; }
+  @keyframes pulse { 70% { box-shadow: 0 0 0 10px rgb(43 68 255 / 0); } 100% { box-shadow: 0 0 0 0 rgb(43 68 255 / 0); } }
+  .headline { font-weight: inherit; }
+  .m-short { display: none; }
+  .l2 { display: inline-flex; align-items: baseline; gap: clamp(12px, 1.9vw, 28px); }
+  .sub { display: flex; flex-wrap: wrap; gap: 32px 80px; justify-content: space-between; align-items: flex-end; }
+  .sub > p { max-width: 620px; }
+  .ctas { display: flex; gap: 12px; flex-wrap: wrap; }
+  .visual { margin-top: 56px; }
+
+  /* facts */
+  .facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--col-gap); padding-bottom: var(--section); }
+  .fact { display: grid; gap: 12px; padding-top: 24px; align-content: start; }
+
+  /* featured */
+  .f-head { display: flex; flex-wrap: wrap; gap: 32px 80px; justify-content: space-between; align-items: flex-end; }
+  .f-title { margin-top: 24px; font-weight: inherit; }
+  .f-meta { display: grid; gap: 12px; }
+  .f-meta div { display: grid; grid-template-columns: 96px 1fr; align-items: center; gap: 16px; }
+  .f-media { position: relative; display: block; margin-top: 56px; border-radius: 24px; overflow: hidden; }
+  .f-media :global(.ph) { border-radius: 24px; }
+  .f-arrow { position: absolute; right: 24px; bottom: 24px; width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center;
+    background: var(--color-bg-surface); color: var(--color-text-primary); transition: background-color 250ms var(--ease-out), color 250ms var(--ease-out); }
+  .f-media:hover .f-arrow { background: var(--color-accent-default); color: var(--color-text-on-accent); }
+  .tiles { margin-top: 56px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .f-ctas { margin-top: 56px; display: flex; flex-wrap: wrap; align-items: center; gap: 24px; }
+
+  /* selected work */
+  .w-head { display: flex; flex-wrap: wrap; gap: 24px 48px; justify-content: space-between; align-items: flex-end; }
+  .w-title { margin-top: 16px; font-weight: inherit; display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 24px; }
+  .w-head > div { flex: 1 1 auto; }
+  .w-intro { flex: 0 1 320px; }
+  .zigzag { margin-top: 80px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; }
+  .col { display: grid; gap: 96px; }
+  .col--offset { padding-top: 200px; }
+
+  /* how */
+  .how-title { margin-top: 16px; font-weight: inherit; }
+  .pillars { margin-top: 64px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
+  .pillar { display: flex; flex-direction: column; gap: 20px; padding-top: 28px; }
+  .grow { flex: 1; }
+  .proof { background: var(--color-accent-subtle); border-radius: var(--radius-md); padding: 14px 16px; display: grid; gap: 6px; }
+
+  /* about short */
+  .about-short { display: grid; grid-template-columns: 400px 1fr; gap: 80px; align-items: center; padding-top: 32px; padding-bottom: 160px; }
+  .a-text { display: grid; gap: 24px; justify-items: start; }
+
+  @media (max-width: 1024px) {
+    .tiles { grid-template-columns: repeat(2, 1fr); }
+    .about-short { grid-template-columns: 1fr 1.4fr; gap: 48px; }
+  }
+  @media (max-width: 860px) {
+    .zigzag { grid-template-columns: 1fr; gap: 64px; }
+    .col { gap: 64px; }
+    .col--offset { padding-top: 0; }
+    .pillars { grid-template-columns: 1fr; gap: 32px; }
+  }
+  @media (max-width: 640px) {
+    .hero { padding-top: 112px; padding-bottom: 64px; gap: 24px; }
+    .meta { font-size: 11px; gap: 10px; }
+    .m-long { display: none; }
+    .m-short { display: inline; }
+    .f-media :global(.ph) { aspect-ratio: 4 / 3 !important; }
+    .ctas { width: 100%; flex-direction: column; }
+    .ctas :global(.btn) { width: 100%; }
+    .visual { margin-top: 24px; }
+    .facts { grid-template-columns: 1fr; gap: 0; }
+    .fact { grid-template-columns: 110px 1fr; gap: 4px 16px; padding-block: 16px; align-items: baseline; }
+    .fact .t-h1 { font-size: 30px; grid-row: span 2; }
+    .f-meta div { grid-template-columns: 80px 1fr; }
+    .tiles { grid-template-columns: repeat(4, 260px); overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 8px;
+      margin-inline: calc(var(--gutter) * -1); padding-inline: var(--gutter); scrollbar-width: none; }
+    .tiles :global(li) { scroll-snap-align: start; }
+    .f-ctas :global(.btn) { width: 100%; }
+    .w-title { flex-direction: column; }
+    .zigzag { margin-top: 48px; }
+    .about-short { grid-template-columns: 1fr; gap: 24px; padding-bottom: 96px; }
+    .photo { max-width: 100%; }
+  }
+</style>

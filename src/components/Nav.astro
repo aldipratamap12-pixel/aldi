@@ -1,0 +1,105 @@
+---
+// Figma component "Nav": floating pill, sticky 24px from the top, translucent with blur.
+// Hides on scroll down, shows on scroll up (motion.js). Mobile: menu button opens a full-screen menu.
+import Icon from './Icon.astro';
+import { site } from '../data/site.js';
+interface Props { active?: 'work' | 'about' | null; }
+const { active = null } = Astro.props;
+const links = [
+  { key: 'work', label: 'Work', href: '/#work' },
+  { key: 'about', label: 'About', href: '/about' },
+  { key: 'contact', label: 'Contact', href: '#contact' },
+];
+---
+<header class="nav-shell" data-nav>
+  <nav class="nav" aria-label="Main">
+    <a class="brand" href="/" aria-label={`${site.name}, home`}>
+      <span class="mark" aria-hidden="true"></span>
+      <span>{site.name}</span>
+    </a>
+    <ul class="links">
+      {links.map((l) => (
+        <li><a href={l.href} class:list={{ active: l.key === active }} aria-current={l.key === active ? 'page' : undefined}>{l.label}</a></li>
+      ))}
+    </ul>
+    <a class="cta" href={`mailto:${site.email}`}>Email me</a>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="mobile-menu" data-menu-open>
+      <Icon name="menu" />
+      <span class="visually-hidden">Open menu</span>
+    </button>
+  </nav>
+
+  <div class="mobile-menu" id="mobile-menu" hidden data-menu>
+    <div class="mm-top">
+      <a class="brand" href="/"><span class="mark" aria-hidden="true"></span><span>{site.name}</span></a>
+      <button class="menu-btn menu-btn--close" type="button" data-menu-close>
+        <Icon name="close" /><span class="visually-hidden">Close menu</span>
+      </button>
+    </div>
+    <ul class="mm-links">
+      {links.map((l, i) => (
+        <li><a href={l.href} data-menu-link><span class="t-label-s c-accent">0{i + 1}</span><span>{l.label}</span></a></li>
+      ))}
+    </ul>
+    <a class="mm-email" href={`mailto:${site.email}`}>{site.email}</a>
+  </div>
+</header>
+
+<style>
+  .nav-shell {
+    position: fixed; z-index: 50; top: 24px; left: 0; right: 0; display: flex; justify-content: center;
+    padding-inline: var(--gutter); pointer-events: none;
+    transition: transform 400ms var(--ease-out), opacity 400ms var(--ease-out);
+  }
+  .nav-shell.is-hidden { transform: translateY(calc(-100% - 32px)); }
+  .nav {
+    pointer-events: auto; display: flex; align-items: center; gap: 40px;
+    padding: 8px 8px 8px 24px; border-radius: var(--radius-full);
+    background: color-mix(in srgb, var(--color-bg-surface) 85%, transparent);
+    -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+    border: 1px solid var(--color-border-default);
+    box-shadow: 0 8px 24px rgb(20 20 20 / 0.06);
+  }
+  .brand { display: inline-flex; align-items: center; gap: 10px; font-weight: 600; text-decoration: none; white-space: nowrap; }
+  .mark { width: 10px; height: 10px; border-radius: 50%; background: var(--color-accent-default); transition: transform 300ms var(--ease-out); }
+  .brand:hover .mark { transform: scale(1.4); }
+  .links { display: flex; gap: 28px; }
+  .links a {
+    position: relative; display: inline-block; padding-block: 10px; font-size: 15px; text-decoration: none; color: var(--color-text-secondary);
+    transition: color 200ms var(--ease-out);
+  }
+  .links a::after {
+    content: ''; position: absolute; left: 50%; bottom: 4px; width: 16px; height: 2px; margin-left: -8px; border-radius: 1px;
+    background: var(--color-accent-default); transform: scaleX(0); transform-origin: left; transition: transform 250ms var(--ease-out);
+  }
+  .links a:hover, .links a.active { color: var(--color-text-primary); }
+  .links a:hover::after, .links a.active::after { transform: scaleX(1); }
+  .cta {
+    display: inline-flex; align-items: center; min-height: 44px; padding: 0 20px; border-radius: var(--radius-full);
+    background: var(--color-accent-default); color: var(--color-text-on-accent); font-weight: 600; font-size: 16px; text-decoration: none;
+    transition: background-color 200ms var(--ease-out);
+  }
+  .cta:hover { background: var(--color-accent-hover); }
+  .menu-btn {
+    display: none; width: 48px; height: 48px; border: 0; border-radius: 50%; cursor: pointer;
+    background: var(--color-bg-inverse); color: var(--color-text-inverse); align-items: center; justify-content: center;
+  }
+
+  .mobile-menu {
+    position: fixed; inset: 0; z-index: 60; pointer-events: auto; display: flex; flex-direction: column;
+    padding: 20px var(--gutter) 40px; background: var(--color-bg-page);
+  }
+  .mobile-menu[hidden] { display: none; }
+  .mm-top { display: flex; align-items: center; justify-content: space-between; padding: 6px 6px 6px 20px; }
+  .mm-links { margin-top: 64px; display: grid; gap: 8px; }
+  .mm-links a { display: flex; align-items: baseline; gap: 16px; padding-block: 12px; text-decoration: none;
+    font-weight: 700; font-size: 44px; line-height: 1.05; letter-spacing: -0.03em; border-bottom: 1px solid var(--color-border-default); }
+  .mm-email { margin-top: auto; font-weight: 600; text-decoration: underline; text-underline-offset: 4px; }
+
+  @media (max-width: 860px) {
+    .nav-shell { top: 16px; }
+    .nav { width: 100%; justify-content: space-between; gap: 16px; padding: 6px 6px 6px 20px; }
+    .links, .cta { display: none; }
+    .menu-btn { display: inline-flex; }
+  }
+</style>

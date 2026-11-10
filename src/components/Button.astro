@@ -1,0 +1,44 @@
+---
+// Figma component "Button": Primary / Secondary / Ghost. Hover: color darkens, arrow moves 4px right.
+import Icon from './Icon.astro';
+interface Props { href: string; variant?: 'primary' | 'secondary' | 'ghost'; icon?: boolean; external?: boolean; full?: boolean; dark?: boolean; }
+const { href, variant = 'primary', icon = true, external = false, full = false, dark = false } = Astro.props;
+---
+<a
+  href={href}
+  class:list={['btn', `btn--${variant}`, { 'btn--full': full, 'btn--dark': dark }]}
+  {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+>
+  <span><slot /></span>
+  {icon && <Icon name={external ? 'arrow-up-right' : 'arrow-right'} />}
+  {external && <span class="visually-hidden">(opens in a new tab)</span>}
+</a>
+
+<style>
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    min-height: 48px; padding: 14px 20px 14px 24px; border-radius: var(--radius-full);
+    font-size: 16px; font-weight: 600; line-height: 1; text-decoration: none; white-space: nowrap;
+    transition: background-color 200ms var(--ease-out), color 200ms var(--ease-out), border-color 200ms var(--ease-out), transform 120ms var(--ease-out);
+  }
+  .btn :global(svg) { transition: transform 200ms var(--ease-out); flex: none; }
+  .btn:hover :global(svg) { transform: translateX(4px); }
+  .btn:active { transform: scale(0.98); }
+  .btn--full { width: 100%; }
+
+  .btn--primary { background: var(--color-accent-default); color: var(--color-text-on-accent); }
+  .btn--primary:hover { background: var(--color-accent-hover); }
+
+  .btn--secondary { border: 1px solid var(--color-border-strong); color: var(--color-text-primary); background: transparent; }
+  .btn--secondary:hover { background: var(--color-bg-subtle); }
+  .btn--secondary:not(:has(svg)) { padding-inline: 24px; }
+
+  .btn--ghost { min-height: 44px; padding: 6px 0; border-radius: 0; color: var(--color-text-primary);
+    text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 5px; }
+  .btn--ghost:hover { color: var(--color-text-accent); }
+
+  .btn--dark.btn--secondary { border-color: var(--color-text-inverse); color: var(--color-text-inverse); }
+  .btn--dark.btn--secondary:hover { background: var(--color-border-inverse); }
+  .btn--dark.btn--ghost { color: var(--color-text-inverse); }
+  .btn--dark.btn--ghost:hover { color: var(--color-text-accent-on-dark); }
+</style>

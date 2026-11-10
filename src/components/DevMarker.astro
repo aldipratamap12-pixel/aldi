@@ -1,0 +1,8 @@
+---
+// Shows the permission status of a project, in `npm run dev` only (same as the dashed tag in Figma).
+import Tag from './Tag.astro';
+interface Props { permission: string; }
+const { permission } = Astro.props;
+const label = permission === 'pending' ? 'Dev only · permission pending' : permission === 'unchecked' ? 'Dev only · permission not checked' : null;
+---
+{import.meta.env.DEV && label && <Tag variant="dev">{label}</Tag>}

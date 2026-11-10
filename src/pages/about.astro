@@ -1,0 +1,122 @@
+---
+// Figma page "About". Facts from cv.md and the approved LinkedIn text (brand/linkedin-profil-v1.md).
+import Base from '../layouts/Base.astro';
+import Button from '../components/Button.astro';
+import Tag from '../components/Tag.astro';
+import Placeholder from '../components/Placeholder.astro';
+import { site } from '../data/site.js';
+
+const steps = [
+  ['Understand the system.', 'I read the brief, the existing product and the business rules. I ask who uses it and what they need to get done.'],
+  ['Structure the flows.', 'I map the information architecture and user flows for each role, before any visual design.'],
+  ['Design the UI.', 'I design high-fidelity screens in Figma with a reusable component library, for desktop and mobile.'],
+  ['Hand it off.', 'I prepare prototypes and notes so developers can build without guessing, and I iterate on feedback.'],
+];
+// JCD start date is [PERLU DATA]; the row shows 2026, the year of the FastTrack project.
+const experience = [
+  ['2026', 'PT Jendela Cakra Digital', 'Founder & UI/UX Designer', 'FastTrack Legal · May – Aug 2026'],
+  ['Nov – Dec 2025', 'PT Global Dinamika Informatika', 'UI/UX Designer (Freelance)', 'MineVISPERA'],
+  ['Jul – Oct 2025', 'PT Ragdalion Revolusi Industri', 'UI/UX Designer (Intern)', 'LPPOM CRM & QOM'],
+  ['Jul 2025', 'Jendela Kode (before JCD)', 'UI Designer', 'Zaco Law Firm'],
+  ['May – Jun 2025', 'PT Harmoni Mitra Tekno', 'UI/UX Designer (Freelance)', 'Super App IoT for Bimaselindo'],
+  ['Feb – Jul 2025', 'PT Harmoni Mitra Tekno', 'UI/UX Designer (Freelance)', 'HRIS for Bimaselindo'],
+];
+const education = [
+  ['Hacktiv8', 'UI/UX Remote Program', 'Nov 2024 – Jan 2025. Included usability testing with Maze on the bootcamp project.'],
+  ['Universitas Budi Luhur', 'Bachelor of Communication', '2016 – 2021'],
+  ['Udemy', 'User Interface Basic (certificate)', 'Nov 2024'],
+  ['Build With Angga', 'Webflow Development 2025 (certificate)', 'Feb 2026'],
+];
+const skills = ['Information architecture', 'User flows', 'Wireframing', 'Prototyping', 'Design systems', 'Component libraries', 'Responsive design', 'UX copywriting', 'Competitor benchmarking'];
+const tools = ['Figma', 'Whimsical', 'Webflow', 'Maze', 'Photoshop', 'Canva'];
+---
+<Base title="About" description="About Aldi Pratama Putra, a UI/UX designer in Depok, Indonesia, working on dashboards, web apps and internal systems." active="about">
+  <section class="a-hero wrap" data-hero>
+    <div class="a-text">
+      <p class="t-label-m c-accent" data-reveal>About</p>
+      <h1 class="a-title" data-split>
+        <span class="line-mask"><span class="l"><span class="t-display">Hi, I'm</span> <span class="t-display-serif c-accent">Aldi.</span></span></span>
+      </h1>
+      <p class="t-h3 measure" data-reveal>I'm a UI/UX designer in Depok, Indonesia. Most of my work is on business systems: HRIS, CRM and order management, IoT apps, and dashboards for operations teams.</p>
+      <p class="t-body-l c-secondary measure" data-reveal>These systems usually have a lot going on. Many user roles, many statuses, a lot of data on one screen. Before I design any screen, I sort out the structure: who uses it, what they need to get done, and where each piece of information should go. Then I design the UI in Figma and hand it off in a form developers can build from.</p>
+      <div class="ctas" data-reveal>
+        {site.resume && <Button href={site.resume} external>Download resume (PDF)</Button>}
+        <Button href={site.linkedin} variant={site.resume ? 'secondary' : 'primary'} external icon={!site.resume}>LinkedIn</Button>
+      </div>
+    </div>
+    <div class="a-photo" data-speed="0.92"><Placeholder label="Portrait photo of Aldi" ratio="11 / 14" kind="photo" /></div>
+  </section>
+
+  <section class="section wrap" aria-labelledby="how">
+    <p class="t-label-m c-accent" data-reveal>How I work</p>
+    <h2 id="how" class="h" data-split><span class="line-mask"><span><span class="t-h1">Four steps, </span><span class="t-h1-serif c-accent">every project.</span></span></span></h2>
+    <ol class="steps">
+      {steps.map(([t, b], i) => (
+        <li data-reveal><span class="t-label-s c-accent">0{i + 1}</span><h3 class="t-h4">{t}</h3><p class="t-body-s c-secondary">{b}</p></li>
+      ))}
+    </ol>
+  </section>
+
+  <section class="wrap exp" aria-labelledby="exp">
+    <p class="t-label-m c-accent" data-reveal>Experience</p>
+    <h2 id="exp" class="t-h1 h" data-reveal>Where I have worked.</h2>
+    <ol class="timeline">
+      {experience.map(([d, c, r, p]) => (
+        <li data-reveal><span class="t-label-m c-secondary">{d}</span><span class="t-h4">{c}</span><span class="t-body-m">{r}</span><span class="t-body-m c-secondary">{p}</span></li>
+      ))}
+    </ol>
+  </section>
+
+  <section class="wrap edu" aria-label="Education, skills and tools">
+    <div>
+      <h2 class="t-label-m c-accent">Education</h2>
+      <ul class="edu-list">
+        {education.map(([a, b, c]) => <li data-reveal><p class="t-body-m t-strong">{a}</p><p class="t-body-m">{b}</p><p class="t-body-s c-secondary">{c}</p></li>)}
+      </ul>
+    </div>
+    <div class="groups">
+      <div class="group" data-reveal><h2 class="t-label-m c-accent">Skills</h2><ul class="chips">{skills.map((s) => <li><Tag>{s}</Tag></li>)}</ul></div>
+      <div class="group" data-reveal><h2 class="t-label-m c-accent">Tools</h2><ul class="chips">{tools.map((s) => <li><Tag>{s}</Tag></li>)}</ul></div>
+      <div class="group" data-reveal><h2 class="t-label-m c-accent">Working style</h2><p class="t-body-m c-secondary">I work async-first: send me the brief in writing and I reply with questions and a scope. Core hours 09.00–18.00 WIB (GMT+7), Monday to Friday. Open to remote UI/UX roles and freelance projects.</p></div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .a-hero { padding-top: 168px; padding-bottom: var(--section); display: grid; grid-template-columns: 1fr 440px; gap: 80px; align-items: end; }
+  .a-text { display: grid; gap: 32px; justify-items: start; }
+  .a-title { font-weight: inherit; }
+  .l { display: inline-flex; flex-wrap: wrap; align-items: baseline; column-gap: clamp(12px, 1.9vw, 28px); }
+  .ctas { display: flex; flex-wrap: wrap; gap: 12px; }
+  .h { margin-top: 16px; font-weight: inherit; }
+  .steps { margin-top: 48px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+  .steps li { display: grid; gap: 16px; align-content: start; padding: 24px 24px 28px; border-radius: var(--radius-lg);
+    background: var(--color-bg-surface); border: 1px solid var(--color-border-default); transition: transform 300ms var(--ease-out); }
+  .steps li:hover { transform: translateY(-4px); }
+  .exp { padding-top: 32px; padding-bottom: var(--section); }
+  .timeline { margin-top: 48px; border-bottom: 1px solid var(--color-border-strong); }
+  .timeline li { display: grid; grid-template-columns: 200px 1.3fr 1fr 1fr; gap: 32px; align-items: center; padding-block: 24px; border-top: 1px solid var(--color-border-strong); }
+  .edu { padding-top: 32px; padding-bottom: var(--section); display: grid; grid-template-columns: 1fr 1fr; gap: 80px; }
+  .edu-list { margin-top: 24px; display: grid; }
+  .edu-list li { display: grid; gap: 4px; padding-block: 16px; border-top: 1px solid var(--color-border-strong); }
+  .groups { display: grid; gap: 40px; align-content: start; }
+  .group { display: grid; gap: 16px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+
+  @media (max-width: 1024px) {
+    .a-hero { grid-template-columns: 1fr 320px; gap: 48px; }
+    .steps { grid-template-columns: repeat(2, 1fr); }
+    .timeline li { grid-template-columns: 160px 1fr 1fr; }
+    .timeline li span:last-child { grid-column: 2 / -1; margin-top: -20px; }
+  }
+  @media (max-width: 640px) {
+    .a-hero { grid-template-columns: 1fr; padding-top: 112px; gap: 32px; }
+    .a-photo { order: -1; margin-top: 8px; }
+    .a-text { gap: 24px; }
+    .ctas, .ctas :global(.btn) { width: 100%; }
+    .steps { grid-template-columns: 1fr; gap: 12px; }
+    .timeline li { grid-template-columns: 1fr; gap: 4px; padding-block: 16px; }
+    .timeline li span:last-child { grid-column: auto; margin-top: 0; }
+    .edu { grid-template-columns: 1fr; gap: 48px; }
+  }
+</style>

@@ -1,0 +1,72 @@
+---
+// Signature visual (Figma component "Hero visual"): the same dashboard drawn twice.
+// Left of the seam: a dashed blueprint (structure). Right of the seam: the finished UI.
+// motion.js draws the blueprint lines on load and moves the seam with scroll. Without motion it stays at 44%.
+const W = 1280, H = 600;
+const shapes = [];
+const box = (x, y, w, h, r, fill, solid = false) => shapes.push({ x, y, w, h, r, fill, solid });
+box(0, 0, W, H, 24, 'surface', true);
+box(24, 88, 200, 488, 16, 'page');
+for (let i = 0; i < 6; i++) box(44, 116 + i * 48, i === 1 ? 160 : 120, 14, 7, i === 1 ? 'accent' : 'border', true);
+for (let i = 0; i < 3; i++) {
+  const x = 248 + i * 346;
+  box(x, 88, 330, 120, 16, 'surface');
+  box(x + 24, 112, 90, 10, 5, 'border', true);
+  box(x + 24, 140, i === 0 ? 150 : 120, 28, 8, i === 0 ? 'accent' : 'ink', true);
+  box(x + 24, 184, 60, 8, 4, 'border', true);
+}
+box(248, 224, 520, 352, 16, 'surface');
+box(272, 248, 140, 12, 6, 'border', true);
+[120, 180, 140, 220, 160, 250, 200, 90].forEach((h, i) => box(284 + i * 58, 548 - h, 32, h, 6, i === 5 ? 'accent' : 'accentSubtle', true));
+box(784, 224, 472, 352, 16, 'surface');
+box(808, 248, 120, 12, 6, 'border', true);
+for (let r = 0; r < 5; r++) {
+  const y = 288 + r * 56;
+  box(808, y + 44, 424, 1, 0, 'border', true);
+  box(808, y + 14, 32, 32, 16, 'subtle', true);
+  box(856, y + 16, 140, 10, 5, 'ink', true);
+  box(856, y + 32, 90, 8, 4, 'border', true);
+  box(1150, y + 18, 82, 22, 11, r % 3 === 0 ? 'accentSubtle' : 'subtle', true);
+}
+const fills = { surface: 'var(--white)', page: 'var(--paper-100)', subtle: 'var(--paper-200)', border: 'var(--paper-300)', ink: 'var(--ink-900)', accent: 'var(--cobalt-500)', accentSubtle: 'var(--cobalt-100)' };
+const strokeFor = (s) => (s.fill === 'surface' && s.solid === false ? 'var(--paper-300)' : 'none');
+---
+<figure class="hv" data-hero-visual aria-label="Illustration: a dashboard drawn first as a blueprint, then as finished UI">
+  <div class="labels" aria-hidden="true">
+    <span class="t-label-s c-accent">01 · Structure</span>
+    <span class="t-label-s">02 · Interface</span>
+  </div>
+  <div class="stage">
+    <svg class="layer wire" viewBox={`0 0 ${W} ${H}`} aria-hidden="true" preserveAspectRatio="xMidYMid meet">
+      {shapes.map((s) => (
+        <rect x={s.x + 0.75} y={s.y + 0.75} width={Math.max(s.w - 1.5, 1)} height={Math.max(s.h - 1.5, 1)} rx={s.r}
+          fill="none" stroke="var(--cobalt-500)" stroke-width="1.5" pathLength="100"
+          class={s.solid ? 'solid' : 'dashed'} />
+      ))}
+    </svg>
+    <svg class="layer ui" viewBox={`0 0 ${W} ${H}`} aria-hidden="true" preserveAspectRatio="xMidYMid meet">
+      {shapes.map((s) => (
+        <rect x={s.x} y={s.y} width={s.w} height={s.h} rx={s.r} fill={fills[s.fill]} stroke={s.r >= 16 && s.fill === 'surface' ? 'var(--paper-300)' : 'none'} />
+      ))}
+    </svg>
+    <span class="seam" aria-hidden="true"></span>
+  </div>
+</figure>
+
+<style>
+  .hv { --seam: 44%; position: relative; width: 100%; }
+  .labels { --pos: var(--seam); position: relative; height: 28px; }
+  .labels span { position: absolute; bottom: 10px; white-space: nowrap; }
+  .labels span:first-child { right: calc(100% - var(--pos) + 14px); }
+  .labels span:last-child { left: calc(var(--pos) + 14px); }
+  .stage { position: relative; aspect-ratio: 1280 / 600; }
+  .layer { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .wire .dashed { stroke-dasharray: 6 5; }
+  .ui { clip-path: inset(-2px -2px -2px var(--seam)); }
+  .seam { position: absolute; top: -24px; bottom: -24px; left: var(--seam); width: 2px; margin-left: -1px; background: var(--color-accent-default); }
+  @media (max-width: 640px) {
+    .stage { width: 200%; margin-left: -50%; }
+    .hv { overflow: hidden; padding-bottom: 8px; }
+    .labels { --pos: calc(var(--seam) * 2 - 50%); }
+  }
+</style>

@@ -1,0 +1,160 @@
+/* Design tokens. Same names and values as the Figma variables
+   (file "Portfolio Aldi Pratama Putra 2026", collections Primitives, Color, Spacing). */
+:root {
+  /* primitives */
+  --paper-50: #FBFAF7;
+  --paper-100: #F5F3EE;
+  --paper-200: #ECE9E1;
+  --paper-300: #DEDAD0;
+  --ink-900: #141414;
+  --ink-700: #2E2D2A;
+  --ink-500: #5E5B54;
+  --ink-300: #A8A49A;
+  --cobalt-100: #E6E9FF;
+  --cobalt-300: #8E9BFF;
+  --cobalt-500: #2B44FF;
+  --cobalt-600: #1F35D9;
+  --white: #FFFFFF;
+
+  /* semantic */
+  --color-bg-page: var(--paper-100);
+  --color-bg-surface: var(--white);
+  --color-bg-subtle: var(--paper-200);
+  --color-bg-inverse: var(--ink-900);
+  --color-text-primary: var(--ink-900);
+  --color-text-secondary: var(--ink-500);
+  --color-text-inverse: var(--paper-50);
+  --color-text-inverse-muted: var(--ink-300);
+  --color-text-accent: var(--cobalt-500);
+  --color-text-on-accent: var(--white);
+  --color-text-accent-on-dark: var(--cobalt-300);
+  --color-accent-default: var(--cobalt-500);
+  --color-accent-hover: var(--cobalt-600);
+  --color-accent-subtle: var(--cobalt-100);
+  --color-accent-on-dark: var(--cobalt-300);
+  --color-border-default: var(--paper-300);
+  --color-border-strong: var(--ink-900);
+  --color-border-inverse: var(--ink-700);
+  --color-focus: var(--ink-900);
+
+  /* spacing */
+  --space-2xs: 4px; --space-xs: 8px; --space-sm: 12px; --space-md: 16px; --space-lg: 24px;
+  --space-xl: 32px; --space-2xl: 48px; --space-3xl: 64px; --space-4xl: 96px; --space-5xl: 128px; --space-6xl: 160px;
+  --radius-sm: 8px; --radius-md: 16px; --radius-lg: 24px; --radius-full: 999px;
+
+  /* layout */
+  --page-max: 1440px;
+  --gutter: 80px;
+  --col-gap: 24px;
+  --section: 128px;
+
+  /* type */
+  --font-sans: 'Archivo Variable', 'Archivo', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-serif: 'Instrument Serif', Georgia, 'Times New Roman', serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (max-width: 1024px) { :root { --gutter: 40px; --col-gap: 20px; --section: 104px; } }
+@media (max-width: 640px) { :root { --gutter: 20px; --col-gap: 16px; --section: 80px; } }
+
+/* ---------- base ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+body {
+  margin: 0;
+  background: var(--color-bg-page);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+  font-size: 17px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+img, svg, video { display: block; max-width: 100%; }
+a { color: inherit; }
+button { font: inherit; color: inherit; }
+h1, h2, h3, h4, p, ul, ol, figure, dl, dd { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+::selection { background: var(--color-accent-default); color: var(--color-text-on-accent); }
+
+:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 3px; border-radius: 6px; }
+.on-dark :focus-visible, .on-dark:focus-visible { outline-color: var(--color-text-inverse); }
+
+.skip-link {
+  position: absolute; left: var(--space-md); top: -100px; z-index: 100;
+  background: var(--color-bg-inverse); color: var(--color-text-inverse);
+  padding: 12px 16px; border-radius: var(--radius-sm); text-decoration: none;
+}
+.skip-link:focus { top: var(--space-md); }
+
+.visually-hidden {
+  position: absolute !important; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
+}
+
+/* ---------- layout ---------- */
+.wrap { width: 100%; max-width: var(--page-max); margin-inline: auto; padding-inline: var(--gutter); }
+.section { padding-block: var(--section); }
+.dark { background: var(--color-bg-inverse); color: var(--color-text-inverse); }
+
+/* ---------- type (Figma text styles) ---------- */
+.t-display {
+  font-family: var(--font-sans); font-weight: 700; text-transform: uppercase;
+  font-size: clamp(52px, 7.8vw, 112px); line-height: 0.92; letter-spacing: -0.04em;
+}
+.t-display-serif {
+  font-family: var(--font-serif); font-style: italic; font-weight: 400; text-transform: none;
+  font-size: clamp(56px, 8.3vw, 120px); line-height: 0.92; letter-spacing: -0.02em;
+}
+.t-h1 { font-weight: 700; font-size: clamp(40px, 4.45vw, 64px); line-height: 1.02; letter-spacing: -0.03em; }
+.t-h1-serif { font-family: var(--font-serif); font-style: italic; font-weight: 400; font-size: clamp(40px, 4.7vw, 68px); line-height: 1.02; letter-spacing: -0.01em; }
+.t-h2 { font-weight: 600; font-size: clamp(30px, 3.05vw, 44px); line-height: 1.1; letter-spacing: -0.02em; }
+.t-h3 { font-weight: 600; font-size: clamp(22px, 1.95vw, 28px); line-height: 1.2; letter-spacing: -0.01em; }
+.t-h4 { font-weight: 600; font-size: 20px; line-height: 1.3; letter-spacing: -0.005em; }
+.t-body-l { font-size: clamp(18px, 1.4vw, 20px); line-height: 1.5; }
+.t-body-m { font-size: 17px; line-height: 1.6; }
+.t-body-s { font-size: 15px; line-height: 1.5; }
+.t-strong { font-weight: 600; }
+.t-label-m, .t-label-s {
+  font-family: var(--font-mono); font-weight: 500; text-transform: uppercase;
+}
+.t-label-m { font-size: 13px; line-height: 1.4; letter-spacing: 0.06em; }
+.t-label-s { font-size: 11px; line-height: 1.4; letter-spacing: 0.08em; }
+.c-secondary { color: var(--color-text-secondary); }
+.c-accent { color: var(--color-text-accent); }
+.dark .c-secondary { color: var(--color-text-inverse-muted); }
+.dark .c-accent { color: var(--color-text-accent-on-dark); }
+.balance { text-wrap: balance; }
+.pretty { text-wrap: pretty; }
+.measure { max-width: 720px; }
+
+/* inline text link */
+.link {
+  display: inline-flex; align-items: center; gap: 6px;
+  text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px;
+  transition: color 200ms var(--ease-out);
+}
+.link:hover { color: var(--color-text-accent); }
+.dark .link:hover { color: var(--color-text-accent-on-dark); }
+.link svg { transition: transform 200ms var(--ease-out); }
+.link:hover svg { transform: translate(2px, -2px); }
+
+/* rules */
+.rule-top { border-top: 1px solid var(--color-border-strong); }
+.dark .rule-top { border-top-color: var(--color-border-inverse); }
+
+/* ---------- motion helpers ---------- */
+/* Content is visible by default. JS adds .motion to <html> only when motion is allowed. */
+.line-mask { display: block; }
+.motion [data-reveal] { opacity: 0; transform: translateY(24px); }
+.motion .line-mask { overflow: hidden; padding-bottom: 0.06em; margin-bottom: -0.06em; }
+.motion .line-mask > span { display: inline-block; transform: translateY(105%); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; scroll-behavior: auto !important; }
+}
