@@ -5,6 +5,7 @@ import HeroVisual from '../components/HeroVisual.astro';
 import ProofTile from '../components/ProofTile.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import Mockup from '../components/Mockup.astro';
+import CaseImage from '../components/CaseImage.astro';
 import { Image } from 'astro:assets';
 import portrait from '../assets/about/aldi.jpg';
 import Icon from '../components/Icon.astro';
@@ -74,7 +75,9 @@ const right = otherProjects.filter((_, i) => i % 2 === 1);
           </dl>
         </div>
         <a class="f-media" href={`/work/${featured.slug}`} aria-label="FastTrack Legal: read the case study" data-speed="0.94">
-          <Mockup slug={featured.slug} alt="FastTrack Legal website on a laptop and a phone" ratio="2 / 1" tone="dark" size="cover" />
+          {featured.images?.cover
+            ? <CaseImage src={featured.images.cover} alt={`FastTrack Legal: ${featured.cover.note}`} sizes="(max-width: 1440px) 92vw, 1280px" rounded={false} />
+            : <Mockup slug={featured.slug} alt="FastTrack Legal website on a laptop and a phone" ratio="2 / 1" tone="dark" size="cover" />}
           <span class="f-arrow" aria-hidden="true"><Icon name="arrow-up-right" /></span>
         </a>
         <ol class="tiles">

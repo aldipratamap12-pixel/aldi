@@ -4,6 +4,7 @@
 import Icon from './Icon.astro';
 import Tag from './Tag.astro';
 import Mockup from './Mockup.astro';
+import CaseImage from './CaseImage.astro';
 import DevMarker from './DevMarker.astro';
 interface Props { project: any; }
 const { project: p } = Astro.props;
@@ -11,7 +12,11 @@ const { project: p } = Astro.props;
 <article class="card" data-reveal>
   <a href={`/work/${p.slug}`} class="hit" aria-label={`${p.name}: read the case study`}></a>
   <div class="media">
-    <div class="zoom"><Mockup slug={p.slug} alt={`${p.name}: ${p.cover.note}`} kind={p.cover.kind} /></div>
+    <div class="zoom">
+      {p.images?.card
+        ? <CaseImage src={p.images.card} alt={`${p.name}: ${p.cover.note}`} sizes="(max-width: 860px) 92vw, 45vw" rounded={false} />
+        : <Mockup slug={p.slug} alt={`${p.name}: ${p.cover.note}`} kind={p.cover.kind} />}
+    </div>
     <span class="arrow" aria-hidden="true"><Icon name="arrow-up-right" /></span>
     <div class="marker"><DevMarker permission={p.permission} /></div>
   </div>

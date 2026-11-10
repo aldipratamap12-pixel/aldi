@@ -110,6 +110,18 @@ function setupToc() {
     });
   }, { rootMargin: '-40% 0px -55% 0px' });
   byId.forEach((_, id) => { const s = document.getElementById(id); if (s) io.observe(s); });
+
+  // Wide diagrams break out over the TOC column: hide the TOC while one is on screen.
+  const toc = document.querySelector('[data-toc]');
+  const wides = document.querySelectorAll('[data-wide]');
+  if (toc && wides.length) {
+    const visible = new Set();
+    const wo = new IntersectionObserver((entries) => {
+      entries.forEach((e) => (e.isIntersecting ? visible.add(e.target) : visible.delete(e.target)));
+      toc.classList.toggle('toc--hide', visible.size > 0);
+    }, { rootMargin: '-10% 0px -10% 0px' });
+    wides.forEach((w) => wo.observe(w));
+  }
 }
 
 function setupNavHide() {

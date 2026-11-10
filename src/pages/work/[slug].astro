@@ -8,6 +8,7 @@ import Tag from '../../components/Tag.astro';
 import DevMarker from '../../components/DevMarker.astro';
 import Icon from '../../components/Icon.astro';
 import Mockup from '../../components/Mockup.astro';
+import CaseImage from '../../components/CaseImage.astro';
 import { visibleProjects, nextProject, showLink } from '../../data/projects.js';
 
 export function getStaticPaths() {
@@ -21,6 +22,9 @@ const sections = [
 const links = p.links.filter(showLink);
 // Section images do not exist yet. Their placeholders show in `npm run dev` only, so the live site never shows an empty box.
 const showSectionImages = import.meta.env.DEV;
+// Full-size originals for diagrams (small text). Uses the raw asset URL, not a resized copy.
+const raw = import.meta.glob<{ default: ImageMetadata }>('../../assets/**/*.{png,jpg}', { eager: true });
+const fullUrl = (src) => raw[`../../assets/${src}`]?.default?.src;
 ---
 <Base title={p.name} description={p.summary} active="work">
   <header class="cs-head wrap">
@@ -48,7 +52,9 @@ const showSectionImages = import.meta.env.DEV;
   </header>
 
   <div class="wrap cover" data-speed="0.94">
-    <Mockup slug={p.slug} alt={`${p.name}: ${p.cover.note}`} ratio="16 / 9" tone="dark" size="cover" kind={p.cover.kind} eager />
+    {p.images?.cover
+      ? <CaseImage src={p.images.cover} alt={`${p.name}: ${p.cover.note}`} sizes="(max-width: 1440px) 92vw, 1280px" eager />
+      : <Mockup slug={p.slug} alt={`${p.name}: ${p.cover.note}`} ratio="16 / 9" tone="dark" size="cover" kind={p.cover.kind} eager />}
   </div>
 
   <ol class="wrap tiles">
@@ -93,9 +99,13 @@ const showSectionImages = import.meta.env.DEV;
             <li data-reveal><span class="t-label-m c-accent">0{i + 1}</span><div><h3 class="t-h4">{t}</h3><p class="t-body-m c-secondary">{b}</p></div></li>
           ))}
         </ol>
-        {showSectionImages && p.processImage && (
-          <figure data-reveal><Placeholder label={p.processImage.alt} /><figcaption class="t-body-s c-secondary">{p.processImage.caption}</figcaption></figure>
-        )}
+        {(p.processImages || (p.processImage ? [p.processImage] : [])).filter((im) => im.src || showSectionImages).map((im) => (
+          <figure data-reveal class="wide" data-wide>
+            <CaseImage src={im.src} alt={im.alt} sizes="(max-width: 1024px) 92vw, 1280px" />
+            <figcaption class="t-body-s c-secondary">{im.caption}</figcaption>
+            {im.src && fullUrl(im.src) && <a class="link t-body-s full" href={fullUrl(im.src)} target="_blank" rel="noopener">Open full size<Icon name="arrow-up-right" size={16} /><span class="visually-hidden">(opens in a new tab)</span></a>}
+          </figure>
+        ))}
       </section>
 
       <section id="solution" class="sec">
@@ -108,8 +118,8 @@ const showSectionImages = import.meta.env.DEV;
             {s.chips && <ul class="chips" data-reveal>{s.chips.map((c) => <li><Tag>{c}</Tag></li>)}</ul>}
             {s.list && <dl class="list">{s.list.map(([b, r]) => <div data-reveal><dt class="t-body-m t-strong">{b}</dt><dd class="t-body-m c-secondary">{r}</dd></div>)}</dl>}
             {s.cards && <ul class="tools">{s.cards.map(([n, d]) => <li data-reveal><p class="t-body-m t-strong">{n}</p><p class="t-body-s c-secondary">{d}</p></li>)}</ul>}
-            {showSectionImages && s.img && (
-              <figure data-reveal><Placeholder label={s.img.alt} ratio={s.img.tall ? '4 / 3' : '16 / 10'} kind={p.cover.kind === 'mobile' ? 'mobile' : 'web'} /><figcaption class="t-body-s c-secondary">{s.img.caption}</figcaption></figure>
+            {s.img && (s.img.src || showSectionImages) && (
+              <figure data-reveal><CaseImage src={s.img.src} alt={s.img.alt} /><figcaption class="t-body-s c-secondary">{s.img.caption}</figcaption></figure>
             )}
           </div>
         ))}
@@ -171,6 +181,15 @@ const showSectionImages = import.meta.env.DEV;
   .sub { display: grid; gap: 12px; padding-top: 16px; }
   .sub + .sub { margin-top: 16px; }
   figure { display: grid; gap: 12px; margin-top: 8px; }
+  figure :global(.ph) { border-radius: 20px; }
+  /* Diagrams are wide: on large screens they break out over the TOC column so the labels stay readable.
+     The TOC fades out while one of them is on screen (motion.js → setupToc). */
+  @media (min-width: 1025px) {
+    figure.wide { width: calc(100% * 11 / 7 + var(--col-gap)); margin-left: calc(-100% * 4 / 7 - var(--col-gap)); }
+  }
+  .full { justify-self: start; }
+  .toc { transition: opacity 250ms var(--ease-out); }
+  .toc.toc--hide { opacity: 0; pointer-events: none; }
 
   .list { border-bottom: 1px solid var(--color-border-strong); }
   .list > div { display: grid; grid-template-columns: 220px 1fr; gap: 24px; padding-block: 16px; border-top: 1px solid var(--color-border-strong); }
@@ -186,7 +205,9 @@ const showSectionImages = import.meta.env.DEV;
 
   .next { display: block; text-decoration: none; border-top: 1px solid var(--color-border-strong); }
   .next-in { display: flex; align-items: center; justify-content: space-between; gap: 32px; padding-block: 96px; }
-  .next-title { margin-block: 12px; transition: transform 400ms var(--ease-out); }
+  .next-in > div { min-width: 0; }
+  .next-title { margin-block: 12px; transition: transform 400ms var(--ease-out); overflow-wrap: anywhere; }
+  @media (max-width: 640px) { .next-title { font-size: 40px; } }
   .next:hover .next-title { transform: translateX(12px); }
   .circle { flex: none; width: 120px; height: 120px; border-radius: 50%; display: grid; place-items: center;
     background: var(--color-accent-default); color: var(--color-text-on-accent); transition: transform 400ms var(--ease-out); }

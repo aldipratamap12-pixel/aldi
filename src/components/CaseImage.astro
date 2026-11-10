@@ -1,0 +1,21 @@
+---
+// A finished case study visual (exported from the Figma page "Visuals · <project>").
+// `src` is a path under src/assets, e.g. "fasttrack/navigation.jpg". Missing images fall back to a dev-only placeholder.
+import { Image } from 'astro:assets';
+import Placeholder from './Placeholder.astro';
+interface Props { src?: string; alt: string; ratio?: string; eager?: boolean; sizes?: string; rounded?: boolean; }
+const { src, alt, ratio = '16 / 10', eager = false, sizes = '(max-width: 1024px) 92vw, 740px', rounded = true } = Astro.props;
+const all = import.meta.glob<{ default: ImageMetadata }>('../assets/**/*.{png,jpg,jpeg,webp}', { eager: true });
+const img = src ? all[`../assets/${src}`]?.default : undefined;
+---
+{img ? (
+  <Image src={img} alt={alt} widths={[800, 1280, 1600, img.width]} sizes={sizes} loading={eager ? 'eager' : 'lazy'} decoding="async"
+    class:list={['ci', { 'ci--rounded': rounded }]} style={`aspect-ratio: ${img.width} / ${img.height}`} />
+) : (
+  import.meta.env.DEV && <Placeholder label={alt} ratio={ratio} />
+)}
+
+<style>
+  .ci { display: block; width: 100%; height: auto; }
+  .ci--rounded { border-radius: 20px; }
+</style>
