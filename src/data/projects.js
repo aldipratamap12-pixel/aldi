@@ -8,8 +8,8 @@ export const projects = [
     slug: 'fasttrack-legal',
     num: '01',
     permission: 'granted',
-    name: 'FastTrack Legal',
-    title: 'FastTrack Legal.',
+    name: 'FASTTRACK Legal',
+    title: 'FASTTRACK Legal.',
     subtitle: '100+ pages, one clear structure.',
     summary: 'I designed the information architecture and UI for a legal services website: 100+ pages, 25 service types and 5 interactive tools.',
     card: {
@@ -18,7 +18,7 @@ export const projects = [
       tags: ['Information architecture', 'Website'],
     },
     meta: [
-      ['Client', 'FastTrack Legal'],
+      ['Client', 'FASTTRACK Legal'],
       ['Role', 'UI/UX Designer'],
       ['Time', '3 months, 2026'],
       ['Platform', 'Website, desktop and mobile'],
@@ -36,7 +36,7 @@ export const projects = [
       ['One component system.', 'I built reusable components so 100+ pages stay consistent on desktop and mobile.'],
     ],
     context: [
-      'FastTrack helps people and businesses set up, run and grow a company in Indonesia.',
+      'FASTTRACK Legal helps people and businesses set up, run and grow a company in Indonesia.',
       'It offers company establishment, business licensing, virtual offices, notary services, visas and corporate compliance. That is a lot of services, and each one has its own requirements, documents, process and packages. The website had to explain all of it to people who are not lawyers.',
     ],
     problemHead: 'The content was large and kept growing. Without a clear structure, people would get lost.',
