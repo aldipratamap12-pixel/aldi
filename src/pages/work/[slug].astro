@@ -115,6 +115,13 @@ const fullUrl = (src) => raw[`../../assets/${src}`]?.default?.src;
           <div class="sub">
             <h3 class="t-h3" data-reveal>{s.t}</h3>
             {s.b && <p class="t-body-m c-secondary" data-reveal>{s.b}</p>}
+            {s.imgs && s.imgs.map((im) => (
+              <figure data-reveal class="wide" data-wide>
+                <CaseImage src={im.src} alt={im.alt} sizes="(max-width: 1024px) 92vw, 1280px" />
+                <figcaption class="t-body-s c-secondary">{im.caption}</figcaption>
+                {im.src && fullUrl(im.src) && <a class="link t-body-s full" href={fullUrl(im.src)} target="_blank" rel="noopener">Open full size<Icon name="arrow-up-right" size={16} /><span class="visually-hidden">(opens in a new tab)</span></a>}
+              </figure>
+            ))}
             {s.chips && <ul class="chips" data-reveal>{s.chips.map((c) => <li><Tag>{c}</Tag></li>)}</ul>}
             {s.list && <dl class="list">{s.list.map(([b, r]) => <div data-reveal><dt class="t-body-m t-strong">{b}</dt><dd class="t-body-m c-secondary">{r}</dd></div>)}</dl>}
             {s.cards && <ul class="tools">{s.cards.map(([n, d]) => <li data-reveal><p class="t-body-m t-strong">{n}</p><p class="t-body-s c-secondary">{d}</p></li>)}</ul>}
@@ -185,7 +192,7 @@ const fullUrl = (src) => raw[`../../assets/${src}`]?.default?.src;
   /* Diagrams are wide: on large screens they break out over the TOC column so the labels stay readable.
      The TOC fades out while one of them is on screen (motion.js → setupToc). */
   @media (min-width: 1025px) {
-    figure.wide { width: calc(100% * 11 / 7 + var(--col-gap)); margin-left: calc(-100% * 4 / 7 - var(--col-gap)); }
+    figure.wide { width: calc(100% * 11 / 7 + var(--col-gap)); margin-left: calc(-100% * 4 / 7 - var(--col-gap)); position: relative; z-index: 2; }
   }
   .full { justify-self: start; }
   .toc { transition: opacity 250ms var(--ease-out); }

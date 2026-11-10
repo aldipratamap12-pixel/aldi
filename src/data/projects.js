@@ -64,13 +64,17 @@ export const projects = [
       ['Check with the legal team.', 'I went through service requirements, terms and business rules with the legal team, and turned them into page content and interface patterns.'],
       ['Stay close to the developers.', 'During the build, I worked with the developers so the website matched the Figma design and stayed realistic to build.'],
     ],
-    processImages: [
-      { src: 'fasttrack/sitemap.png', alt: 'Sitemap: Home, six menu items, 11 service groups, 5 tools and the shared service page template', caption: 'The site structure: six menu items, 11 service groups and 5 tools. Redrawn for this case study from the live site.' },
-      { src: 'fasttrack/user-flow.png', alt: 'User flow from landing on the site to ordering a service, with a side path through the free tools', caption: 'The main path, from "which service?" to "how do I start?". Redrawn for this case study.' },
-      { src: 'fasttrack/wireframe.png', alt: 'Low-fidelity wireframe of a service page on desktop and mobile', caption: 'A service page as a lo-fi wireframe: key facts on the left, the next step on the right. Redrawn for this case study from the final layout.' },
-    ],
+    // No process images: the sitemap, user flow and wireframe were drawn after the project, from the live site,
+    // so they explain the final structure in Solution and are not presented as original process files.
+    processImages: [],
     solutionHead: 'One navigation, readable pages, and tools for the first questions.',
     solution: [
+      { t: 'How the final site is structured.', b: 'Six menu items, a mega menu with 11 service groups and 5 tools, and one page template shared by the service pages.',
+        imgs: [
+          { src: 'fasttrack/sitemap.png', alt: 'Sitemap: Home, six menu items, 11 service groups, 5 tools and the shared service page template', caption: 'The site structure: six menu items, 11 service groups and 5 tools.' },
+          { src: 'fasttrack/user-flow.png', alt: 'User flow from landing on the site to ordering a service, with a side path through the free tools', caption: 'The main path, from "which service?" to "how do I start?".' },
+          { src: 'fasttrack/wireframe.png', alt: 'Low-fidelity wireframe of a service page on desktop and mobile', caption: 'A service page in lo-fi: key facts on the left, the next step on the right.' },
+        ] },
       { t: 'One navigation for 25 services.', b: 'The services are grouped into 11 clear groups on the live site, so people can find the type of service they need.',
         chips: ['Pendirian Badan Usaha Indonesia', 'Kantor Perwakilan & Badan Usaha Asing', 'OSS & NIB', 'Perizinan Dasar dan Perizinan Berusaha', 'Notaris – Akta', 'Layanan Hukum Korporasi', 'Pembubaran Badan Usaha', 'Legalisasi, Apostille & Terjemahan', 'Hak Kekayaan Intelektual', 'Expatriate & Keimigrasian', 'Digital Marketing'],
         img: { src: 'fasttrack/navigation.jpg', alt: 'The Layanan mega menu on the live site, with 11 service groups and 5 tools', caption: 'The Layanan mega menu on the live site: 11 service groups and the 5 tools in one panel.' } },
