@@ -26,7 +26,8 @@ export const projects = [
     links: [{ label: 'fasttrack.legal', href: 'https://fasttrack.legal/', kind: 'Live site', confirmed: false }],
     cover: { kind: 'web', note: 'the home page, the service mega menu and the mobile home page' },
     // Visuals from the Figma page "Visuals · FastTrack". Desktop screens come from the FastTrack Figma file,
-    // mobile screens from the live site. Sitemap, user flow and wireframe were redrawn for this case study.
+    // mobile screens from the live site. The Solution images use the live site (fasttrack.legal).
+    // Sitemap, user flow and wireframe were redrawn for this case study in the FastTrack style (FastTrack Figma file, page "UX Documentation (Portfolio)").
     images: { cover: 'fasttrack/cover.jpg', card: 'fasttrack/card.jpg' },
     tiles: [
       ['Structure first.', 'I organized 25 types of legal services into one navigation for 100+ pages.'],
@@ -64,17 +65,17 @@ export const projects = [
       ['Stay close to the developers.', 'During the build, I worked with the developers so the website matched the Figma design and stayed realistic to build.'],
     ],
     processImages: [
-      { src: 'fasttrack/sitemap.png', alt: 'Sitemap: Home, six menu items, 12 service groups, 5 tools and the shared service page template', caption: 'The site structure: six menu items, 12 service groups and 5 tools. Redrawn for this case study from the final design.' },
+      { src: 'fasttrack/sitemap.png', alt: 'Sitemap: Home, six menu items, 11 service groups, 5 tools and the shared service page template', caption: 'The site structure: six menu items, 11 service groups and 5 tools. Redrawn for this case study from the live site.' },
       { src: 'fasttrack/user-flow.png', alt: 'User flow from landing on the site to ordering a service, with a side path through the free tools', caption: 'The main path, from "which service?" to "how do I start?". Redrawn for this case study.' },
       { src: 'fasttrack/wireframe.png', alt: 'Low-fidelity wireframe of a service page on desktop and mobile', caption: 'A service page as a lo-fi wireframe: key facts on the left, the next step on the right. Redrawn for this case study from the final layout.' },
     ],
     solutionHead: 'One navigation, readable pages, and tools for the first questions.',
     solution: [
-      { t: 'One navigation for 25 services.', b: 'The services are grouped into clear categories, so people can find the type of service they need.',
-        chips: ['PT Perorangan', 'PT PMDN', 'PT PMA', 'CV', 'OSS & NIB', 'Business licensing', 'Notary services', 'Virtual office', 'Corporate services', 'Visa & immigration'],
-        img: { src: 'fasttrack/navigation.jpg', alt: 'The Layanan mega menu with 12 service groups and 5 tools', caption: 'The Layanan mega menu: 12 service groups and the 5 tools in one panel.' } },
+      { t: 'One navigation for 25 services.', b: 'The services are grouped into 11 clear groups on the live site, so people can find the type of service they need.',
+        chips: ['Pendirian Badan Usaha Indonesia', 'Kantor Perwakilan & Badan Usaha Asing', 'OSS & NIB', 'Perizinan Dasar dan Perizinan Berusaha', 'Notaris – Akta', 'Layanan Hukum Korporasi', 'Pembubaran Badan Usaha', 'Legalisasi, Apostille & Terjemahan', 'Hak Kekayaan Intelektual', 'Expatriate & Keimigrasian', 'Digital Marketing'],
+        img: { src: 'fasttrack/navigation.jpg', alt: 'The Layanan mega menu on the live site, with 11 service groups and 5 tools', caption: 'The Layanan mega menu on the live site: 11 service groups and the 5 tools in one panel.' } },
       { t: 'Service pages that read in order.', b: 'Each service page starts with what the service is and who it is for, then moves to requirements, process and documents.',
-        img: { src: 'fasttrack/service-page.jpg', alt: 'The PT Perorangan service page on desktop, next to the service list on mobile', caption: 'The PT Perorangan page on desktop, next to the service list on mobile.' } },
+        img: { src: 'fasttrack/service-page.jpg', alt: 'The PT Perorangan service page on desktop, next to the service list on mobile', caption: 'The live PT Perorangan page on desktop, next to the service list on mobile.' } },
       { t: 'Five tools for the first questions.', b: 'These tools help people answer common questions before they talk to the legal team.',
         cards: [
           ['PT Name Availability Checker', 'Check if a company name may be available before registering.'],
@@ -83,9 +84,9 @@ export const projects = [
           ['Deed of Establishment Simulator', 'Try out the information a deed needs, before the formal process.'],
           ['PT Name Generator', "Get company name ideas when you don't know where to start."],
         ],
-        img: { src: 'fasttrack/tools.jpg', alt: 'The KBLI 2025 Guide, the Deed of Establishment Simulator and the name generator modal', caption: 'Panduan KBLI 2025, Simulasi Akta Pendirian and the Generator Nama modal.' } },
+        img: { src: 'fasttrack/tools.jpg', alt: 'The KBLI 2025 Guide, the Deed of Establishment Simulator and the name generator modal', caption: 'Panduan KBLI 2025, Simulasi Akta Pendirian and the Generator Nama modal on the live site.' } },
       { t: 'A component library for 100+ pages.', b: 'Navigation, buttons, forms, cards, service listings, pricing sections, information blocks, tables, alerts and tool components. Each page uses the same parts, so new services can be added without a new design.',
-        img: { src: 'fasttrack/components.jpg', alt: 'Service card variants from the component library and the same cards in the home service list', caption: 'Service card variants from the component library, and the same cards in the Home service list.' } },
+        img: { src: 'fasttrack/components.jpg', alt: 'Service cards and tool cards on the live home page', caption: 'The same service card and tool card patterns, as they appear on the live home page.' } },
     ],
     stats: [['100+', 'pages organized in one structure'], ['25', 'service types in one navigation'], ['5', 'interactive tools'], ['2', 'layouts for every page: desktop and mobile'], ['1', 'component library behind the whole site']],
     resultList: [],
