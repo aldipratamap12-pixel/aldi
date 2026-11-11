@@ -546,6 +546,18 @@ export const projects = [
 
 import { SHOW_ALL } from './site.js';
 
+// In-progress work, shown on Home as a "Coming soon" card only (no case study page yet).
+// Source: Aldi (2026-11-11) and the MBA Project Figma file. The card image is a blurred dashboard, because the project is ongoing.
+export const comingSoon = [
+  {
+    slug: 'mba-order-management',
+    name: 'MBA Order Management',
+    images: { card: 'mba/card.jpg' },
+    cover: { note: 'a blurred preview of the dashboard' },
+    card: { summary: 'An order management system for PT Misael Berkat Abadi: orders, documents and certificates, from the first quote to the final payment.', meta: 'Web app · 2026 · In progress', tags: ['Order management', 'Design system'] },
+  },
+];
+
 export const visibleProjects = projects.filter((p) => SHOW_ALL || p.permission === 'granted');
 export const featured = visibleProjects.find((p) => p.slug === 'fasttrack-legal');
 export const otherProjects = visibleProjects.filter((p) => p.slug !== 'fasttrack-legal');

@@ -7,22 +7,25 @@ import Mockup from './Mockup.astro';
 import CaseImage from './CaseImage.astro';
 import DevMarker from './DevMarker.astro';
 import { displayNum } from '../data/projects.js';
-interface Props { project: any; }
-const { project: p } = Astro.props;
+// soon: an in-progress project. No link, no number, a "Coming soon" label instead.
+interface Props { project: any; soon?: boolean; }
+const { project: p, soon = false } = Astro.props;
 ---
-<article class="card" data-reveal>
-  <a href={`/work/${p.slug}`} class="hit" aria-label={`${p.name}: read the case study`}></a>
+<article class:list={["card", { "card--soon": soon }]} data-reveal>
+  {!soon && <a href={`/work/${p.slug}`} class="hit" aria-label={`${p.name}: read the case study`}></a>}
   <div class="media">
     <div class="zoom">
       {p.images?.card
         ? <CaseImage src={p.images.card} alt={`${p.name}: ${p.cover.note}`} sizes="(max-width: 860px) 92vw, 45vw" rounded={false} />
         : <Mockup slug={p.slug} alt={`${p.name}: ${p.cover.note}`} kind={p.cover.kind} />}
     </div>
-    <span class="arrow" aria-hidden="true"><Icon name="arrow-up-right" /></span>
-    <div class="marker"><DevMarker permission={p.permission} /></div>
+    {soon
+      ? <span class="soon t-label-m"><span class="soon-dot" aria-hidden="true"></span>Coming soon</span>
+      : <span class="arrow" aria-hidden="true"><Icon name="arrow-up-right" /></span>}
+    {!soon && <div class="marker"><DevMarker permission={p.permission} /></div>}
   </div>
   <div class="body">
-    <span class="t-label-m c-secondary num">{displayNum(p)}</span>
+    <span class="t-label-m c-secondary num">{soon ? "—" : displayNum(p)}</span>
     <div class="text">
       <h3 class="t-h3 title">{p.name}</h3>
       <p class="t-body-m c-secondary pretty">{p.card.summary}</p>
@@ -55,5 +58,11 @@ const { project: p } = Astro.props;
   .card:hover .title { color: var(--color-text-accent); }
   .tags { display: flex; flex-wrap: wrap; gap: 8px; }
   .hit:focus-visible { outline-offset: 6px; }
+  .soon { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 3; display: inline-flex; align-items: center; gap: 10px; padding: 12px 20px; border-radius: var(--radius-full); background: rgb(255 255 255 / 0.92); color: #0B3A4C; white-space: nowrap; box-shadow: 0 10px 30px rgb(0 0 0 / 0.25); }
+  .soon-dot { width: 8px; height: 8px; border-radius: 50%; background: #E8A33D; box-shadow: 0 0 0 0 rgb(232 163 61 / 0.6); animation: soonpulse 2s infinite; }
+  @keyframes soonpulse { 70% { box-shadow: 0 0 0 8px rgb(232 163 61 / 0); } 100% { box-shadow: 0 0 0 0 rgb(232 163 61 / 0); } }
+  .card--soon:hover .zoom { transform: none; }
+  .card--soon:hover .title { color: inherit; }
+  .card--soon:hover .body { border-top-color: var(--color-border-default); }
   @media (max-width: 640px) { .tags { display: none; } .body { gap: 16px; } }
 </style>

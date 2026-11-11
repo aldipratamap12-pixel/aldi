@@ -10,7 +10,7 @@ import { Image } from 'astro:assets';
 import portrait from '../assets/about/aldi.jpg';
 import Icon from '../components/Icon.astro';
 import { site } from '../data/site.js';
-import { featured, otherProjects, visibleProjects, showLink, displayNum } from '../data/projects.js';
+import { featured, otherProjects, visibleProjects, comingSoon, showLink, displayNum } from '../data/projects.js';
 
 const pillars = [
   ['Sort out the structure.', 'Before I design a screen, I map who uses it, what they need to get done, and where each piece of information goes.', 'IoT app: devices from 5 brands, organized as Home → Room → Device instead of by brand.'],
@@ -26,6 +26,9 @@ const workIntro = clientWork.length
   : 'My Hacktiv8 final project: a mobile app, from the first journey map to a usability test.';
 const left = otherProjects.filter((_, i) => i % 2 === 0);
 const right = otherProjects.filter((_, i) => i % 2 === 1);
+// Coming-soon cards go to whichever column is shorter.
+const soonLeft = left.length <= right.length ? comingSoon : [];
+const soonRight = left.length <= right.length ? [] : comingSoon;
 ---
 <Base active="work">
   <!-- HERO -->
@@ -113,8 +116,8 @@ const right = otherProjects.filter((_, i) => i % 2 === 1);
         <p class="t-body-m c-secondary w-intro" data-reveal>{workIntro}</p>
       </div>
       <div class="zigzag">
-        <div class="col">{left.map((p) => <ProjectCard project={p} />)}</div>
-        <div class="col col--offset" data-speed="1.08">{right.map((p) => <ProjectCard project={p} />)}</div>
+        <div class="col">{left.map((p) => <ProjectCard project={p} />)}{soonLeft.map((p) => <ProjectCard project={p} soon />)}</div>
+        <div class="col col--offset" data-speed="1.08">{right.map((p) => <ProjectCard project={p} />)}{soonRight.map((p) => <ProjectCard project={p} soon />)}</div>
       </div>
     </section>
   )}

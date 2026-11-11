@@ -11,7 +11,7 @@ export const site = {
   resume: null,
   positioning:
     'I help software teams turn complex business systems (dashboards, admin panels and internal tools) into clear UI that users understand and developers can build.',
-  description: 'UI/UX designer for dashboards, web apps and internal systems. Case studies: FASTTRACK Legal, MineVISPERA, HRIS, Super App IoT, LPPOM, Zaco Law Firm and SimaksiKu.',
+  description: 'UI/UX designer for dashboards, web apps and internal systems. Case studies: FASTTRACK Legal, MineVISPERA, HRIS, Super App IoT, LPPOM, Zaco Law Firm and SimaksiKu. Coming soon: MBA Order Management.',
 };
 
 // Projects are shown on the live site only when permission is "granted".
