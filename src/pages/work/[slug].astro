@@ -57,7 +57,7 @@ const fullUrl = (src) => raw[`../../assets/${src}`]?.default?.src;
       : <Mockup slug={p.slug} alt={`${p.name}: ${p.cover.note}`} ratio="16 / 9" tone="dark" size="cover" kind={p.cover.kind} eager />}
   </div>
 
-  <ol class="wrap tiles">
+  <ol class="wrap tiles" tabindex="0" aria-label={`${p.name} in four points`}>
     {p.tiles.map(([t, b], i) => <ProofTile index={i + 1} title={t} body={b} />)}
   </ol>
 

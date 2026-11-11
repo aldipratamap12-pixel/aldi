@@ -149,7 +149,18 @@ function setupMenu() {
   openBtn.addEventListener('click', open);
   closeBtn.addEventListener('click', close);
   menu.querySelectorAll('[data-menu-link]').forEach((a) => a.addEventListener('click', () => { menu.hidden = true; openBtn.setAttribute('aria-expanded', 'false'); document.body.style.overflow = ''; }));
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !menu.hidden) close(); });
+  document.addEventListener('keydown', (e) => {
+    if (menu.hidden) return;
+    if (e.key === 'Escape') { close(); return; }
+    // Keep Tab inside the open menu (it covers the page).
+    if (e.key === 'Tab') {
+      const f = [...menu.querySelectorAll('a[href], button:not([disabled])')].filter((el) => el.offsetParent !== null);
+      if (!f.length) return;
+      const first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  });
 }
 
 function setupEmailCopy() {

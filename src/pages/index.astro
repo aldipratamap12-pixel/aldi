@@ -89,7 +89,7 @@ const soonRight = left.length <= right.length ? [] : comingSoon;
             : <Mockup slug={featured.slug} alt="FASTTRACK Legal website on a laptop and a phone" ratio="2 / 1" tone="dark" size="cover" />}
           <span class="f-arrow" aria-hidden="true"><Icon name="arrow-up-right" /></span>
         </a>
-        <ol class="tiles">
+        <ol class="tiles" tabindex="0" aria-label="FASTTRACK Legal in four points">
           {featured.tiles.map(([t, b], i) => <ProofTile index={i + 1} title={t} body={b} tone="dark" />)}
         </ol>
         <div class="f-ctas" data-reveal>
