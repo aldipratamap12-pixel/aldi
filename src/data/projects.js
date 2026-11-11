@@ -80,7 +80,7 @@ export const projects = [
       { t: 'One navigation for 25 services.', b: 'The services are grouped into 11 clear groups on the live site, so people can find the type of service they need.',
         chips: ['Pendirian Badan Usaha Indonesia', 'Kantor Perwakilan & Badan Usaha Asing', 'OSS & NIB', 'Perizinan Dasar dan Perizinan Berusaha', 'Notaris – Akta', 'Layanan Hukum Korporasi', 'Pembubaran Badan Usaha', 'Legalisasi, Apostille & Terjemahan', 'Hak Kekayaan Intelektual', 'Expatriate & Keimigrasian', 'Digital Marketing'],
         img: { src: 'fasttrack/navigation.jpg', alt: 'The Layanan mega menu on the live site, with 11 service groups and 5 tools', caption: 'The Layanan mega menu on the live site: 11 service groups and the 5 tools in one panel.' } },
-      { t: 'Service pages that read in order.', b: 'Each service page starts with what the service is and who it is for, then moves to requirements, process and documents.',
+      { t: 'Service pages that read in order.', b: 'Each service page starts with a short overview, then the requirements, the benefits and the process steps. The price and the WhatsApp button stay in the sidebar.',
         img: { src: 'fasttrack/service-page.jpg', alt: 'The PT Perorangan service page on desktop, next to the service list on mobile', caption: 'The live PT Perorangan page on desktop, next to the service list on mobile.' } },
       { t: 'Five tools for the first questions.', b: 'These tools help people answer common questions before they talk to the legal team.',
         cards: [
