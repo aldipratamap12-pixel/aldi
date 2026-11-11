@@ -67,11 +67,12 @@ export function initMotion() {
   // Hero visual: blueprint lines draw in, then the seam moves as you scroll
   const hv = document.querySelector('[data-hero-visual]');
   if (hv) {
-    const rects = hv.querySelectorAll('.wire rect');
+    const rects = hv.querySelectorAll('.wire .draw');
     gsap.fromTo(rects, { strokeDasharray: '0 100' }, {
       strokeDasharray: (i, r) => (r.classList.contains('dashed') ? '6 5' : '100 0'),
-      duration: 1.2, ease: 'power2.out', stagger: 0.012, delay: 0.4,
+      duration: 1.2, ease: 'power2.out', stagger: 0.004, delay: 0.4,
     });
+    gsap.from(hv.querySelectorAll('.wire .note'), { opacity: 0, duration: 0.5, stagger: 0.03, delay: 1.2 });
     gsap.fromTo(hv, { '--seam': '78%' }, {
       '--seam': '12%', ease: 'none',
       scrollTrigger: { trigger: hv, start: 'top 75%', end: 'bottom 30%', scrub: 0.6 },
