@@ -467,7 +467,8 @@ export const projects = [
     summary: 'My Hacktiv8 final project: a mobile app to explore Indonesian national parks, book a climbing permit (SIMAKSI), plan the trip and report problems on the trail.',
     card: { summary: 'Bootcamp final project: explore national parks, book a climbing permit and plan the trip, in one mobile app.', meta: 'Mobile app · 2024 · Bootcamp final project', tags: ['Mobile', 'UX process'] },
     meta: [['Program', 'Hacktiv8 UI/UX Remote Program'], ['Role', 'UI/UX Designer, final project'], ['Time', 'Nov 2024 – Jan 2025'], ['Platform', 'Mobile app (Android)']],
-    links: [],
+    // Prototype link from Aldi's final presentation (slide 14). Own project, so it is shown on the live site.
+    links: [{ label: 'View in Figma', href: 'https://www.figma.com/proto/6dQLsonrjSqpuQE6wvUrqm/Final-Project_SimaksiKu?node-id=322-6778&p=f&scaling=scale-down&content-scaling=fixed&page-id=322%3A6363&starting-point-node-id=322%3A11894&show-proto-sidebar=1', kind: 'Prototype', confirmed: true }],
     cover: { kind: 'mobile', note: 'national parks, a mountain page, home, the booking form and trip planning' },
     // Visuals from the SimaksiKu Figma copy (page "Portfolio Visuals"). Phones show real screens from the file.
     // Journey map, Crazy 8, sketches, mindmap, user flow and wireframes are the project's own process files.
