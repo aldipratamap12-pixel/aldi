@@ -1,6 +1,6 @@
 ---
-// A small cursor character that hops down the page step by step: in every section it goes like stairs
-// from the right side to the left side, over headings, text, images and cards. It follows the scroll.
+// A small cursor character that stands near the top right of each section and jumps to the next
+// section's spot when you scroll past a section border (down or up).
 // Extra perches: data-perch. Areas to avoid: data-perch-skip.
 // Decoration only: aria-hidden, no pointer events. Desktop with a mouse only; off with reduced motion or ?nomotion.
 ---
@@ -73,8 +73,8 @@
 
     const foot = (e: P, f: number) => { const g = geo(e); return { x: g.l + g.w * f, y: g.t + 2 }; };
 
-    // The route: section by section, each one walked like stairs from its right side down to its left side.
-    // Every step is the closest spot below the last one, near a line that runs from top-right to bottom-left.
+    // The route: one spot per section, near its top right corner, so it only jumps at a section border.
+    // (The stair search below picks that first spot; the route used to continue down to the left.)
     type Step = { p: P; f: number };
     let path: Step[] = [];
     const MIN_DY = 56;
@@ -94,7 +94,7 @@
         const lineX = (t: number) => R - ((t - T) / (B - T || 1)) * (R - L);
         const at = (n: typeof mine[0]) => Math.min(Math.max(lineX(n.t), n.l + INSET), n.r - INSET);
         let last = startNode ?? null, lastT = startNode ? startNode.t : T - MIN_DY;
-        if (startNode) out.push({ p: startNode.p, f: 0.5 });
+        if (startNode) { out.push({ p: startNode.p, f: 0.5 }); continue; } // hero: just the Contact me button
         for (;;) {
           let best: typeof mine[0] | null = null, bc = Infinity;
           for (const n of mine) {
@@ -104,7 +104,7 @@
           }
           if (!best) break;
           out.push({ p: best.p, f: (at(best) - best.l) / (best.r - best.l) });
-          last = best; lastT = best.t;
+          break; // one spot per section: it only jumps when a new section comes in
         }
       }
       path = out;
