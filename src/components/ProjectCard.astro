@@ -6,6 +6,7 @@ import Tag from './Tag.astro';
 import Mockup from './Mockup.astro';
 import CaseImage from './CaseImage.astro';
 import DevMarker from './DevMarker.astro';
+import { displayNum } from '../data/projects.js';
 interface Props { project: any; }
 const { project: p } = Astro.props;
 ---
@@ -21,7 +22,7 @@ const { project: p } = Astro.props;
     <div class="marker"><DevMarker permission={p.permission} /></div>
   </div>
   <div class="body">
-    <span class="t-label-m c-secondary num">{p.num}</span>
+    <span class="t-label-m c-secondary num">{displayNum(p)}</span>
     <div class="text">
       <h3 class="t-h3 title">{p.name}</h3>
       <p class="t-body-m c-secondary pretty">{p.card.summary}</p>

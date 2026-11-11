@@ -418,8 +418,8 @@ export const projects = [
     num: '07',
     // Own bootcamp project (Hacktiv8), solo (confirmed 2026-11-11), so no client permission is needed.
     // Facts: the Figma file, cv.md and Aldi's final presentation (Presentation Final Project.pdf: background,
-    // goals, Maze usability test scores, insights, conclusion, next steps). Dev-only until Aldi reviews this version.
-    permission: 'unchecked',
+    // goals, Maze usability test scores, insights, conclusion, next steps). Approved for the live site by Aldi on 2026-11-11.
+    permission: 'granted',
     name: 'SimaksiKu',
     title: 'SimaksiKu.',
     subtitle: 'From paper sketches to a hiking app.',
@@ -508,6 +508,9 @@ export const visibleProjects = projects.filter((p) => SHOW_ALL || p.permission =
 export const featured = visibleProjects.find((p) => p.slug === 'fasttrack-legal');
 export const otherProjects = visibleProjects.filter((p) => p.slug !== 'fasttrack-legal');
 export const showLink = (l) => SHOW_ALL || l.confirmed;
+// Number shown on cards and case studies: the position among the projects that are visible,
+// so the live site counts 01, 02, ... with no gaps. In dev every project is visible, so it matches p.num.
+export const displayNum = (p) => String(visibleProjects.indexOf(p) + 1).padStart(2, '0');
 
 export function nextProject(slug) {
   const list = visibleProjects;

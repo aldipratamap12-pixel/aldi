@@ -9,7 +9,7 @@ import DevMarker from '../../components/DevMarker.astro';
 import Icon from '../../components/Icon.astro';
 import Mockup from '../../components/Mockup.astro';
 import CaseImage from '../../components/CaseImage.astro';
-import { visibleProjects, nextProject, showLink } from '../../data/projects.js';
+import { visibleProjects, nextProject, showLink, displayNum } from '../../data/projects.js';
 
 export function getStaticPaths() {
   return visibleProjects.map((p) => ({ params: { slug: p.slug }, props: { p } }));
@@ -30,7 +30,7 @@ const fullUrl = (src) => raw[`../../assets/${src}`]?.default?.src;
   <header class="cs-head wrap">
     <div class="crumb" data-reveal>
       <a class="t-label-m back" href="/#work">← Work</a>
-      <span class="t-label-m c-accent">/ Case study {p.num}</span>
+      <span class="t-label-m c-accent">/ Case study {displayNum(p)}</span>
       <DevMarker permission={p.permission} />
     </div>
     <h1 class="title" data-split>

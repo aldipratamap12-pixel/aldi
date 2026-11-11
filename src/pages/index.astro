@@ -10,7 +10,7 @@ import { Image } from 'astro:assets';
 import portrait from '../assets/about/aldi.jpg';
 import Icon from '../components/Icon.astro';
 import { site } from '../data/site.js';
-import { featured, otherProjects, showLink } from '../data/projects.js';
+import { featured, otherProjects, showLink, displayNum } from '../data/projects.js';
 
 // Facts: from cv.md (300+ = FastTrack 100+ pages + MineVISPERA ~100 + IoT 100+; 6 projects listed in cv.md).
 const facts = [
@@ -19,10 +19,18 @@ const facts = [
   ['14 days', 'for 100+ mobile screens', 'Super App IoT: 3 modules, from wireframe to handoff.'],
 ];
 const pillars = [
-  ['Sort out the structure.', 'Before I design a screen, I map who uses it, what they need to get done, and where each piece of information goes.', 'IoT app: devices from 7 brands, organized as Home → Room → Device instead of by brand.'],
+  ['Sort out the structure.', 'Before I design a screen, I map who uses it, what they need to get done, and where each piece of information goes.', 'IoT app: devices from 5 brands, organized as Home → Room → Device instead of by brand.'],
   ['Design for scanning.', 'Internal tools are used for hours every day. I aim for clear hierarchy and clear status, not decoration.', 'MineVISPERA: dense tables and dashboards redesigned without changing the business logic.'],
   ['Make it ready to build.', 'A design is done when developers can build it without guessing. Every project gets a component library.', 'MineVISPERA handoff: hi-fi mockups, component library, UX copy and walkthrough prototypes.'],
 ];
+// Intro follows what is visible: client work, the bootcamp project, or both.
+const hasClientWork = otherProjects.some((p) => p.slug !== 'simaksiku');
+const hasBootcamp = otherProjects.some((p) => p.slug === 'simaksiku');
+const workIntro = hasClientWork && hasBootcamp
+  ? 'Business systems I designed in 2025: dashboards, HR, IoT, CRM and one law firm website. Plus my bootcamp final project.'
+  : hasClientWork
+    ? 'Business systems I designed in 2025: dashboards, HR, IoT, CRM, and one law firm website.'
+    : 'My Hacktiv8 final project: a mobile app, from the first journey map to a usability test.';
 const left = otherProjects.filter((_, i) => i % 2 === 0);
 const right = otherProjects.filter((_, i) => i % 2 === 1);
 ---
@@ -61,7 +69,7 @@ const right = otherProjects.filter((_, i) => i % 2 === 1);
       <div class="wrap">
         <div class="f-head">
           <div>
-            <p class="t-label-m c-accent" data-reveal>Featured project · {featured.num}</p>
+            <p class="t-label-m c-accent" data-reveal>Featured project · {displayNum(featured)}</p>
             <h2 class="f-title" id="featured-title" data-split>
               <span class="line-mask"><span class="t-h1">FASTTRACK Legal.</span></span>
               <span class="line-mask"><span><span class="t-h1">100+ pages, </span><span class="t-h1-serif c-accent">one clear structure.</span></span></span>
@@ -98,13 +106,13 @@ const right = otherProjects.filter((_, i) => i % 2 === 1);
     <section class="work section wrap" aria-labelledby="work-title">
       <div class="w-head">
         <div>
-          <p class="t-label-m c-accent" data-reveal>Selected work · 02–0{otherProjects.length + 1}</p>
+          <p class="t-label-m c-accent" data-reveal>Selected work · {otherProjects.length === 1 ? displayNum(otherProjects[0]) : `${displayNum(otherProjects[0])}–${displayNum(otherProjects[otherProjects.length - 1])}`}</p>
           <h2 id="work-title" class="w-title" data-split>
             <span class="line-mask"><span class="t-display">Selected</span></span>
             <span class="line-mask"><span class="t-display-serif c-accent">work.</span></span>
           </h2>
         </div>
-        <p class="t-body-m c-secondary w-intro" data-reveal>Business systems I designed in 2025: dashboards, HR, IoT, CRM, and one law firm website.</p>
+        <p class="t-body-m c-secondary w-intro" data-reveal>{workIntro}</p>
       </div>
       <div class="zigzag">
         <div class="col">{left.map((p) => <ProjectCard project={p} />)}</div>
