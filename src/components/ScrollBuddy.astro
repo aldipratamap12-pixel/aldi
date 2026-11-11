@@ -1,6 +1,6 @@
 ---
-// A small cursor character that hops down the page step by step, like stairs from right to left:
-// headings, text, images and cards, each step the closest one below the last. It follows the scroll.
+// A small cursor character that hops down the page step by step: in every section it goes like stairs
+// from the right side to the left side, over headings, text, images and cards. It follows the scroll.
 // Extra perches: data-perch. Areas to avoid: data-perch-skip.
 // Decoration only: aria-hidden, no pointer events. Desktop with a mouse only; off with reduced motion or ?nomotion.
 ---
@@ -73,29 +73,39 @@
 
     const foot = (e: P, f: number) => { const g = geo(e); return { x: g.l + g.w * f, y: g.t + 2 }; };
 
-    // The route: one step after another, down the page like stairs, drifting from right to left.
-    // Each step is the closest spot below the last one, so it never has to cross the page.
+    // The route: section by section, each one walked like stairs from its right side down to its left side.
+    // Every step is the closest spot below the last one, near a line that runs from top-right to bottom-left.
     type Step = { p: P; f: number };
     let path: Step[] = [];
-    const MIN_DY = 56, DRIFT = -36;
+    const MIN_DY = 56;
+    const hostOf = (p: P) => (p instanceof Element ? p : p.host);
     function buildPath() {
-      const nodes = perches.map((p) => { const g = geo(p); return { p, l: g.l, r: g.r, t: g.t + scrollY }; }).filter((n) => n.r - n.l > 2 * INSET);
-      const first = (START && nodes.find((n) => n.p === START)) || nodes.sort((x, y) => x.t - y.t)[0];
-      if (!first) return;
-      const out: Step[] = [{ p: first.p, f: 0.5 }];
-      let last = first, lastX = (first.l + first.r) / 2;
-      const used = new Set([first.p]);
-      for (;;) {
-        let best = null as null | typeof first, bx = 0, bc = Infinity;
-        for (const n of nodes) {
-          if (used.has(n.p) || n.t < last.t + MIN_DY) continue;
-          const x = Math.min(Math.max(lastX + DRIFT, n.l + INSET), n.r - INSET);
-          const c = (n.t - last.t) + 1.2 * Math.abs(x - lastX);
-          if (c < bc) { bc = c; best = n; bx = x; }
+      const nodes = perches.map((p) => { const g = geo(p); return { p, l: g.l, r: g.r, t: g.t + scrollY, sec: hostOf(p).closest('section') }; })
+        .filter((n) => n.r - n.l > 2 * INSET && n.sec);
+      const secs = [...new Set(nodes.map((n) => n.sec))].sort((a, b) => a!.getBoundingClientRect().top - b!.getBoundingClientRect().top);
+      const out: Step[] = [];
+      for (const sec of secs) {
+        let mine = nodes.filter((n) => n.sec === sec);
+        const startNode = START ? mine.find((n) => n.p === START) : undefined;
+        if (startNode) mine = mine.filter((n) => n.t >= startNode.t); // the hero starts at Contact me
+        if (!mine.length) continue;
+        const L = Math.min(...mine.map((n) => n.l)) + INSET, R = Math.max(...mine.map((n) => n.r)) - INSET;
+        const T = Math.min(...mine.map((n) => n.t)), B = Math.max(...mine.map((n) => n.t));
+        const lineX = (t: number) => R - ((t - T) / (B - T || 1)) * (R - L);
+        const at = (n: typeof mine[0]) => Math.min(Math.max(lineX(n.t), n.l + INSET), n.r - INSET);
+        let last = startNode ?? null, lastT = startNode ? startNode.t : T - MIN_DY;
+        if (startNode) out.push({ p: startNode.p, f: 0.5 });
+        for (;;) {
+          let best: typeof mine[0] | null = null, bc = Infinity;
+          for (const n of mine) {
+            if (n === last || n.t < lastT + MIN_DY) continue;
+            const c = (n.t - lastT) + 1.5 * Math.abs(at(n) - lineX(n.t));
+            if (c < bc) { bc = c; best = n; }
+          }
+          if (!best) break;
+          out.push({ p: best.p, f: (at(best) - best.l) / (best.r - best.l) });
+          last = best; lastT = best.t;
         }
-        if (!best) break;
-        out.push({ p: best.p, f: (bx - best.l) / (best.r - best.l) });
-        used.add(best.p); last = best; lastX = bx;
       }
       path = out;
     }
@@ -185,6 +195,7 @@
         if (mx >= 0) { const dx = mx - x, dy = my - (y - 30), d = Math.hypot(dx, dy) || 1; look((dx / d) * 1.5 * dir, (dy / d) * 1.5); }
       }
 
+      x = Math.min(Math.max(x, W / 2 + 6), innerWidth - W / 2 - 6); // never half off the screen
       if (idx >= 0) {
         el.style.transform = `translate3d(${(x - W / 2).toFixed(1)}px, ${(y - H + bob).toFixed(1)}px, 0)`;
         body.style.transform = `rotate(${r.toFixed(2)}deg) scale(${sx.toFixed(3)}, ${sy.toFixed(3)})`;
