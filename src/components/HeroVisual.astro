@@ -3,15 +3,19 @@
 // Left of the seam: the blueprint (structure): dot grid, 12-column grid, dashed containers,
 // text as skeleton bars, redlines and component tags. Right of the seam: the finished UI.
 // motion.js draws the blueprint strokes on load and moves the seam with scroll. Without motion it stays at 44%.
+// The finished side is interactive: hover a bar, a KPI card, a table row, a menu item or a button.
 // All content is illustrative (generic labels and numbers), not data from a client project.
 const W = 1280, H = 640;
 const els = [];
+let G = null; // current hover group: { id, cls, data }
+const grp = (id, cls, fn, data = {}) => { const prev = G; G = { id, cls, data }; fn(); G = prev; };
+const add = (e) => els.push({ ...e, g: G });
 const tw = (str, s, w = 400) => str.length * s * (w >= 600 ? 0.6 : 0.54);
-const rect = (x, y, w, h, r, fill, o = {}) => els.push({ k: 'rect', x, y, w, h, r, fill, ...o });
-const text = (x, y, str, s, fill = 'ink', o = {}) => els.push({ k: 'text', x, y, str, s, fill, weight: 400, anchor: 'start', ...o });
-const circle = (cx, cy, r, fill, o = {}) => els.push({ k: 'circle', cx, cy, r, fill, ...o });
-const path = (d, stroke, o = {}) => els.push({ k: 'path', d, stroke, ...o });
-const line = (x1, y1, x2, y2, stroke = 'border', o = {}) => els.push({ k: 'line', x1, y1, x2, y2, stroke, ...o });
+const rect = (x, y, w, h, r, fill, o = {}) => add({ k: 'rect', x, y, w, h, r, fill, ...o });
+const text = (x, y, str, s, fill = 'ink', o = {}) => add({ k: 'text', x, y, str, s, fill, weight: 400, anchor: 'start', ...o });
+const circle = (cx, cy, r, fill, o = {}) => add({ k: 'circle', cx, cy, r, fill, ...o });
+const path = (d, stroke, o = {}) => add({ k: 'path', d, stroke, ...o });
+const line = (x1, y1, x2, y2, stroke = 'border', o = {}) => add({ k: 'line', x1, y1, x2, y2, stroke, ...o });
 
 // Frame
 rect(0, 0, W, H, 24, 'surface', { container: true, border: true });
@@ -20,16 +24,22 @@ rect(0, 0, W, H, 24, 'surface', { container: true, border: true });
 rect(24, 20, 26, 26, 7, 'accent');
 path('M31 37 L36 29 L40 34 L44 27', 'white', { sw: 2 });
 text(60, 38, 'Ops Console', 15, 'ink', { weight: 600 });
-rect(248, 17, 360, 32, 16, 'page', { border: true });
-circle(268, 33, 6, 'none', { stroke: 'muted', sw: 1.6 });
-line(272.5, 37.5, 276, 41, 'muted', { sw: 1.6 });
-text(284, 38, 'Search operators, reports…', 13, 'muted');
-circle(1146, 33, 16, 'page', { border: true });
-path('M1140 37 h12 M1142 37 v-5 a4 4 0 0 1 8 0 v5', 'ink', { sw: 1.6 });
-circle(1153, 25, 4, 'accent');
-circle(1196, 33, 16, 'accentSubtle');
-text(1196, 38, 'AP', 12, 'accent', { weight: 600, anchor: 'middle' });
-text(1220, 38, '▾', 11, 'muted');
+grp('search', 'hv-i hv-search', () => {
+  rect(248, 17, 360, 32, 16, 'page', { border: true, cls: 'field' });
+  circle(268, 33, 6, 'none', { stroke: 'muted', sw: 1.6 });
+  line(272.5, 37.5, 276, 41, 'muted', { sw: 1.6 });
+  text(284, 38, 'Search operators, reports…', 13, 'muted');
+});
+grp('bell', 'hv-i hv-icon', () => {
+  circle(1146, 33, 16, 'page', { border: true, cls: 'iconbg' });
+  path('M1140 37 h12 M1142 37 v-5 a4 4 0 0 1 8 0 v5', 'ink', { sw: 1.6 });
+  circle(1153, 25, 4, 'accent', { cls: 'dot' });
+});
+grp('avatar', 'hv-i hv-icon', () => {
+  circle(1196, 33, 16, 'accentSubtle', { cls: 'iconbg' });
+  text(1196, 38, 'AP', 12, 'accent', { weight: 600, anchor: 'middle' });
+  text(1220, 38, '▾', 11, 'muted');
+});
 line(0, 64, W, 64, 'border');
 
 // Sidebar
@@ -38,10 +48,12 @@ text(24, 96, 'MENU', 10, 'muted', { weight: 600, mono: true });
 const nav = ['Overview', 'Operators', 'Training', 'Reports', 'Schedule', 'Settings'];
 nav.forEach((n, i) => {
   const y = 112 + i * 44;
-  if (i === 0) rect(16, y, 192, 36, 10, 'accentSubtle');
-  rect(32, y + 10, 16, 16, 4, i === 0 ? 'accent' : 'none', { stroke: i === 0 ? null : 'muted', sw: 1.6 });
-  text(60, y + 23, n, 14, i === 0 ? 'accent' : 'ink', { weight: i === 0 ? 600 : 400 });
-  if (i === 2) { rect(176, y + 10, 22, 16, 8, 'subtle'); text(187, y + 22, '3', 11, 'ink', { weight: 600, anchor: 'middle' }); }
+  grp(`nav-${i}`, `hv-i hv-nav${i === 0 ? ' is-active' : ''}`, () => {
+    rect(16, y, 192, 36, 10, i === 0 ? 'accentSubtle' : 'none', { cls: 'navbg', ui: true });
+    rect(32, y + 10, 16, 16, 4, i === 0 ? 'accent' : 'none', { stroke: i === 0 ? null : 'muted', sw: 1.6, cls: 'navicon' });
+    text(60, y + 23, n, 14, i === 0 ? 'accent' : 'ink', { weight: i === 0 ? 600 : 400, cls: 'navlabel' });
+    if (i === 2) { rect(176, y + 10, 22, 16, 8, 'subtle'); text(187, y + 22, '3', 11, 'ink', { weight: 600, anchor: 'middle' }); }
+  });
 });
 rect(16, 524, 192, 92, 14, 'page', { border: true, container: true });
 text(32, 552, 'Data sync', 13, 'ink', { weight: 600 });
@@ -52,10 +64,14 @@ rect(32, 588, 131, 6, 3, 'accent');
 // Page header
 text(248, 106, 'Overview', 24, 'ink', { weight: 700 });
 text(248, 128, 'Last 30 days · all sites', 13, 'muted');
-rect(1048, 86, 100, 36, 10, 'surface', { border: true });
-text(1098, 109, 'Export', 13, 'ink', { weight: 600, anchor: 'middle' });
-rect(1160, 86, 96, 36, 10, 'accent');
-text(1208, 109, '+ New', 13, 'white', { weight: 600, anchor: 'middle' });
+grp('export', 'hv-i hv-btn is-ghost', () => {
+  rect(1048, 86, 100, 36, 10, 'surface', { border: true, cls: 'btnbg' });
+  text(1098, 109, 'Export', 13, 'ink', { weight: 600, anchor: 'middle' });
+});
+grp('new', 'hv-i hv-btn is-primary', () => {
+  rect(1160, 86, 96, 36, 10, 'accent', { cls: 'btnbg' });
+  text(1208, 109, '+ New', 13, 'white', { weight: 600, anchor: 'middle' });
+});
 
 // KPI cards
 const kpis = [
@@ -67,13 +83,15 @@ const kpis = [
 const kw = (1008 - 3 * 16) / 4;
 kpis.forEach(([label, value, delta, spark], i) => {
   const x = 248 + i * (kw + 16), y = 148;
-  rect(x, y, kw, 112, 16, 'surface', { border: true, container: true, tag: i === 0 ? 'KPI card' : null });
-  text(x + 20, y + 30, label, 13, 'muted');
-  text(x + 20, y + 68, value, 28, i === 0 ? 'accent' : 'ink', { weight: 700 });
-  const up = delta.startsWith('+');
-  rect(x + 20, y + 80, tw(delta, 11, 600) + 16, 20, 10, up ? 'accentSubtle' : 'subtle');
-  text(x + 28, y + 94, delta, 11, up ? 'accent' : 'muted', { weight: 600 });
-  path(spark.replace(/([ML])(\d+) (\d+)/g, (_, c, a, b) => `${c}${x + kw - 104 + Number(a)} ${y + 70 + Number(b)}`), i === 0 ? 'accent' : 'ink', { sw: 2 });
+  grp(`kpi-${i}`, 'hv-i hv-kpi', () => {
+    rect(x, y, kw, 112, 16, 'surface', { border: true, container: true, tag: i === 0 ? 'KPI card' : null, cls: 'card' });
+    text(x + 20, y + 30, label, 13, 'muted');
+    text(x + 20, y + 68, value, 28, i === 0 ? 'accent' : 'ink', { weight: 700, cls: 'value' });
+    const up = delta.startsWith('+');
+    rect(x + 20, y + 80, tw(delta, 11, 600) + 16, 20, 10, up ? 'accentSubtle' : 'subtle');
+    text(x + 28, y + 94, delta, 11, up ? 'accent' : 'muted', { weight: 600 });
+    path(spark.replace(/([ML])(\d+) (\d+)/g, (_, c, a, b) => `${c}${x + kw - 104 + Number(a)} ${y + 70 + Number(b)}`), i === 0 ? 'accent' : 'ink', { sw: 2, cls: 'spark' });
+  });
 });
 
 // Bar chart card
@@ -84,7 +102,7 @@ circle(cx + 360, cy + 30, 4, 'accent'); text(cx + 370, cy + 34, 'Score', 12, 'mu
 circle(cx + 430, cy + 30, 4, 'accentSubtle'); text(cx + 440, cy + 34, 'Target', 12, 'muted');
 rect(cx + cw - 72, cy + 18, 48, 24, 8, 'page', { border: true });
 text(cx + cw - 48, cy + 34, '2025', 11, 'ink', { weight: 600, anchor: 'middle' });
-const gx0 = cx + 52, gy0 = cy + 290, gh = 210;
+const gx0 = cx + 52, gy0 = cy + 290, gh = 188;
 [0, 50, 100, 150].forEach((v, i) => {
   const y = gy0 - (i * gh) / 3;
   line(gx0, y, cx + cw - 24, y, 'border', { dash: i > 0 });
@@ -93,24 +111,30 @@ const gx0 = cx + 52, gy0 = cy + 290, gh = 210;
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'];
 const vals = [72, 96, 84, 118, 104, 132, 120, 146, 128, 138];
 const step = (cw - 24 - 52 - 12) / months.length;
-const pts = [];
+const DEF = 7; // bar highlighted before any hover
+const pts = months.map((_, i) => [gx0 + 12 + i * step + 13, gy0 - ((vals[i] - 14) / 150) * gh - 12]);
 months.forEach((m, i) => {
   const bx = gx0 + 12 + i * step, h = (vals[i] / 150) * gh;
-  rect(bx, gy0 - h, 26, h, 6, i === 7 ? 'accent' : 'accentSubtle');
-  text(bx + 13, gy0 + 20, m, 11, 'muted', { anchor: 'middle' });
-  pts.push([bx + 13, gy0 - ((vals[i] - 14) / 150) * gh - 12]);
+  grp(`bar-${i}`, `hv-i hv-bar${i === DEF ? ' is-default' : ''}`, () => {
+    rect(bx - (step - 26) / 2, gy0 - gh - 8, step, gh + 34, 0, 'none', { cls: 'hit', ui: true });
+    line(bx + 13, gy0 - gh, bx + 13, gy0, 'muted', { cls: 'guide', dash: true, ui: true });
+    rect(bx, gy0 - h, 26, h, 6, i === DEF ? 'accent' : 'accentSubtle', { cls: 'bar' });
+    text(bx + 13, gy0 + 20, m, 11, 'muted', { anchor: 'middle', cls: 'mlabel' });
+  }, { i, x: pts[i][0], y: pts[i][1], v: vals[i], m });
 });
 path('M' + pts.map((p) => p.join(' ')).join(' L'), 'ink', { sw: 2 });
-pts.forEach((p, i) => i === 7 && circle(p[0], p[1], 5, 'surface', { stroke: 'ink', sw: 2 }));
-const tx = pts[7][0], ty = pts[7][1] - 44;
-rect(tx - 38, ty - 18, 76, 30, 8, 'ink');
-text(tx, ty + 2, '146 pts', 12, 'white', { weight: 600, anchor: 'middle' });
+grp('tip', 'hv-tip', () => {
+  circle(pts[DEF][0], pts[DEF][1], 5, 'surface', { stroke: 'ink', sw: 2 });
+  const tx = pts[DEF][0], ty = pts[DEF][1] - 44;
+  rect(tx - 44, ty - 20, 88, 32, 8, 'ink');
+  text(tx, ty + 1, `${months[DEF]} · ${vals[DEF]} pts`, 12, 'white', { weight: 600, anchor: 'middle', cls: 'tiptext' });
+});
 
 // Table card
 const tbx = 824, tby = 276, tbw = 432, tbh = 340;
 rect(tbx, tby, tbw, tbh, 16, 'surface', { border: true, container: true, tag: 'Table / row' });
 text(tbx + 24, tby + 34, 'Top operators', 16, 'ink', { weight: 600 });
-text(tbx + tbw - 24, tby + 34, 'View all →', 12, 'accent', { weight: 600, anchor: 'end' });
+grp('viewall', 'hv-i hv-link', () => text(tbx + tbw - 24, tby + 34, 'View all →', 12, 'accent', { weight: 600, anchor: 'end' }));
 rect(tbx + 16, tby + 52, tbw - 32, 28, 8, 'page');
 text(tbx + 28, tby + 70, 'NAME', 10, 'muted', { weight: 600, mono: true });
 text(tbx + 214, tby + 70, 'PROGRESS', 10, 'muted', { weight: 600, mono: true });
@@ -118,23 +142,26 @@ text(tbx + tbw - 28, tby + 70, 'STATUS', 10, 'muted', { weight: 600, mono: true,
 const rows = [['Operator 01', 'Site A', 92, 'Active'], ['Operator 02', 'Site B', 84, 'Active'], ['Operator 03', 'Site A', 71, 'Review'], ['Operator 04', 'Site C', 66, 'Active'], ['Operator 05', 'Site B', 48, 'Review']];
 rows.forEach(([n, site, p, st], i) => {
   const y = tby + 90 + i * 48;
-  circle(tbx + 42, y + 22, 15, i % 2 ? 'subtle' : 'accentSubtle');
-  text(tbx + 42, y + 26, 'O' + (i + 1), 10, i % 2 ? 'ink' : 'accent', { weight: 600, anchor: 'middle' });
-  text(tbx + 66, y + 19, n, 13, 'ink', { weight: 600 });
-  text(tbx + 66, y + 35, site, 11, 'muted');
-  rect(tbx + 214, y + 18, 96, 6, 3, 'subtle');
-  rect(tbx + 214, y + 18, (96 * p) / 100, 6, 3, p >= 80 ? 'accent' : 'ink');
-  text(tbx + 318, y + 24, p + '%', 11, 'muted', { weight: 600 });
-  const active = st === 'Active';
-  const pw = tw(st, 11, 600) + 22;
-  rect(tbx + tbw - 24 - pw, y + 11, pw, 22, 11, active ? 'accentSubtle' : 'subtle');
-  circle(tbx + tbw - 24 - pw + 10, y + 22, 3, active ? 'accent' : 'muted');
-  text(tbx + tbw - 24 - pw + 17, y + 26, st, 11, active ? 'accent' : 'ink', { weight: 600 });
+  grp(`row-${i}`, 'hv-i hv-row', () => {
+    rect(tbx + 12, y + 2, tbw - 24, 42, 10, 'page', { cls: 'rowbg', ui: true });
+    circle(tbx + 42, y + 22, 15, i % 2 ? 'subtle' : 'accentSubtle');
+    text(tbx + 42, y + 26, 'O' + (i + 1), 10, i % 2 ? 'ink' : 'accent', { weight: 600, anchor: 'middle' });
+    text(tbx + 66, y + 19, n, 13, 'ink', { weight: 600, cls: 'name' });
+    text(tbx + 66, y + 35, site, 11, 'muted');
+    rect(tbx + 214, y + 18, 96, 6, 3, 'subtle');
+    rect(tbx + 214, y + 18, (96 * p) / 100, 6, 3, p >= 80 ? 'accent' : 'ink', { cls: 'progress' });
+    text(tbx + 318, y + 24, p + '%', 11, 'muted', { weight: 600 });
+    const active = st === 'Active';
+    const pw = tw(st, 11, 600) + 22;
+    rect(tbx + tbw - 24 - pw, y + 11, pw, 22, 11, active ? 'accentSubtle' : 'subtle');
+    circle(tbx + tbw - 24 - pw + 10, y + 22, 3, active ? 'accent' : 'muted');
+    text(tbx + tbw - 24 - pw + 17, y + 26, st, 11, active ? 'accent' : 'ink', { weight: 600 });
+  });
   if (i < rows.length - 1) line(tbx + 24, y + 46, tbx + tbw - 24, y + 46, 'border');
 });
 
-// Cursor on the finished side
-path('M1224 108 l0 22 l6 -6 l4 9 l4 -2 l-4 -9 l8 0 z', 'ink', { sw: 1.4, fill: 'surface' });
+// Fake cursor on the finished side (hidden once the real cursor is over the visual)
+grp('cursor', 'hv-cursor', () => path('M1224 108 l0 22 l6 -6 l4 9 l4 -2 l-4 -9 l8 0 z', 'ink', { sw: 1.4, fill: 'surface' }));
 
 // Blueprint-only annotations (redlines and tags), drawn under the UI layer
 const notes = [];
@@ -159,6 +186,16 @@ const skel = (e) => {
 };
 const cols = Array.from({ length: 12 }, (_, i) => 248 + i * ((1008 - 11 * 16) / 12 + 16));
 const colW = (1008 - 11 * 16) / 12;
+
+// UI layer: contiguous elements of one group are wrapped in a <g>
+const nodes = [];
+for (const e of els) {
+  const last = nodes[nodes.length - 1];
+  if (e.g && last && last.group && last.group.id === e.g.id) last.items.push(e);
+  else if (e.g) nodes.push({ group: e.g, items: [e] });
+  else nodes.push({ items: [e] });
+}
+const wireEls = els.filter((e) => !e.ui);
 ---
 <figure class="hv" data-hero-visual aria-label="Illustration: a dashboard drawn first as a blueprint, then as finished UI">
   <div class="labels" aria-hidden="true">
@@ -171,10 +208,10 @@ const colW = (1008 - 11 * 16) / 12;
         <pattern id="hv-dots" width="16" height="16" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1" fill="var(--cobalt-500)" opacity="0.18" /></pattern>
         <marker id="hv-tick" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="8" markerHeight="8" orient="auto"><path d="M4 0 V8" stroke="var(--cobalt-500)" stroke-width="1.2" /></marker>
       </defs>
-      <rect x="0" y="0" width={W} height={H} rx="24" fill="var(--cobalt-50, #F3F5FF)" />
+      <rect x="0" y="0" width={W} height={H} rx="24" fill="#F3F5FF" />
       <rect x="0" y="0" width={W} height={H} rx="24" fill="url(#hv-dots)" />
       {cols.map((x) => <rect x={x} y="64" width={colW} height={H - 64} fill="var(--cobalt-500)" opacity="0.045" />)}
-      {els.map((e) => {
+      {wireEls.map((e) => {
         if (e.k === 'rect') return <rect class={`draw ${e.container ? 'dashed' : 'solid'}`} x={e.x + 0.75} y={e.y + 0.75} width={Math.max(e.w - 1.5, 1)} height={Math.max(e.h - 1.5, 1)} rx={e.r} fill="none" stroke="var(--cobalt-500)" stroke-width={e.container ? 1.5 : 1.2} pathLength="100" />;
         if (e.k === 'text') { const s = skel(e); return <rect class="draw solid" x={s.x} y={s.y} width={s.w} height={s.h} rx={s.h / 2} fill="none" stroke="var(--cobalt-500)" stroke-width="1" opacity="0.8" pathLength="100" />; }
         if (e.k === 'circle') return <circle class="draw solid" cx={e.cx} cy={e.cy} r={e.r} fill="none" stroke="var(--cobalt-500)" stroke-width="1.2" pathLength="100" />;
@@ -183,14 +220,14 @@ const colW = (1008 - 11 * 16) / 12;
       })}
       {notes.map((n) => n.k === 'redH' ? (
         <g class="note">
-          <line x1={n.x1} y1={n.y} x2={n.x2} y2={n.y} stroke="var(--red-500, #E5484D)" stroke-width="1" marker-start="url(#hv-tick)" marker-end="url(#hv-tick)" />
-          <rect x={(n.x1 + n.x2) / 2 - 14} y={n.y - 20} width="28" height="14" rx="3" fill="var(--red-500, #E5484D)" />
+          <line x1={n.x1} y1={n.y} x2={n.x2} y2={n.y} stroke="#E5484D" stroke-width="1" marker-start="url(#hv-tick)" marker-end="url(#hv-tick)" />
+          <rect x={(n.x1 + n.x2) / 2 - 14} y={n.y - 20} width="28" height="14" rx="3" fill="#E5484D" />
           <text x={(n.x1 + n.x2) / 2} y={n.y - 10} text-anchor="middle" font-size="9" font-family="var(--font-mono)" fill="#fff">{n.label}</text>
         </g>
       ) : (
         <g class="note">
-          <line x1={n.x} y1={n.y1} x2={n.x} y2={n.y2} stroke="var(--red-500, #E5484D)" stroke-width="1" marker-start="url(#hv-tick)" marker-end="url(#hv-tick)" />
-          <rect x={n.side > 0 ? n.x + 4 : n.x - 32} y={(n.y1 + n.y2) / 2 - 7} width="28" height="14" rx="3" fill="var(--red-500, #E5484D)" />
+          <line x1={n.x} y1={n.y1} x2={n.x} y2={n.y2} stroke="#E5484D" stroke-width="1" marker-start="url(#hv-tick)" marker-end="url(#hv-tick)" />
+          <rect x={n.side > 0 ? n.x + 4 : n.x - 32} y={(n.y1 + n.y2) / 2 - 7} width="28" height="14" rx="3" fill="#E5484D" />
           <text x={n.side > 0 ? n.x + 18 : n.x - 18} y={(n.y1 + n.y2) / 2 + 3} text-anchor="middle" font-size="9" font-family="var(--font-mono)" fill="#fff">{n.label}</text>
         </g>
       ))}
@@ -202,19 +239,49 @@ const colW = (1008 - 11 * 16) / 12;
       ))}
       {[[8, 8], [W - 8, 8], [8, H - 8], [W - 8, H - 8]].map(([x, y]) => <path class="note" d={`M${x - 6} ${y} H${x + 6} M${x} ${y - 6} V${y + 6}`} stroke="var(--cobalt-500)" stroke-width="1" />)}
     </svg>
-    <svg class="layer ui" viewBox={`0 0 ${W} ${H}`} aria-hidden="true" preserveAspectRatio="xMidYMid meet">
+    <svg class="layer ui" viewBox={`0 0 ${W} ${H}`} aria-hidden="true" preserveAspectRatio="xMidYMid meet" data-hv-ui>
       <defs><filter id="hv-shadow" x="-10%" y="-10%" width="120%" height="140%"><feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#141414" flood-opacity="0.06" /></filter></defs>
-      {els.map((e) => {
-        if (e.k === 'rect') return <rect x={e.x} y={e.y} width={e.w} height={e.h} rx={e.r} fill={F(e.fill)} stroke={e.border ? 'var(--paper-300)' : e.stroke ? F(e.stroke) : 'none'} stroke-width={e.sw || 1} filter={e.container && e.tag ? 'url(#hv-shadow)' : undefined} />;
-        if (e.k === 'text') return <text x={e.x} y={e.y} font-size={e.s} font-weight={e.weight} text-anchor={e.anchor} fill={F(e.fill)} font-family={e.mono ? 'var(--font-mono)' : 'var(--font-sans)'} letter-spacing={e.mono ? '0.06em' : undefined}>{e.str}</text>;
-        if (e.k === 'circle') return <circle cx={e.cx} cy={e.cy} r={e.r} fill={F(e.fill)} stroke={e.border ? 'var(--paper-300)' : e.stroke ? F(e.stroke) : 'none'} stroke-width={e.sw || 1} />;
-        if (e.k === 'path') return <path d={e.d} fill={e.fill ? F(e.fill) : 'none'} stroke={F(e.stroke)} stroke-width={e.sw || 1.5} stroke-linecap="round" stroke-linejoin="round" />;
-        if (e.k === 'line') return <line x1={e.x1} y1={e.y1} x2={e.x2} y2={e.y2} stroke={F(e.stroke)} stroke-width={e.sw || 1} stroke-dasharray={e.dash ? '3 4' : undefined} stroke-linecap="round" />;
+      {nodes.map((nd) => {
+        const items = nd.items.map((e) => {
+          const c = e.cls || undefined;
+          if (e.k === 'rect') return <rect class={c} x={e.x} y={e.y} width={e.w} height={e.h} rx={e.r} fill={F(e.fill)} stroke={e.border ? 'var(--paper-300)' : e.stroke ? F(e.stroke) : 'none'} stroke-width={e.sw || 1} filter={e.container && e.tag ? 'url(#hv-shadow)' : undefined} />;
+          if (e.k === 'text') return <text class={c} x={e.x} y={e.y} font-size={e.s} font-weight={e.weight} text-anchor={e.anchor} fill={F(e.fill)} font-family={e.mono ? 'var(--font-mono)' : 'var(--font-sans)'} letter-spacing={e.mono ? '0.06em' : undefined}>{e.str}</text>;
+          if (e.k === 'circle') return <circle class={c} cx={e.cx} cy={e.cy} r={e.r} fill={F(e.fill)} stroke={e.border ? 'var(--paper-300)' : e.stroke ? F(e.stroke) : 'none'} stroke-width={e.sw || 1} />;
+          if (e.k === 'path') return <path class={c} d={e.d} fill={e.fill ? F(e.fill) : 'none'} stroke={F(e.stroke)} stroke-width={e.sw || 1.5} stroke-linecap="round" stroke-linejoin="round" />;
+          if (e.k === 'line') return <line class={c} x1={e.x1} y1={e.y1} x2={e.x2} y2={e.y2} stroke={F(e.stroke)} stroke-width={e.sw || 1} stroke-dasharray={e.dash ? '3 4' : undefined} stroke-linecap="round" />;
+        });
+        if (!nd.group) return items;
+        const d = nd.group.data;
+        return <g class={nd.group.cls} data-i={d.i} data-x={d.x} data-y={d.y} data-v={d.v} data-m={d.m}>{items}</g>;
       })}
     </svg>
     <span class="seam" aria-hidden="true"><span class="knob"></span></span>
   </div>
 </figure>
+
+<script>
+  // Chart hover: move the tooltip and the point marker to the hovered bar.
+  const svg = document.querySelector('[data-hv-ui]');
+  const tip = svg?.querySelector('.hv-tip');
+  const tipText = tip?.querySelector('.tiptext');
+  const bars = svg ? [...svg.querySelectorAll('.hv-bar')] : [];
+  const def = bars.find((b) => b.classList.contains('is-default'));
+  if (svg && tip && tipText && def) {
+    const x0 = Number(def.dataset.x), y0 = Number(def.dataset.y);
+    const show = (b) => {
+      tip.style.transform = `translate(${Number(b.dataset.x) - x0}px, ${Number(b.dataset.y) - y0}px)`;
+      tipText.textContent = `${b.dataset.m} · ${b.dataset.v} pts`;
+      bars.forEach((o) => o.classList.toggle('is-on', o === b));
+      svg.classList.toggle('bar-hover', b !== def);
+    };
+    bars.forEach((b) => b.addEventListener('pointerenter', () => show(b)));
+    const chartLeave = () => show(def);
+    bars.forEach((b) => b.addEventListener('pointerleave', (e) => {
+      const to = e.relatedTarget;
+      if (!(to instanceof Element) || !to.closest('.hv-bar')) chartLeave();
+    }));
+  }
+</script>
 
 <style>
   .hv { --seam: 44%; position: relative; width: 100%; }
@@ -224,17 +291,62 @@ const colW = (1008 - 11 * 16) / 12;
   .labels span:last-child { left: calc(var(--pos) + 14px); }
   .stage { position: relative; aspect-ratio: 1280 / 640; }
   .layer { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .wire { pointer-events: none; }
   .wire .dashed { stroke-dasharray: 6 5; }
-  .ui { clip-path: inset(-2px -2px -2px var(--seam)); }
-  .seam { position: absolute; top: -24px; bottom: -24px; left: var(--seam); width: 2px; margin-left: -1px; background: var(--color-accent-default); }
+  .ui { clip-path: inset(-2px -2px -2px var(--seam)); pointer-events: none; }
+  .seam { position: absolute; top: -24px; bottom: -24px; left: var(--seam); width: 2px; margin-left: -1px; background: var(--color-accent-default); pointer-events: none; }
   .knob { position: absolute; top: 74%; left: 50%; width: 28px; height: 28px; margin: -14px 0 0 -14px; border-radius: 50%; background: var(--color-accent-default); box-shadow: 0 0 0 4px var(--color-bg-page), 0 6px 16px rgb(20 20 20 / 0.18); }
   .knob::before, .knob::after { content: ''; position: absolute; top: 9px; width: 0; height: 0; border: 5px solid transparent; }
   .knob::before { left: 2px; border-right-color: #fff; }
   .knob::after { right: 2px; border-left-color: #fff; }
+
+  /* Interactive finished side. Only groups receive the pointer; the clip-path keeps the blueprint side inert. */
+  .ui :global(.hv-i), .ui :global(.hv-i .hit) { pointer-events: all; cursor: pointer; }
+  .ui :global(.hv-i *) { transition: fill 0.18s ease, stroke 0.18s ease, opacity 0.18s ease, transform 0.22s cubic-bezier(.2,.7,.2,1); }
+  .ui :global(.hv-i) { transition: transform 0.22s cubic-bezier(.2,.7,.2,1); }
+  .stage:hover .ui :global(.hv-cursor) { opacity: 0; }
+  .ui :global(.hv-cursor) { transition: opacity 0.2s ease; }
+
+  /* KPI cards: lift, accent border, accent sparkline and value */
+  .ui :global(.hv-kpi:hover) { transform: translateY(-4px); }
+  .ui :global(.hv-kpi:hover .card) { stroke: var(--cobalt-500); stroke-width: 1.5; }
+  .ui :global(.hv-kpi:hover .spark) { stroke: var(--cobalt-500); }
+  .ui :global(.hv-kpi:hover .value) { fill: var(--cobalt-500); }
+
+  /* Bars: the hovered bar lights up, others step back; a dashed guide appears */
+  .ui :global(.hv-bar .hit) { fill: transparent; }
+  .ui :global(.hv-bar .guide) { opacity: 0; }
+  .ui :global(.hv-bar.is-on .guide), .ui :global(.hv-bar:hover .guide) { opacity: 1; }
+  .ui:global(.bar-hover) :global(.hv-bar .bar) { fill: var(--cobalt-100); }
+  .ui :global(.hv-bar.is-on .bar), .ui :global(.hv-bar:hover .bar) { fill: var(--cobalt-500); }
+  .ui :global(.hv-bar.is-on .mlabel), .ui :global(.hv-bar:hover .mlabel) { fill: var(--ink-900); font-weight: 600; }
+  .ui :global(.hv-tip) { transition: transform 0.25s cubic-bezier(.2,.7,.2,1); pointer-events: none; }
+
+  /* Table rows */
+  .ui :global(.hv-row .rowbg) { opacity: 0; }
+  .ui :global(.hv-row:hover .rowbg) { opacity: 1; }
+  .ui :global(.hv-row:hover .name) { fill: var(--cobalt-500); }
+  .ui :global(.hv-row:hover .progress) { fill: var(--cobalt-500); }
+
+  /* Menu, buttons, icons, search, link */
+  .ui :global(.hv-nav:not(.is-active):hover .navbg) { fill: var(--paper-100); }
+  .ui :global(.hv-nav:not(.is-active):hover .navlabel) { fill: var(--cobalt-500); }
+  .ui :global(.hv-nav:not(.is-active):hover .navicon) { stroke: var(--cobalt-500); }
+  .ui :global(.hv-btn.is-primary:hover .btnbg) { fill: var(--cobalt-600, #1F35E0); }
+  .ui :global(.hv-btn.is-ghost:hover .btnbg) { fill: var(--paper-100); stroke: var(--ink-900); }
+  .ui :global(.hv-btn:hover) { transform: translateY(-1px); }
+  .ui :global(.hv-icon:hover .iconbg) { stroke: var(--cobalt-500); }
+  .ui :global(.hv-search:hover .field) { stroke: var(--cobalt-500); fill: var(--white); }
+  .ui :global(.hv-link:hover) { opacity: 0.7; }
+
   @media (max-width: 640px) {
     .stage { width: 200%; margin-left: -50%; }
     .hv { overflow: hidden; padding-bottom: 8px; }
     .labels { --pos: calc(var(--seam) * 2 - 50%); }
     .knob { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ui :global(.hv-i), .ui :global(.hv-i *), .ui :global(.hv-tip) { transition: none; }
+    .ui :global(.hv-kpi:hover), .ui :global(.hv-btn:hover) { transform: none; }
   }
 </style>
