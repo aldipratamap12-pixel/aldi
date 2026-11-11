@@ -417,7 +417,7 @@ export const projects = [
     slug: 'simaksiku',
     num: '07',
     // Own bootcamp project (Hacktiv8), so no client permission is needed. Kept dev-only ('unchecked')
-    // until Aldi confirms the text in brand/portfolio-teks/07-simaksiku.md (solo or team, Maze results, reflection).
+    // until Aldi confirms the text in brand/portfolio-teks/07-simaksiku.md (Maze results, reflection). Solo project, confirmed 2026-11-11.
     permission: 'unchecked',
     name: 'SimaksiKu',
     title: 'SimaksiKu.',
@@ -447,7 +447,7 @@ export const projects = [
       ['Group bookings', 'One person registers the whole group, so the form has to handle several members.'],
       ['Limited quota', 'Each trail has a quota, so the date and the trail have to be chosen early.'],
     ],
-    roleHead: 'This was my bootcamp final project.',
+    roleHead: 'I did this final project on my own, from research to the prototype.',
     role: [
       ['Research', 'I mapped the registration journey and its pain points.'],
       ['Ideation', 'I used Crazy 8 and paper sketches to explore the main screens.'],
