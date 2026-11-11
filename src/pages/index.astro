@@ -10,14 +10,8 @@ import { Image } from 'astro:assets';
 import portrait from '../assets/about/aldi.jpg';
 import Icon from '../components/Icon.astro';
 import { site } from '../data/site.js';
-import { featured, otherProjects, showLink, displayNum } from '../data/projects.js';
+import { featured, otherProjects, visibleProjects, showLink, displayNum } from '../data/projects.js';
 
-// Facts: from cv.md (300+ = FastTrack 100+ pages + MineVISPERA ~100 + IoT 100+; 6 projects listed in cv.md).
-const facts = [
-  ['300+', 'screens and pages designed', 'Across HRIS, CRM, IoT, legal-tech and mining projects.'],
-  ['6', 'client projects since 2025', 'Via software houses, an internship, and my own studio.'],
-  ['14 days', 'for 100+ mobile screens', 'Super App IoT: 3 modules, from wireframe to handoff.'],
-];
 const pillars = [
   ['Sort out the structure.', 'Before I design a screen, I map who uses it, what they need to get done, and where each piece of information goes.', 'IoT app: devices from 5 brands, organized as Home → Room → Device instead of by brand.'],
   ['Design for scanning.', 'Internal tools are used for hours every day. I aim for clear hierarchy and clear status, not decoration.', 'MineVISPERA: dense tables and dashboards redesigned without changing the business logic.'],
@@ -51,15 +45,20 @@ const right = otherProjects.filter((_, i) => i % 2 === 1);
     <div class="visual" data-speed="0.92"><HeroVisual /></div>
   </section>
 
-  <!-- FACTS -->
-  <section class="facts wrap" aria-label="In numbers">
-    {facts.map(([n, l, s]) => (
-      <div class="fact rule-top" data-reveal>
-        <p class="t-h1" data-count>{n}</p>
-        <p class="t-body-m t-strong">{l}</p>
-        <p class="t-body-s c-secondary">{s}</p>
-      </div>
-    ))}
+  <!-- FIELDS: one link per visible case study, so the live site never names a hidden project -->
+  <section class="fields wrap" aria-labelledby="fields-title">
+    <p id="fields-title" class="t-label-m c-secondary fields-label" data-reveal>Fields I've designed for</p>
+    <ul class="fields-list">
+      {visibleProjects.map((p) => (
+        <li data-reveal>
+          <a class="field" href={`/work/${p.slug}`} aria-label={`${p.domain}: ${p.name} case study`}>
+            <span class="t-label-s c-secondary f-num">{displayNum(p)}</span>
+            <span class="f-name">{p.domain}</span>
+            <span class="f-project t-body-s">{p.name}<Icon name="arrow-up-right" size={16} /></span>
+          </a>
+        </li>
+      ))}
+    </ul>
   </section>
 
   <!-- FEATURED -->
@@ -166,9 +165,20 @@ const right = otherProjects.filter((_, i) => i % 2 === 1);
   .ctas { display: flex; gap: 12px; flex-wrap: wrap; }
   .visual { margin-top: 56px; }
 
-  /* facts */
-  .facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--col-gap); padding-bottom: var(--section); }
-  .fact { display: grid; gap: 12px; padding-top: 24px; align-content: start; }
+  /* fields */
+  .fields { display: grid; grid-template-columns: 3fr 9fr; gap: var(--col-gap); align-items: start; padding-top: 32px; padding-bottom: var(--section); border-top: 1px solid var(--color-border-default); margin-top: 72px; }
+  .fields-label { padding-top: 14px; }
+  .fields-list { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 4px 0; }
+  .fields-list li { display: flex; }
+  .field { position: relative; display: grid; grid-template-columns: auto auto; column-gap: 10px; align-items: start; padding: 4px 24px 26px 0; color: var(--color-text-primary); text-decoration: none; }
+  .f-num { padding-top: 10px; transition: color 0.2s ease; }
+  .f-name { font-family: var(--font-sans); font-weight: 700; font-size: clamp(26px, 3vw, 44px); line-height: 1.05; letter-spacing: -0.02em; text-transform: uppercase; transition: color 0.2s ease; }
+  .fields-list li:not(:last-child) .f-name::after { content: '/'; margin-left: 24px; color: var(--color-border-default); font-weight: 400; }
+  .f-project { grid-column: 2; height: 0; margin-top: 6px; overflow: visible; white-space: nowrap; display: inline-flex; align-items: center; gap: 4px; color: var(--color-text-accent); opacity: 0; transform: translateY(-6px); transition: opacity 0.2s ease, transform 0.25s cubic-bezier(.2,.7,.2,1); }
+  .field:hover .f-name, .field:focus-visible .f-name { color: var(--color-text-accent); }
+  .field:hover .f-num, .field:focus-visible .f-num { color: var(--color-text-accent); }
+  .field:hover .f-project, .field:focus-visible .f-project { opacity: 1; transform: none; }
+  .fields-list:hover .field:not(:hover) .f-name { color: var(--ink-300, #B5B2AA); }
 
   /* featured */
   .f-head { display: flex; flex-wrap: wrap; gap: 32px 80px; justify-content: space-between; align-items: flex-end; }
@@ -226,9 +236,14 @@ const right = otherProjects.filter((_, i) => i % 2 === 1);
     .ctas { width: 100%; flex-direction: column; }
     .ctas :global(.btn) { width: 100%; }
     .visual { margin-top: 24px; }
-    .facts { grid-template-columns: 1fr; gap: 0; }
-    .fact { grid-template-columns: 110px 1fr; gap: 4px 16px; padding-block: 16px; align-items: baseline; }
-    .fact .t-h1 { font-size: 30px; grid-row: span 2; }
+    .fields { grid-template-columns: 1fr; gap: 8px; margin-top: 40px; }
+    .fields-list { display: grid; }
+    .field { grid-template-columns: 32px 1fr auto; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--color-border-default); width: 100%; }
+    .fields-list li:not(:last-child) .f-name::after { content: none; }
+    .f-num { padding-top: 0; }
+    .f-name { font-size: 22px; }
+    .f-project { grid-column: 3; height: auto; opacity: 1; transform: none; font-size: 0; gap: 0; }
+    .f-project :global(svg) { width: 18px; height: 18px; }
     .f-meta div { grid-template-columns: 80px 1fr; }
     .tiles { grid-template-columns: repeat(4, 260px); overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 8px;
       margin-inline: calc(var(--gutter) * -1); padding-inline: var(--gutter); scrollbar-width: none; }
