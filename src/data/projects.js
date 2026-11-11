@@ -234,6 +234,9 @@ export const projects = [
     meta: [['Client', 'PT Harmoni Mitra Tekno, for Bimaselindo'], ['Role', 'UI/UX Designer (freelance)'], ['Time', '14 days, May – Jun 2025'], ['Platform', 'Mobile app']],
     links: [{ label: 'View in Figma', href: 'https://www.figma.com/proto/qmsNWjazRAFS2QVHaqM0Ke/Bimaselindo-Homes?node-id=413-14766&starting-point-node-id=413%3A14766', kind: 'Prototype', confirmed: false }],
     cover: { kind: 'mobile', note: '3 mobile screens (dashboard, device control, shop)' },
+    // Visuals from the Bimasakti Homes Figma copy (page "Portfolio Visuals"). Every phone shows a real screen
+    // from the project file, rendered as an image. The wireframes are the project's own low-fi wireframes.
+    images: { cover: 'iot/cover.jpg', card: 'iot/card.jpg' },
     tiles: [
       ['14 days.', 'I designed 100+ screens across 3 modules, starting from wireframes.'],
       ['Home, not brand.', 'I organized devices from 7 brands as Home → Room → Device.'],
@@ -247,7 +250,7 @@ export const projects = [
     problemHead: 'Three product areas, one small screen.',
     problem: [
       ['7 device brands', 'BARDI, Evomab, ARBIT, Tuya, DMSS, Airbot and Solarman each have their own features and terms.'],
-      ['Different controls', 'A lamp, an air purifier and a CCTV camera need very different controls.'],
+      ['Different controls', 'A lamp, an air conditioner and a CCTV camera need very different controls.'],
       ['Shopping', 'It had to feel familiar.'],
       ['Home services', 'They had to be easy to request from a phone.'],
       ['One journey', 'Buying, installing, connecting and maintaining a device should feel connected.'],
@@ -268,16 +271,21 @@ export const projects = [
       ['One pattern, many devices.', "I designed one control pattern that every device type follows, with room for each device's own functions."],
       ['Check with the client.', 'I ran feedback sessions with the Bimaselindo team to check the feature logic and refine the flows before handoff.'],
     ],
-    processImage: { alt: 'Low-fidelity wireframes', caption: 'The first wireframes that set the app structure.' },
+    processImages: [
+      { src: 'iot/wireframes.jpg', alt: 'Six low-fidelity wireframes: dashboard, rooms, living room, air conditioner, smart light and CCTV', caption: 'Low-fi wireframes from the project file: the dashboard, rooms and device controls.' },
+    ],
     solutionHead: 'Control, shop and services in one app.',
     solution: [
-      { t: 'Home dashboard.', b: 'An overview of rooms, connected devices and their status, with quick controls, scenes and notifications.',
-        img: { alt: 'Home dashboard', caption: 'The home dashboard.' } },
-      { t: 'Device controls.', list: [['Smart lighting', 'Power, brightness, color temperature and color.'], ['Air purifier', 'Power, fan speed, mode and air quality.'], ['CCTV', 'Live view, camera controls, recording and alerts.']],
-        img: { alt: 'Three device control screens', caption: 'One control pattern for three kinds of devices.' } },
-      { t: 'Scenes.', b: 'Routines like "Good Morning", "Leaving Home" and "Night Mode" change several devices in one action.' },
-      { t: 'Shop and home services.', b: 'Shopping uses familiar mobile patterns: categories, product details, cart and checkout. Booking a service takes four steps: select a service, describe what you need, pick a schedule, confirm.',
-        img: { alt: 'Home service booking flow', caption: 'Booking a home service in four steps.' } },
+      { t: 'Home dashboard.', b: 'Rooms, connected devices and their state on one screen, with a power toggle on every device card. Notifications show what changed, and ask for approval when someone wants to view a camera.',
+        imgs: [{ src: 'iot/dashboard.jpg', alt: 'Home dashboard, all rooms, the living room and notifications', caption: 'Home → Room → Device: the dashboard, the room list, one room and its notifications.' }] },
+      { t: 'Device controls.', list: [['Air conditioner', 'Temperature, cool, auto and dry modes, fan speed and a schedule.'], ['Smart lamp', 'Power, color, white or warm light, brightness and a schedule.'], ['Robot vacuum', 'Start cleaning, map, charger, cleaning modes and a schedule.'], ['Garage door', 'Open or close, with a schedule.'], ['CCTV', 'Live view, screenshot, speech, recording, playback and camera direction.']],
+        imgs: [{ src: 'iot/devices.jpg', alt: 'Control screens for an air conditioner, a smart lamp, a robot vacuum, a garage door and a CCTV camera', caption: 'Five device types, one layout: the device and its state on top, the controls below.' }] },
+      { t: 'Automation and energy.', b: 'Schedules, group control and location rules like "When you arrive" or "If you leave" change several devices in one action. An energy screen shows the use for today and per device.',
+        imgs: [{ src: 'iot/automation.jpg', alt: 'Automation list, a location rule, a schedule, energy usage and app preferences', caption: 'Automations, a location rule, a schedule, energy usage and app preferences.' }] },
+      { t: 'Shop.', b: 'Categories, product details, cart and checkout, using familiar mobile shopping patterns.',
+        imgs: [{ src: 'iot/marketplace.jpg', alt: 'Marketplace home, product detail, cart and checkout', caption: 'Browse, product detail, cart and checkout.' }] },
+      { t: 'Home services.', b: 'Booking a service takes five steps: pick a service, choose a package, check the summary, pay, and track the order.',
+        imgs: [{ src: 'iot/services.jpg', alt: 'Home services booking flow in five screens', caption: 'Booking a home service, from choosing a service to tracking the order.' }] },
       { t: 'Connected journey.', b: 'Discover → Buy → Install → Connect → Control → Maintain, all in the same app.' },
       { t: 'Built for one hand.', b: 'Bottom navigation, bottom sheets, large touch targets and clear device states.' },
     ],
