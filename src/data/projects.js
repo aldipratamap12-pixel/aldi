@@ -152,7 +152,7 @@ export const projects = [
     ],
     // Before: Aldi's screenshots of the old screens (zips 3 and 4), names, badge numbers and the face blurred.
     processImages: [
-      { src: 'minevispera/before-after.jpg', alt: 'Before and after: the Operation Scorecard dashboard and the Mine Mentor training list, old layout next to the redesign', caption: 'The same data before and after the redesign: the scorecard dashboard and the training list. Names and photos are blurred.' },
+      { src: 'minevispera/before-after.jpg', alt: 'Before and after: the Operation Scorecard dashboard and the Mine Mentor training list, old layout next to the redesign', caption: 'The old screens next to the redesign: the scorecard dashboard and the training list. Names and photos are blurred.' },
     ],
     solutionHead: 'Clearer hierarchy, three modules, one system.',
     solution: [
