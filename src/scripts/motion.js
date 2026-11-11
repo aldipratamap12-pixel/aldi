@@ -75,7 +75,7 @@ export function initMotion() {
     gsap.from(hv.querySelectorAll('.wire .note'), { opacity: 0, duration: 0.5, stagger: 0.03, delay: 1.2 });
     gsap.fromTo(hv, { '--seam': '78%' }, {
       '--seam': '12%', ease: 'none',
-      scrollTrigger: { trigger: hv, start: 'top 75%', end: 'bottom 30%', scrub: 0.6 },
+      scrollTrigger: { trigger: hv, start: 'top 75%', end: 'bottom 30%', scrub: 1.2 },
     });
   }
 
