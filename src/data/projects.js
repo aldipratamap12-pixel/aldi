@@ -417,7 +417,7 @@ export const projects = [
     slug: 'simaksiku',
     num: '07',
     // Own bootcamp project (Hacktiv8), so no client permission is needed. Kept dev-only ('unchecked')
-    // until Aldi confirms the text in brand/portfolio-teks/07-simaksiku.md (Maze results, reflection). Solo project, confirmed 2026-11-11.
+    // until Aldi confirms the text in brand/portfolio-teks/07-simaksiku.md (reflection sentence). Solo project; Maze results no longer available, so no test numbers. Both confirmed 2026-11-11.
     permission: 'unchecked',
     name: 'SimaksiKu',
     title: 'SimaksiKu.',
