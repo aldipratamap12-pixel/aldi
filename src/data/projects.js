@@ -416,8 +416,9 @@ export const projects = [
   {
     slug: 'simaksiku',
     num: '07',
-    // Own bootcamp project (Hacktiv8), so no client permission is needed. Kept dev-only ('unchecked')
-    // until Aldi confirms the text in brand/portfolio-teks/07-simaksiku.md (reflection sentence). Solo project; Maze results no longer available, so no test numbers. Both confirmed 2026-11-11.
+    // Own bootcamp project (Hacktiv8), solo (confirmed 2026-11-11), so no client permission is needed.
+    // Facts: the Figma file, cv.md and Aldi's final presentation (Presentation Final Project.pdf: background,
+    // goals, Maze usability test scores, insights, conclusion, next steps). Dev-only until Aldi reviews this version.
     permission: 'unchecked',
     name: 'SimaksiKu',
     title: 'SimaksiKu.',
@@ -434,18 +435,20 @@ export const projects = [
       ['Journey first.', 'I mapped the registration journey to find where hikers get stuck.'],
       ['From sketch to prototype.', 'I went from Crazy 8 and paper sketches to wireframes and a high-fidelity prototype.'],
       ['Five features, one app.', 'Explore parks, book a SIMAKSI, plan a trip, track a climb and report problems.'],
-      ['Tested with Maze.', 'I ran usability testing on the prototype with Maze.'],
+      ['Tested with Maze.', 'I tested 4 scenarios with hikers at 3 experience levels. 11 of 12 scores were 3 out of 3.'],
     ],
     context: [
       'SimaksiKu is a mobile app concept for registering a climb and learning about the national parks in Indonesia.',
-      'To climb a mountain in a national park, hikers need a SIMAKSI, an entry permit for a conservation area. This was my final project for the Hacktiv8 UI/UX bootcamp. The app covers the whole trip: exploring a park, booking the permit, planning gear and food, tracking the climb, and reporting problems on the trail.',
+      'Indonesia has 56 national parks, and many of them are popular hiking spots. To climb there, hikers need a SIMAKSI, an entry permit for a conservation area. This was my final project for the Hacktiv8 UI/UX bootcamp.',
+      'I set three goals: make the SIMAKSI registration easier with one digital system, teach hikers about conservation, and reduce the impact of hiking with education and a way to report trash or damage.',
     ],
-    problemHead: 'Registering for a climb takes more than one form.',
+    problemHead: 'Registration is scattered, and the trail pays the price.',
     problem: [
+      ['Scattered registration', 'Hiking registration is not managed in one place.'],
+      ['Hard-to-find information', 'Up-to-date information for hikers is hard to get.'],
+      ['Damage on the trail', 'Hiking activity puts the environment at risk.'],
       ['Unclear documents', 'Hikers need to know which documents to prepare, like an ID card and a health certificate.'],
       ['No draft', 'The registration could not be saved and finished later.'],
-      ['Group bookings', 'One person registers the whole group, so the form has to handle several members.'],
-      ['Limited quota', 'Each trail has a quota, so the date and the trail have to be chosen early.'],
     ],
     roleHead: 'I did this final project on my own, from research to the prototype.',
     role: [
@@ -461,7 +464,7 @@ export const projects = [
       ['Sketch fast, then pick.', 'I used Crazy 8 to sketch ideas quickly, then drew the main screens on paper: home, explore, park detail, trip planning, live tracking and the environment report.'],
       ['Plan the content and the flows.', 'A UI mindmap listed what each screen needs. The user flows covered logging in and booking a SIMAKSI, including the checks for a valid account and an available quota.'],
       ['Wireframes, then the UI.', 'I built low-fi wireframes in Whimsical, then set up the colors, type, spacing and components in Figma before the high-fidelity screens.'],
-      ['Test with users.', 'I ran usability testing on the prototype with Maze.'],
+      ['Test with users.', 'I tested 4 scenarios in Maze with hikers at three experience levels: extreme, semi-extreme and non-extreme. Each task was scored from 1 (could not finish it) to 3 (finished quickly, with no trouble).'],
     ],
     processImages: [
       { src: 'simaksiku/journey.jpg', alt: 'User journey map for hiking registration, with user actions, pain points and possible solutions', caption: 'The user journey map: two pain points, documents and saving a draft.' },
@@ -487,9 +490,15 @@ export const projects = [
       { t: 'A design system.', b: 'Colors, type, spacing, shadows and components, set up in Figma before the final screens.',
         imgs: [{ src: 'simaksiku/design-system.jpg', alt: 'Design system components: buttons, inputs, cards, tabs, navigation and dialogs', caption: 'The components behind the screens.' }] },
     ],
-    stats: [['7', 'mountains with full detail pages'], ['5', 'features: explore, booking, trip planning, tracking, reports'], ['4', 'screen states: empty, loading, error, success']],
-    resultList: [['Prototype', 'A high-fidelity mobile prototype in Figma.'], ['Process files', 'Journey map, Crazy 8, sketches, mindmap, user flows and wireframes.'], ['Testing', 'Usability testing with Maze.']],
-    quote: ['[PERLU DATA] What I took from it.', 'Write one or two sentences in your own words about what this project taught you.'],
+    stats: [['4', 'scenarios tested in Maze'], ['3', 'hiker levels: extreme, semi-extreme, non-extreme'], ['11', 'of 12 scores were 3 out of 3']],
+    resultList: [
+      ['Registration', 'All three hiker levels finished it with no trouble. Hikers found it easy to understand.'],
+      ['Trip planning', 'Experienced hikers valued it most. The non-extreme hiker could not finish this task.'],
+      ['Live tracking', 'Positive for every level, especially on new or unfamiliar trails.'],
+      ['Environment report', 'Seen as useful, but the visuals and interaction need work.'],
+      ['Next version', 'Document upload, a registration draft, clearer document info, a guide for new hikers, a cost estimate, a weight and trash calculator, a compass, and reports with coordinates, a date and a privacy option.'],
+    ],
+    quote: ['Experienced hikers found it helpful. Beginners needed more guidance.', 'The app was easy to use, but the next version needs more complete information, a cost estimate, and more detailed environment reports.'],
   },
 ];
 
