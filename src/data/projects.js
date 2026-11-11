@@ -332,7 +332,7 @@ export const projects = [
     subtitle: 'From quotation to order, step by step.',
     summary: 'During a 4-month internship, I designed the UI for the CRM and quotation-to-order modules of two enterprise apps.',
     card: { summary: 'UI for the CRM and quotation-to-order modules of two enterprise apps, during a 4-month internship.', meta: 'Enterprise web · 2025 · UI/UX Designer Intern', tags: ['CRM', 'User flows'] },
-    meta: [['Company', 'PT Ragdalion Revolusi Industri'], ['Role', 'UI/UX Designer (intern)'], ['Time', '4 months, Jul – Oct 2025'], ['Platform', 'Web and mobile']],
+    meta: [['Company', 'PT Ragdalion Revolusi Industri'], ['Role', 'UI/UX Designer (intern)'], ['Time', '4 months, Jul – Oct 2025'], ['Platform', 'Web']],
     links: [],
     cover: { kind: 'web', note: 'the Overview dashboard on a laptop and the Leads Company dashboard on a tablet' },
     // Visuals: Aldi's own mockups of the Overview and Leads Company dashboards, plus the Master Data Customer screens
