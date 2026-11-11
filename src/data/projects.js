@@ -324,7 +324,7 @@ export const projects = [
   {
     slug: 'lppom-crm-qom',
     num: '05',
-    permission: 'unchecked',
+    permission: 'granted', // set live by Aldi on 2026-11-11
     name: 'LPPOM CRM & QOM',
     introLabel: 'CRM modules',
     domain: 'Certification CRM',
