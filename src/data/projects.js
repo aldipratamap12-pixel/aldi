@@ -371,12 +371,13 @@ export const projects = [
     ],
     // No process image: no flow diagram is available (the company Figma file is no longer accessible).
     processImages: [],
-    solutionHead: 'Dashboards for the sales team, clear forms for the data behind them.',
+    solutionHead: 'Dashboards for the sales team, clear forms for the data, and clear stages for quotations.',
     solution: [
       { t: 'Dashboards for leads and halal partners.', b: 'The Overview shows total leads split into new and existing clients and cold, warm and hot leads, with leads performance per month, leads by source, and the top halal partners. Leads Company follows each lead through the pipeline, from raw leads to closed won or lost, with SLA status per stage.',
         imgs: [{ src: 'lppom/dashboards.jpg', alt: 'The LPPOM Overview dashboard and the Leads Company dashboard', caption: 'The Overview and Leads Company dashboards.' }] },
       { t: 'Customer data, from list to detail.', b: 'Master data for customers follows one pattern: a list with search and actions, a detail page with outlets, and create and edit forms. Confirm and success pop-ups close every change.',
         imgs: [{ src: 'lppom/customer.jpg', alt: 'Customer list, customer detail, create and edit forms, and confirm and success pop-ups', caption: 'Customer list, detail, create and edit, with confirm and success pop-ups.' }] },
+      { t: 'QOM: a clear path from quotation to order.', b: 'Each quotation shows its current stage, the important information for that stage, and the actions available next. The QOM design files are no longer available, so this module has no screens here.' },
       { t: 'Readable data.', b: 'Tables, forms, status indicators and actions follow one visual hierarchy, so users can see what needs attention.' },
       { t: 'Shared patterns.', b: 'Navigation, data presentation, forms, actions and workflow states use the same patterns in both modules, while each module keeps its own process.' },
     ],
