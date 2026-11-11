@@ -148,16 +148,17 @@ export const projects = [
       ['Design the platform as one system.', 'I set up shared patterns first, then applied them across the three modules.'],
       ['Prototype the tricky parts.', 'Dashboards, card and table views, enrollment flows and hierarchical data were prototyped in Figma, so the client could review how they behave, not just how they look.'],
     ],
-    // No process image: the old screens only exist as small exports with real names in them,
-    // so there is no before/after until a clean, high-resolution "before" screen is available.
-    processImages: [],
+    // Before: Aldi's screenshots of the old screens (zips 3 and 4), names, badge numbers and the face blurred.
+    processImages: [
+      { src: 'minevispera/before-after.jpg', alt: 'Before and after: the Operation Scorecard dashboard and the Mine Mentor training list, old layout next to the redesign', caption: 'The same data before and after the redesign: the scorecard dashboard and the training list. Names and photos are blurred.' },
+    ],
     solutionHead: 'Clearer hierarchy, three modules, one system.',
     solution: [
       { t: 'Clearer hierarchy on every screen.', b: 'Primary information comes first, supporting details second, and actions are easy to find. Dashboards, tables, cards and detail views became easier to scan.' },
       { t: 'Operation Scorecard.', b: 'Dashboard, operator ranking, summary view, and best and worst performance. Performance data is grouped so it is easier to compare and read.',
         imgs: [{ src: 'minevispera/scorecard.jpg', alt: 'Operation Scorecard: dashboard, operator ranking, summary view, and best and worst performance', caption: 'Operation Scorecard: dashboard, ranking, summary view, and best and worst performance.' }] },
-      { t: 'Mine Mentor.', b: 'Training information and user progress in a clearer structure: a training dashboard, my training, training details and the exam.',
-        imgs: [{ src: 'minevispera/mine-mentor.jpg', alt: 'Mine Mentor: training dashboard, my training list, training detail and an exam in progress', caption: 'Mine Mentor: the training dashboard, my training, a training detail and an exam in progress.' }] },
+      { t: 'Mine Mentor.', b: 'Training information and user progress in a clearer structure: training history, my training, training details and the exam.',
+        imgs: [{ src: 'minevispera/mine-mentor.jpg', alt: 'Mine Mentor: training history, my training list, training detail and an exam in progress', caption: 'Mine Mentor: training history, my training, a training detail and an exam in progress.' }] },
       { t: 'Sign in, home and admin.', b: 'People sign in with a badge number or an NT account and confirm with a one-time code. Home shows the modules they can open. Admin pages manage roles, menus and settings.',
         imgs: [{ src: 'minevispera/admin.jpg', alt: 'Sign in page, home with modules, security roles and config settings', caption: 'Sign in, home and modules, and two admin pages: roles and settings.' }] },
       { t: 'Tables that work on any screen.', b: 'On desktop, data sits in tables. On mobile, the same rows become cards. Related data is grouped, states are easier to tell apart, and filters are easier to use.',
