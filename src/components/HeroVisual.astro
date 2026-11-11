@@ -96,7 +96,7 @@ kpis.forEach(([label, value, delta, spark], i) => {
 
 // Bar chart card
 const cx = 248, cy = 276, cw = 560, ch = 340;
-rect(cx, cy, cw, ch, 16, 'surface', { border: true, container: true, tag: 'Bar chart' });
+rect(cx, cy, cw, ch, 16, 'surface', { border: true, container: true, tag: 'Bar chart', cls: 'hv-perch' });
 text(cx + 24, cy + 34, 'Performance', 16, 'ink', { weight: 600 });
 circle(cx + 360, cy + 30, 4, 'accent'); text(cx + 370, cy + 34, 'Score', 12, 'muted');
 circle(cx + 430, cy + 30, 4, 'accentSubtle'); text(cx + 440, cy + 34, 'Target', 12, 'muted');
@@ -132,7 +132,7 @@ grp('tip', 'hv-tip', () => {
 
 // Table card
 const tbx = 824, tby = 276, tbw = 432, tbh = 340;
-rect(tbx, tby, tbw, tbh, 16, 'surface', { border: true, container: true, tag: 'Table / row' });
+rect(tbx, tby, tbw, tbh, 16, 'surface', { border: true, container: true, tag: 'Table / row', cls: 'hv-perch' });
 text(tbx + 24, tby + 34, 'Top operators', 16, 'ink', { weight: 600 });
 grp('viewall', 'hv-i hv-link', () => text(tbx + tbw - 24, tby + 34, 'View all →', 12, 'accent', { weight: 600, anchor: 'end' }));
 rect(tbx + 16, tby + 52, tbw - 32, 28, 8, 'page');

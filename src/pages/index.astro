@@ -48,11 +48,11 @@ const soonRight = left.length <= right.length ? [] : comingSoon;
         <Button href={`mailto:${site.email}`} variant="secondary" icon={false}>Contact me</Button>
       </div>
     </div>
-    <div class="visual" data-speed="0.92" data-perch data-perch-x="0.9"><HeroVisual /></div>
+    <div class="visual" data-speed="0.92" data-perch><HeroVisual /></div>
   </section>
 
   <!-- FIELDS: one link per visible case study, so the live site never names a hidden project -->
-  <section class="fields wrap" aria-labelledby="fields-title" data-perch data-perch-x="0.92">
+  <section class="fields wrap" aria-labelledby="fields-title" data-perch>
     <p id="fields-title" class="t-label-m c-secondary fields-label" data-reveal>Fields I've designed for</p>
     <ul class="fields-list">
       {visibleProjects.map((p) => (
@@ -86,13 +86,13 @@ const soonRight = left.length <= right.length ? [] : comingSoon;
             <div><dt class="t-label-s c-secondary">Platform</dt><dd class="t-body-s">Web, desktop and mobile</dd></div>
           </dl>
         </div>
-        <a class="f-media" href={`/work/${featured.slug}`} aria-label="FASTTRACK Legal: read the case study" data-speed="0.94" data-perch data-perch-x="0.88">
+        <a class="f-media" href={`/work/${featured.slug}`} aria-label="FASTTRACK Legal: read the case study" data-speed="0.94" data-perch-skip data-perch-areas="0.62 0.745 0.468; 0.075 0.585 0.1; 0.81 0.935 0.137">
           {featured.images?.cover
             ? <CaseImage src={featured.images.cover} alt={`FASTTRACK Legal: ${featured.cover.note}`} sizes="(max-width: 1440px) 92vw, 1280px" rounded={false} />
             : <Mockup slug={featured.slug} alt="FASTTRACK Legal website on a laptop and a phone" ratio="2 / 1" tone="dark" size="cover" />}
           <span class="f-arrow" aria-hidden="true"><Icon name="arrow-up-right" /></span>
         </a>
-        <ol class="tiles" tabindex="0" aria-label="FASTTRACK Legal in four points" data-perch data-perch-x="0.1">
+        <ol class="tiles" tabindex="0" aria-label="FASTTRACK Legal in four points">
           {featured.tiles.map(([t, b], i) => <ProofTile index={i + 1} title={t} body={b} tone="dark" />)}
         </ol>
         <div class="f-ctas" data-reveal>
@@ -133,7 +133,7 @@ const soonRight = left.length <= right.length ? [] : comingSoon;
     </h2>
     <ol class="pillars">
       {pillars.map(([t, b, proof], i) => (
-        <li class="pillar rule-top" data-reveal data-perch data-perch-x="0.8">
+        <li class="pillar rule-top" data-reveal data-perch>
           <span class="t-label-m c-accent">0{i + 1}</span>
           <h3 class="t-h3">{t}</h3>
           <p class="t-body-m c-secondary grow">{b}</p>
@@ -145,7 +145,7 @@ const soonRight = left.length <= right.length ? [] : comingSoon;
 
   <!-- ABOUT SHORT -->
   <section class="about-short wrap" aria-labelledby="about-title">
-    <div class="photo" data-speed="0.92" data-perch data-perch-x="0.78"><Image src={portrait} alt="Portrait of Aldi Pratama Putra" widths={[400, 709]} sizes="(max-width: 640px) 90vw, 400px" class="portrait" /></div>
+    <div class="photo" data-speed="0.92" data-perch><Image src={portrait} alt="Portrait of Aldi Pratama Putra" widths={[400, 709]} sizes="(max-width: 640px) 90vw, 400px" class="portrait" /></div>
     <div class="a-text">
       <p class="t-label-m c-accent" data-reveal>About</p>
       <h2 id="about-title" class="t-h1" data-reveal>Hi, I'm Aldi.</h2>

@@ -1,7 +1,7 @@
 ---
-// A small cursor character that stands on the top edge of page components and jumps
-// to the next one as you scroll: it runs to the corner, jumps, lands, then trots to its spot.
-// Mark a component with data-perch (optional data-perch-x="0.8" = where on its top edge it stands).
+// A small cursor character that stands on headings, text, images and tiles, and hops to whatever
+// is nearest the middle of the screen as you scroll. Going down it walks off a corner first.
+// Extra perches: data-perch. Areas to avoid: data-perch-skip.
 // Decoration only: aria-hidden, no pointer events. Desktop with a mouse only; off with reduced motion or ?nomotion.
 ---
 <div class="sb" aria-hidden="true" data-buddy hidden>
@@ -34,61 +34,101 @@
     const eyes = [...el.querySelectorAll<SVGGElement>('.sb-eye')];
     const pupils = [...el.querySelectorAll<SVGGElement>('.sb-pupil')];
     const legs = [...el.querySelectorAll<SVGGElement>('.sb-leg')];
-    const W = 48, H = 44, G = 2900; // size in px; gravity in px/s²
-    const EDGE = 8; // how close to a corner the feet go before take-off
+    const W = 48, H = 44, G = 3000; // size in px; gravity in px/s²
+    const INSET = 14;              // keep the feet this far inside an edge
 
-    const perches = [...document.querySelectorAll<HTMLElement>('[data-perch]')];
-    if (!perches.length) return;
-    const rest = (p: HTMLElement) => parseFloat(p.dataset.perchX ?? (p.closest('.col--offset') ? '0.18' : '0.82'));
-    const rect = (p: HTMLElement) => p.getBoundingClientRect();
-    // Feet position on a perch at a fraction f of its width, in viewport px. Read live every frame,
-    // so parallax and smooth scroll are followed.
-    const at = (p: HTMLElement, f: number) => { const r = rect(p); return { x: r.left + r.width * f - W / 2, y: r.top - H + 2 }; };
-    const toF = (p: HTMLElement, x: number) => { const r = rect(p); return (x + W / 2 - r.left) / r.width; };
-    const clampF = (p: HTMLElement, f: number, inset: number) => { const w = rect(p).width; return Math.min(Math.max(f, inset / w), 1 - inset / w); };
+    // Anything with a visible top edge can be stood on: headings, text, images, tiles, plus [data-perch].
+    const SEL = 'h1 .line-mask, h2 .line-mask, h2:not([data-split]), h3, p, img, dd, .f-name, .tiles > li, .hv-kpi .card, .hv-perch, [data-perch]';
+    const HV = '.hv-kpi .card, .hv-perch'; // the hero visual is skipped, except its cards
+    const SKIP = '[data-perch-skip], .hv, nav, footer, .visually-hidden, [data-buddy], .tags, .ctas';
+    const isBlock = (e: Element) => e.matches('img, li, rect, [data-perch]');
+    // Live geometry in viewport px. For text: the first line only, so it stands on the words, not the empty box.
+    function geo(e: P) {
+      if (!(e instanceof Element)) { const q = e.host.getBoundingClientRect(); return { l: q.left + q.width * e.a[0], r: q.left + q.width * e.a[1], t: q.top + q.height * e.a[2], w: q.width * (e.a[1] - e.a[0]) }; }
+      let r: DOMRect | undefined;
+      if (!isBlock(e)) { const rg = document.createRange(); rg.selectNodeContents(e); r = [...rg.getClientRects()].find((q) => q.width > 4); }
+      r = r ?? e.getBoundingClientRect();
+      return { l: r.left, r: r.right, t: r.top, w: r.width };
+    }
+    const shown = (p: P) => { const e = p instanceof Element ? p : p.host; const rv = e.closest('[data-reveal]'); return !rv || +getComputedStyle(rv).opacity > 0.6; };
 
-    type Run = { p: HTMLElement; f0: number; f1: number; start: number; dur: number };
-    type Jump = { from: HTMLElement; to: HTMLElement; ff: number; ft: number; a0: { x: number; y: number }; b0: { x: number; y: number }; t1: number; t2: number; v0: number; start: number; up: boolean };
-    let cur: HTMLElement | null = null, f = 0.5;               // where it stands now
-    let phase: 'idle' | 'run1' | 'pre' | 'air' | 'land' | 'run2' = 'idle';
-    let run: Run | null = null, jump: Jump | null = null, next: HTMLElement | null = null;
-    let t0 = 0, dir = 1, stride = 0, mx = -1, my = -1;
+    // A spot inside a picture: [left, right, top] as fractions of the image, for images whose top edge is empty space.
+    type P = Element | { host: Element; a: number[] };
+    let perches: P[] = [];
+    function collect() {
+      const all = [...document.querySelectorAll(SEL)].filter((e) => (!e.closest(SKIP) || e.matches(HV)) && (e.textContent?.trim() || isBlock(e)));
+      const g = all.map((e) => ({ e, ...geo(e) })).filter((q) => q.w > 40);
+      // Drop near-duplicates (same top edge over the same span): keep the wider one.
+      const areas = [...document.querySelectorAll<HTMLElement>('[data-perch-areas]')].flatMap((h) => h.dataset.perchAreas!.split(';').map((s) => ({ host: h.querySelector('img') ?? h, a: s.trim().split(/\s+/).map(Number) })));
+      perches = [...areas, ...g.filter((a) => !g.some((b) => b !== a && Math.abs(b.t - a.t) < 10 && b.l < a.r && a.l < b.r && (b.w > a.w || (b.w === a.w && g.indexOf(b) < g.indexOf(a))))).map((q) => q.e)];
+    }
+    collect();
+    setTimeout(collect, 1500);
+    addEventListener('resize', () => collect());
 
-    const band = () => ({ top: Math.max(120, innerHeight * 0.2), bottom: innerHeight * 0.86 });
-    const live = (p: HTMLElement) => { const r = rect(p), b = band(); return r.width > 0 && r.top > b.top + 24 && r.top < b.bottom - 24; };
-    function pick(): HTMLElement | null {
-      const list = perches.filter(live).sort((a, b) => rect(a).top - rect(b).top);
-      if (!cur) return list[0] ?? null;
-      const t = rect(cur).top, b = band();
-      if (t < b.top) return list.find((p) => rect(p).top > t) ?? null;               // scrolled down: the next one below
-      if (t > b.bottom) return [...list].reverse().find((p) => rect(p).top < t) ?? null; // scrolled up: the one above
+    const foot = (e: P, f: number) => { const g = geo(e); return { x: g.l + g.w * f, y: g.t + 2 }; };
+    const frac = (e: P, x: number) => { const g = geo(e); return (x - g.l) / g.w; };
+    const clampX = (g: { l: number; r: number }, x: number) => Math.min(Math.max(x, g.l + INSET), g.r - INSET);
+
+    let cur: P | null = null, f = 0.5, dir = 1;
+    let phase: 'idle' | 'run' | 'pre' | 'air' | 'land' = 'idle';
+    let run: { f0: number; f1: number; start: number; dur: number } | null = null;
+    let jump: { to: P; ff: number; ft: number; a0: { x: number; y: number }; b0: { x: number; y: number }; T: number; v0: number; up: boolean } | null = null;
+    let t0 = 0, lastPick = 0, mx = -1, my = -1;
+
+    // Stay near the middle of the screen: when the current spot drifts away while scrolling,
+    // hop to whatever is closest to that line. Short, frequent hops keep pace with the scroll.
+    function pick(): P | null {
+      const L = innerHeight * 0.5;
+      const near = perches.filter((e) => { const t = geo(e).t; return t > 110 && t < innerHeight - 60; });
+      let best: P | null = null, bd = Infinity;
+      for (const e of near) { const d = Math.abs(geo(e).t - L); if (d < bd && shown(e)) { bd = d; best = e; } }
+      if (!cur) return best;
+      const ct = geo(cur).t, cd = Math.abs(ct - L);
+      if (best && best !== cur && cd > 130 && bd < cd - 50) return best;
+      // About to be carried off the screen: take anything still visible rather than ride along.
+      if (ct < 100 || ct > innerHeight - 40) {
+        const vis = perches.filter((e) => e !== cur && shown(e) && (() => { const t = geo(e).t; return t > 70 && t < innerHeight - 20; })());
+        vis.sort((a, b) => Math.abs(geo(a).t - L) - Math.abs(geo(b).t - L));
+        return vis[0] ?? null;
+      }
       return null;
     }
-    const runFor = (p: HTMLElement, f0: number, f1: number, now: number): Run => {
-      const dist = Math.abs(f1 - f0) * rect(p).width;
-      return { p, f0, f1, start: now, dur: Math.min(Math.max(dist / 650, 0.16), 0.6) * 1000 };
-    };
 
-    // 1. Run to the corner of the current component that faces the next one.
-    function leave(to: HTMLElement, now: number) {
-      next = to;
-      const here = at(cur!, f), there = at(to, rest(to)), r = rect(cur!);
-      dir = there.x + W / 2 >= here.x + W / 2 - 40 ? 1 : -1;
-      const onScreen = r.top > -H && r.top < innerHeight + H;
-      const edge = dir > 0 ? 1 - EDGE / r.width : EDGE / r.width;
-      if (onScreen) { run = runFor(cur!, f, edge, now); phase = 'run1'; }
-      else { f = edge; takeOff(now); } // its component already left the screen: no time to run
-      look(1.5, 0);
+    function leave(to: P, now: number) {
+      const g = geo(cur!), tg = geo(to), x = g.l + g.w * f;
+      const onScreen = g.t > -H && g.t < innerHeight + H;
+      const down = tg.t > g.t;
+      let fromX = x, landX: number;
+      if (down && onScreen) {
+        // Going down: walk off the corner that is closest to where it will land.
+        const edges = [g.l + 4, g.r - 4];
+        const cost = (e: number) => Math.abs(clampX(tg, e) - e) + Math.abs(e - x) * 0.35;
+        fromX = cost(edges[0]) < cost(edges[1]) ? edges[0] : edges[1];
+        const out = fromX === edges[0] ? -1 : 1;
+        landX = clampX(tg, fromX + out * 30);
+      } else {
+        landX = clampX(tg, x + (Math.abs(clampX(tg, x) - x) < 1 ? dir * 24 : 0));
+      }
+      const ft = (landX - tg.l) / tg.w;
+      const prep = () => takeOff(to, ft, now);
+      if (Math.abs(fromX - x) > 3) {
+        dir = fromX > x ? 1 : -1;
+        run = { f0: f, f1: frac(cur!, fromX), start: now, dur: Math.min(Math.max(Math.abs(fromX - x) / 720, 0.14), 0.45) * 1000 };
+        phase = 'run'; pending = prep; look(1.5, 0);
+      } else prep();
       body.classList.remove('idle');
     }
-    // 2. Jump off the corner and land a little ahead, inside the next component.
-    function takeOff(now: number) {
-      const to = next!, a = at(cur!, f);
-      a.y = Math.min(Math.max(a.y, -H), innerHeight);
-      const ft = clampF(to, toF(to, a.x + dir * 56), 26);
-      const b = at(to, ft), up = b.y < a.y;
-      const apex = up ? b.y - 16 : a.y - 22, h1 = a.y - apex, h2 = b.y - apex;
-      jump = { from: cur!, to, ff: f, ft, a0: a, b0: b, t1: Math.sqrt((2 * h1) / G), t2: Math.sqrt((2 * h2) / G), v0: -Math.sqrt(2 * G * h1), start: now, up };
+    let pending: (() => void) | null = null;
+
+    function takeOff(to: P, ft: number, now: number) {
+      const a = foot(cur!, f), b = foot(to, ft);
+      a.y = Math.min(Math.max(a.y, -H), innerHeight + H);
+      const up = b.y < a.y;
+      if (Math.abs(b.x - a.x) > 2) dir = b.x > a.x ? 1 : -1;
+      const apex = up ? b.y - 16 : a.y - 18, h1 = a.y - apex, h2 = b.y - apex;
+      const T = Math.sqrt((2 * h1) / G) + Math.sqrt((2 * h2) / G);
+      jump = { to, ff: f, ft, a0: a, b0: b, T, v0: -Math.sqrt(2 * G * h1), up };
       phase = 'pre'; t0 = now;
       look(1.4, up ? -1.6 : 1.6);
     }
@@ -101,55 +141,47 @@
     addEventListener('pointermove', (e) => { mx = e.clientX; my = e.clientY; }, { passive: true });
     const legPose = (a: number, b: number) => { legs[0].style.transform = `rotate(${a}deg)`; legs[1].style.transform = `rotate(${b}deg)`; };
 
-    const PRE = 90, LAND = 300;
+    const PRE = 80, LAND = 260;
     function frame(now: number) {
       let x = 0, y = 0, sx = 1, sy = 1, r = 0, bob = 0;
-      if (!cur) { cur = pick(); if (cur) { f = rest(cur); el.hidden = false; body.classList.add('idle'); } }
-      if (cur && phase === 'idle') { const n = pick(); if (n && n !== cur) leave(n, now); }
+      if (!cur) { cur = pick(); if (cur) { f = 0.75; el.hidden = false; body.classList.add('idle'); } }
+      else if (phase === 'idle' && now - lastPick > 120) { lastPick = now; const n = pick(); if (n) leave(n, now); }
 
-      if (phase === 'run1' || phase === 'run2') {
+      if (phase === 'run') {
         const k = Math.min((now - run!.start) / run!.dur, 1);
-        const e = phase === 'run1' ? k * k * (2 - k) * 0.4 + k * 0.6 : 1 - Math.pow(1 - k, 2); // speed up into the jump, ease out at the end
-        f = run!.f0 + (run!.f1 - run!.f0) * e;
-        const p = at(run!.p, f); x = p.x; y = p.y;
-        stride = Math.abs(f - run!.f0) * rect(run!.p).width / 7;
-        const s = Math.sin(stride); legPose(30 * s, -30 * s); bob = -Math.abs(s) * 2.4; r = 5 * dir;
-        if (k >= 1) {
-          if (phase === 'run1') takeOff(now);
-          else { phase = 'idle'; run = null; legPose(0, 0); r = 0; bob = 0; body.classList.add('idle'); }
-        }
+        f = run!.f0 + (run!.f1 - run!.f0) * (k * (2 - k) * 0.3 + k * 0.7);
+        const p = foot(cur!, f); x = p.x; y = p.y;
+        const s = Math.sin((Math.abs(f - run!.f0) * geo(cur!).w) / 7);
+        legPose(30 * s, -30 * s); bob = -Math.abs(s) * 2.4; r = 5 * dir;
+        if (k >= 1) { run = null; legPose(0, 0); const go = pending; pending = null; go?.(); }
       }
       if (phase === 'pre') {
-        const k = Math.sin((Math.PI / 2) * Math.min((now - t0) / PRE, 1)), p = at(jump!.from, jump!.ff);
-        x = p.x; y = Math.min(Math.max(p.y, -H), innerHeight); sx = 1 + 0.1 * k; sy = 1 - 0.14 * k; legPose(-12 * k, 12 * k);
+        const k = Math.sin((Math.PI / 2) * Math.min((now - t0) / PRE, 1)), p = foot(cur!, jump!.ff);
+        x = p.x; y = Math.min(Math.max(p.y, -H), innerHeight + H); sx = 1 + 0.1 * k; sy = 1 - 0.14 * k; legPose(-12 * k, 12 * k);
         if (now - t0 >= PRE) { phase = 'air'; t0 = now; }
       } else if (phase === 'air') {
-        const j = jump!, t = (now - t0) / 1000, T = j.t1 + j.t2, u = Math.min(t / T, 1);
-        const a = at(j.from, j.ff), b = at(j.to, j.ft);
-        a.y = Math.min(Math.max(a.y, -H), innerHeight);
-        // Ballistic arc measured against the take-off line, laid over the live start and end points.
-        const tt = Math.min(t, T), phys = j.v0 * tt + 0.5 * G * tt * tt, line = (j.b0.y - j.a0.y) * u;
+        const j = jump!, t = Math.min((now - t0) / 1000, j.T), u = t / j.T;
+        const a = foot(cur!, j.ff), b = foot(j.to, j.ft);
+        a.y = Math.min(Math.max(a.y, -H), innerHeight + H);
+        // Ballistic arc measured against the take-off line, laid over the live start and end points,
+        // so it keeps landing on target while the page scrolls under it.
+        const phys = j.v0 * t + 0.5 * G * t * t, line = (j.b0.y - j.a0.y) * u;
         x = a.x + (b.x - a.x) * u; y = a.y + (b.y - a.y) * u + (phys - line);
-        const vy = j.v0 + G * tt, s = Math.min(0.14, Math.abs(vy) / 8000);
+        const vy = j.v0 + G * t, s = Math.min(0.14, Math.abs(vy) / 8000);
         sy = 1 + s; sx = 1 - s * 0.55; r = dir * Math.max(-9, Math.min(9, vy / 120)) * 0.5 * (j.up ? -1 : 1);
-        legPose(vy < 0 ? -22 : 14, vy < 0 ? 26 : -10); // tucked going up, reaching down to land
-        if (u >= 1) { phase = 'land'; t0 = now; cur = j.to; f = j.ft; blink(170); legPose(0, 0); }
+        legPose(vy < 0 ? -22 : 14, vy < 0 ? 26 : -10);
+        if (u >= 1) { phase = 'land'; t0 = now; cur = j.to; f = j.ft; jump = null; blink(170); legPose(0, 0); }
       } else if (phase === 'land') {
-        const k = Math.min((now - t0) / LAND, 1), d = Math.exp(-5 * k) * Math.cos(k * Math.PI * 3), p = at(cur!, f);
+        const k = Math.min((now - t0) / LAND, 1), d = Math.exp(-5 * k) * Math.cos(k * Math.PI * 3), p = foot(cur!, f);
         x = p.x; y = p.y; sy = 1 - 0.2 * d; sx = 1 + 0.14 * d;
-        if (k >= 1) {
-          // 3. Trot from the landing spot to its usual place on this component.
-          const goal = rest(cur!); jump = null;
-          if (Math.abs(goal - f) * rect(cur!).width > 6) { dir = goal > f ? 1 : -1; run = runFor(cur!, f, goal, now); phase = 'run2'; look(1.5, 0); }
-          else { phase = 'idle'; body.classList.add('idle'); }
-        }
+        if (k >= 1) { phase = 'idle'; body.classList.add('idle'); }
       } else if (phase === 'idle' && cur) {
-        const p = at(cur, f); x = p.x; y = p.y;
-        if (mx >= 0) { const dx = mx - (x + W / 2), dy = my - (y + 14), d = Math.hypot(dx, dy) || 1; look((dx / d) * 1.5 * dir, (dy / d) * 1.5); }
+        const p = foot(cur, f); x = p.x; y = p.y;
+        if (mx >= 0) { const dx = mx - x, dy = my - (y - 30), d = Math.hypot(dx, dy) || 1; look((dx / d) * 1.5 * dir, (dy / d) * 1.5); }
       }
 
       if (cur) {
-        el.style.transform = `translate3d(${x.toFixed(1)}px, ${(y + bob).toFixed(1)}px, 0)`;
+        el.style.transform = `translate3d(${(x - W / 2).toFixed(1)}px, ${(y - H + bob).toFixed(1)}px, 0)`;
         body.style.transform = `rotate(${r.toFixed(2)}deg) scale(${sx.toFixed(3)}, ${sy.toFixed(3)})`;
         face.style.transform = `scaleX(${dir})`;
       }

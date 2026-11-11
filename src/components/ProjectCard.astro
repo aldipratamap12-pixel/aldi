@@ -11,7 +11,7 @@ import { displayNum } from '../data/projects.js';
 interface Props { project: any; soon?: boolean; }
 const { project: p, soon = false } = Astro.props;
 ---
-<article class:list={["card", { "card--soon": soon }]} data-reveal data-perch>
+<article class:list={["card", { "card--soon": soon }]} data-reveal>
   {!soon && <a href={`/work/${p.slug}`} class="hit" aria-label={`${p.name}: read the case study`}></a>}
   <div class="media">
     <div class="zoom">
