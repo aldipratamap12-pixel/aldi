@@ -38,7 +38,8 @@
     const INSET = 14;              // keep the feet this far inside an edge
 
     // Anything with a visible top edge can be stood on: headings, text, images, tiles, plus [data-perch].
-    const SEL = 'h1 .line-mask, h2 .line-mask, h2:not([data-split]), h3, p, img, dd, .f-name, .tiles > li, .hv-kpi .card, .hv-perch, [data-perch]';
+    // Only the first line of a split heading: the lines below sit too close to stand between.
+    const SEL = 'h2 .line-mask:first-child, h2:not([data-split]), h3, p, img, dd, .f-name, .tiles > li, .hv-kpi .card, .hv-perch, [data-perch]';
     const HV = '.hv-kpi .card, .hv-perch'; // the hero visual is skipped, except its cards
     const SKIP = '[data-perch-skip], .hv, nav, footer, .visually-hidden, [data-buddy], .tags, .ctas';
     const isBlock = (e: Element) => e.matches('img, li, rect, .btn, [data-perch]');
@@ -77,6 +78,7 @@
     let run: { f0: number; f1: number; start: number; dur: number } | null = null;
     let jump: { to: P; ff: number; ft: number; a0: { x: number; y: number }; b0: { x: number; y: number }; T: number; v0: number; up: boolean } | null = null;
     let t0 = 0, lastPick = 0, mx = -1, my = -1;
+    const y0 = scrollY; // stay on the start button until the visitor scrolls
 
     // Stay near the middle of the screen: when the current spot drifts away while scrolling,
     // hop to whatever is closest to that line. Short, frequent hops keep pace with the scroll.
@@ -148,11 +150,13 @@
       let x = 0, y = 0, sx = 1, sy = 1, r = 0, bob = 0;
       if (!cur) {
         // Start on the Contact me button once it has faded in (if it is on screen), else the spot nearest the middle.
-        const st = START && shown(START) && geo(START).t > 0 && geo(START).t < innerHeight - 40 ? START : null;
-        if (st || !START || !geo(START).w || geo(START).t >= innerHeight - 40 || geo(START).t <= 0) cur = st ?? pick();
+        // Wait for it (hidden) while it is still fading in or below the fold; never start on the text.
+        if (!START) cur = pick();
+        else if (shown(START) && geo(START).t > 0 && geo(START).t < innerHeight - 50) cur = START;
+        else if (geo(START).t <= 0) cur = pick(); // page opened already scrolled past the hero
         if (cur) { f = cur === START ? 0.5 : 0.75; el.hidden = false; body.classList.add('idle'); }
       }
-      else if (phase === 'idle' && now - lastPick > 120) { lastPick = now; const n = pick(); if (n) leave(n, now); }
+      else if (phase === 'idle' && now - lastPick > 120 && !(cur === START && Math.abs(scrollY - y0) < 40)) { lastPick = now; const n = pick(); if (n) leave(n, now); }
 
       if (phase === 'run') {
         const k = Math.min((now - run!.start) / run!.dur, 1);
