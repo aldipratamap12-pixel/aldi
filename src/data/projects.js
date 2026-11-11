@@ -554,7 +554,7 @@ export const comingSoon = [
     name: 'MBA Order Management',
     images: { card: 'mba/card.jpg' },
     cover: { note: 'a blurred preview of the dashboard' },
-    card: { summary: 'An order management system for PT Misael Berkat Abadi: orders, documents and certificates, from the first quote to the final payment.', meta: 'Web app · 2026 · In progress', tags: ['Order management', 'Design system'] },
+    card: { summary: 'An order management system for PT Misael Berkat Abadi, a marine equipment supplier: orders, documents and certificates, from the first quote to the final payment.', meta: 'Web app · 2026 · In progress', tags: ['Order management', 'Design system'] },
   },
 ];
 
