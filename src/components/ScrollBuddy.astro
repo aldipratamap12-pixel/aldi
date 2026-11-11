@@ -1,6 +1,6 @@
 ---
-// A small cursor character that stands on headings, text, images and tiles, and hops to whatever
-// is nearest the middle of the screen as you scroll. Going down it walks off a corner first.
+// A small cursor character that hops down the page step by step, like stairs from right to left:
+// headings, text, images and cards, each step the closest one below the last. It follows the scroll.
 // Extra perches: data-perch. Areas to avoid: data-perch-skip.
 // Decoration only: aria-hidden, no pointer events. Desktop with a mouse only; off with reduced motion or ?nomotion.
 ---
@@ -65,76 +65,79 @@
       const areas = [...document.querySelectorAll<HTMLElement>('[data-perch-areas]')].flatMap((h) => h.dataset.perchAreas!.split(';').map((s) => ({ host: h.querySelector('img') ?? h, a: s.trim().split(/\s+/).map(Number) })));
       perches = [...(START ? [START] : []), ...areas, ...g.filter((a) => !g.some((b) => b !== a && Math.abs(b.t - a.t) < 10 && b.l < a.r && a.l < b.r && (b.w > a.w || (b.w === a.w && g.indexOf(b) < g.indexOf(a))))).map((q) => q.e)];
     }
-    collect();
-    setTimeout(collect, 1500);
-    addEventListener('resize', () => collect());
+    const refresh = () => { const keep = idx >= 0 ? path[idx]?.p : null; collect(); buildPath(); if (keep) { const i = path.findIndex((s) => s.p === keep); if (i >= 0 && phase === 'idle') idx = i; } };
+    // collect() runs first, then the route is built once the helpers below exist.
+    queueMicrotask(refresh);
+    setTimeout(refresh, 1500);
+    addEventListener('resize', refresh);
 
     const foot = (e: P, f: number) => { const g = geo(e); return { x: g.l + g.w * f, y: g.t + 2 }; };
-    const frac = (e: P, x: number) => { const g = geo(e); return (x - g.l) / g.w; };
-    const clampX = (g: { l: number; r: number }, x: number) => Math.min(Math.max(x, g.l + INSET), g.r - INSET);
 
-    let cur: P | null = null, f = 0.5, dir = 1;
-    let phase: 'idle' | 'run' | 'pre' | 'air' | 'land' = 'idle';
-    let run: { f0: number; f1: number; start: number; dur: number } | null = null;
-    let jump: { to: P; ff: number; ft: number; a0: { x: number; y: number }; b0: { x: number; y: number }; T: number; v0: number; up: boolean } | null = null;
-    let t0 = 0, lastPick = 0, mx = -1, my = -1;
+    // The route: one step after another, down the page like stairs, drifting from right to left.
+    // Each step is the closest spot below the last one, so it never has to cross the page.
+    type Step = { p: P; f: number };
+    let path: Step[] = [];
+    const MIN_DY = 56, DRIFT = -36;
+    function buildPath() {
+      const nodes = perches.map((p) => { const g = geo(p); return { p, l: g.l, r: g.r, t: g.t + scrollY }; }).filter((n) => n.r - n.l > 2 * INSET);
+      const first = (START && nodes.find((n) => n.p === START)) || nodes.sort((x, y) => x.t - y.t)[0];
+      if (!first) return;
+      const out: Step[] = [{ p: first.p, f: 0.5 }];
+      let last = first, lastX = (first.l + first.r) / 2;
+      const used = new Set([first.p]);
+      for (;;) {
+        let best = null as null | typeof first, bx = 0, bc = Infinity;
+        for (const n of nodes) {
+          if (used.has(n.p) || n.t < last.t + MIN_DY) continue;
+          const x = Math.min(Math.max(lastX + DRIFT, n.l + INSET), n.r - INSET);
+          const c = (n.t - last.t) + 1.2 * Math.abs(x - lastX);
+          if (c < bc) { bc = c; best = n; bx = x; }
+        }
+        if (!best) break;
+        out.push({ p: best.p, f: (bx - best.l) / (best.r - best.l) });
+        used.add(best.p); last = best; lastX = bx;
+      }
+      path = out;
+    }
+
+    let idx = -1, dir = -1;
+    let phase: 'idle' | 'pre' | 'air' | 'land' = 'idle';
+    let jump: { to: number; a0: { x: number; y: number }; b0: { x: number; y: number }; T: number; v0: number; up: boolean } | null = null;
+    let t0 = 0, mx = -1, my = -1;
     const y0 = scrollY; // stay on the start button until the visitor scrolls
+    const stepAt = (i: number) => foot(path[i].p, path[i].f);
+    const topOf = (i: number) => geo(path[i].p).t;
 
-    // Stay near the middle of the screen: when the current spot drifts away while scrolling,
-    // hop to whatever is closest to that line. Short, frequent hops keep pace with the scroll.
-    function pick(): P | null {
+    // Which step it should be on: the one nearest the middle of the screen.
+    function wanted(): number {
       const L = innerHeight * 0.5;
-      const near = perches.filter((e) => { const t = geo(e).t; return t > 110 && t < innerHeight - 60; });
-      let best: P | null = null, bd = Infinity;
-      for (const e of near) { const d = Math.abs(geo(e).t - L); if (d < bd && shown(e)) { bd = d; best = e; } }
-      if (!cur) return best;
-      const ct = geo(cur).t, cd = Math.abs(ct - L);
-      if (best && best !== cur && cd > 130 && bd < cd - 50) return best;
-      // About to be carried off the screen: take anything still visible rather than ride along.
-      if (ct < 100 || ct > innerHeight - 40) {
-        const vis = perches.filter((e) => e !== cur && shown(e) && (() => { const t = geo(e).t; return t > 70 && t < innerHeight - 20; })());
-        vis.sort((a, b) => Math.abs(geo(a).t - L) - Math.abs(geo(b).t - L));
-        return vis[0] ?? null;
-      }
-      return null;
+      let best = -1, bd = Infinity;
+      path.forEach((s, i) => { const t = topOf(i); const d = Math.abs(t - L); if (t > 70 && t < innerHeight - 50 && d < bd && shown(s.p)) { bd = d; best = i; } });
+      return best;
+    }
+    // One step toward it at a time. Steps already off the screen are skipped.
+    function nextStep(): number {
+      const w = wanted();
+      if (w < 0 || w === idx) return -1;
+      const L = innerHeight * 0.5, d = Math.abs(topOf(idx) - L);
+      if (d < 120 && topOf(idx) > 70 && topOf(idx) < innerHeight - 50) return -1; // still a fine spot
+      const s = w > idx ? 1 : -1;
+      let n = idx + s;
+      while (n !== w && (topOf(n) < 60 || topOf(n) > innerHeight - 40)) n += s;
+      return n;
     }
 
-    function leave(to: P, now: number) {
-      const g = geo(cur!), tg = geo(to), x = g.l + g.w * f;
-      const onScreen = g.t > -H && g.t < innerHeight + H;
-      const down = tg.t > g.t;
-      let fromX = x, landX: number;
-      if (down && onScreen) {
-        // Going down: walk off the corner that is closest to where it will land.
-        const edges = [g.l + 4, g.r - 4];
-        const cost = (e: number) => Math.abs(clampX(tg, e) - e) + Math.abs(e - x) * 0.35;
-        fromX = cost(edges[0]) < cost(edges[1]) ? edges[0] : edges[1];
-        const out = fromX === edges[0] ? -1 : 1;
-        landX = clampX(tg, fromX + out * 30);
-      } else {
-        landX = clampX(tg, x + (Math.abs(clampX(tg, x) - x) < 1 ? dir * 24 : 0));
-      }
-      const ft = (landX - tg.l) / tg.w;
-      const prep = () => takeOff(to, ft, now);
-      if (Math.abs(fromX - x) > 3) {
-        dir = fromX > x ? 1 : -1;
-        run = { f0: f, f1: frac(cur!, fromX), start: now, dur: Math.min(Math.max(Math.abs(fromX - x) / 720, 0.14), 0.45) * 1000 };
-        phase = 'run'; pending = prep; look(1.5, 0);
-      } else prep();
-      body.classList.remove('idle');
-    }
-    let pending: (() => void) | null = null;
-
-    function takeOff(to: P, ft: number, now: number) {
-      const a = foot(cur!, f), b = foot(to, ft);
+    function hop(to: number, now: number) {
+      const a = stepAt(idx), b = stepAt(to);
       a.y = Math.min(Math.max(a.y, -H), innerHeight + H);
       const up = b.y < a.y;
       if (Math.abs(b.x - a.x) > 2) dir = b.x > a.x ? 1 : -1;
       const apex = up ? b.y - 16 : a.y - 18, h1 = a.y - apex, h2 = b.y - apex;
       const T = Math.sqrt((2 * h1) / G) + Math.sqrt((2 * h2) / G);
-      jump = { to, ff: f, ft, a0: a, b0: b, T, v0: -Math.sqrt(2 * G * h1), up };
+      jump = { to, a0: a, b0: b, T, v0: -Math.sqrt(2 * G * h1), up };
       phase = 'pre'; t0 = now;
       look(1.4, up ? -1.6 : 1.6);
+      body.classList.remove('idle');
     }
 
     function look(x: number, y: number) { pupils.forEach((p) => (p.style.transform = `translate(${x}px, ${y}px)`)); }
@@ -147,32 +150,23 @@
 
     const PRE = 80, LAND = 260;
     function frame(now: number) {
-      let x = 0, y = 0, sx = 1, sy = 1, r = 0, bob = 0;
-      if (!cur) {
-        // Start on the Contact me button once it has faded in (if it is on screen), else the spot nearest the middle.
-        // Wait for it (hidden) while it is still fading in or below the fold; never start on the text.
-        if (!START) cur = pick();
-        else if (shown(START) && geo(START).t > 0 && geo(START).t < innerHeight - 50) cur = START;
-        else if (geo(START).t <= 0) cur = pick(); // page opened already scrolled past the hero
-        if (cur) { f = cur === START ? 0.5 : 0.75; el.hidden = false; body.classList.add('idle'); }
-      }
-      else if (phase === 'idle' && now - lastPick > 120 && !(cur === START && Math.abs(scrollY - y0) < 40)) { lastPick = now; const n = pick(); if (n) leave(n, now); }
+      let x = 0, y = 0, sx = 1, sy = 1, r = 0;
+      const bob = 0;
+      if (idx < 0 && path.length) {
+        // Start on the Contact me button once it has faded in; wait (hidden) while it is below the fold.
+        const t = topOf(0);
+        if (path[0].p === START && shown(START!) && t > 0 && t < innerHeight - 50) idx = 0;
+        else if (path[0].p !== START || t <= 0) { const w = wanted(); if (w >= 0) idx = w; }
+        if (idx >= 0) { el.hidden = false; body.classList.add('idle'); }
+      } else if (idx >= 0 && phase === 'idle' && !(idx === 0 && Math.abs(scrollY - y0) < 40)) { const n = nextStep(); if (n >= 0) hop(n, now); }
 
-      if (phase === 'run') {
-        const k = Math.min((now - run!.start) / run!.dur, 1);
-        f = run!.f0 + (run!.f1 - run!.f0) * (k * (2 - k) * 0.3 + k * 0.7);
-        const p = foot(cur!, f); x = p.x; y = p.y;
-        const s = Math.sin((Math.abs(f - run!.f0) * geo(cur!).w) / 7);
-        legPose(30 * s, -30 * s); bob = -Math.abs(s) * 2.4; r = 5 * dir;
-        if (k >= 1) { run = null; legPose(0, 0); const go = pending; pending = null; go?.(); }
-      }
       if (phase === 'pre') {
-        const k = Math.sin((Math.PI / 2) * Math.min((now - t0) / PRE, 1)), p = foot(cur!, jump!.ff);
+        const k = Math.sin((Math.PI / 2) * Math.min((now - t0) / PRE, 1)), p = stepAt(idx);
         x = p.x; y = Math.min(Math.max(p.y, -H), innerHeight + H); sx = 1 + 0.1 * k; sy = 1 - 0.14 * k; legPose(-12 * k, 12 * k);
         if (now - t0 >= PRE) { phase = 'air'; t0 = now; }
       } else if (phase === 'air') {
         const j = jump!, t = Math.min((now - t0) / 1000, j.T), u = t / j.T;
-        const a = foot(cur!, j.ff), b = foot(j.to, j.ft);
+        const a = stepAt(idx), b = stepAt(j.to);
         a.y = Math.min(Math.max(a.y, -H), innerHeight + H);
         // Ballistic arc measured against the take-off line, laid over the live start and end points,
         // so it keeps landing on target while the page scrolls under it.
@@ -181,17 +175,17 @@
         const vy = j.v0 + G * t, s = Math.min(0.14, Math.abs(vy) / 8000);
         sy = 1 + s; sx = 1 - s * 0.55; r = dir * Math.max(-9, Math.min(9, vy / 120)) * 0.5 * (j.up ? -1 : 1);
         legPose(vy < 0 ? -22 : 14, vy < 0 ? 26 : -10);
-        if (u >= 1) { phase = 'land'; t0 = now; cur = j.to; f = j.ft; jump = null; blink(170); legPose(0, 0); }
+        if (u >= 1) { phase = 'land'; t0 = now; idx = j.to; jump = null; blink(170); legPose(0, 0); }
       } else if (phase === 'land') {
-        const k = Math.min((now - t0) / LAND, 1), d = Math.exp(-5 * k) * Math.cos(k * Math.PI * 3), p = foot(cur!, f);
+        const k = Math.min((now - t0) / LAND, 1), d = Math.exp(-5 * k) * Math.cos(k * Math.PI * 3), p = stepAt(idx);
         x = p.x; y = p.y; sy = 1 - 0.2 * d; sx = 1 + 0.14 * d;
         if (k >= 1) { phase = 'idle'; body.classList.add('idle'); }
-      } else if (phase === 'idle' && cur) {
-        const p = foot(cur, f); x = p.x; y = p.y;
+      } else if (phase === 'idle' && idx >= 0) {
+        const p = stepAt(idx); x = p.x; y = p.y;
         if (mx >= 0) { const dx = mx - x, dy = my - (y - 30), d = Math.hypot(dx, dy) || 1; look((dx / d) * 1.5 * dir, (dy / d) * 1.5); }
       }
 
-      if (cur) {
+      if (idx >= 0) {
         el.style.transform = `translate3d(${(x - W / 2).toFixed(1)}px, ${(y - H + bob).toFixed(1)}px, 0)`;
         body.style.transform = `rotate(${r.toFixed(2)}deg) scale(${sx.toFixed(3)}, ${sy.toFixed(3)})`;
         face.style.transform = `scaleX(${dir})`;
