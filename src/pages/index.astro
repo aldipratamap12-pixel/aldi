@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import Button from '../components/Button.astro';
 import HeroVisual from '../components/HeroVisual.astro';
+import HeroBackground from '../components/HeroBackground.astro';
 import ProofTile from '../components/ProofTile.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import Mockup from '../components/Mockup.astro';
@@ -33,6 +34,7 @@ const soonRight = left.length <= right.length ? [] : comingSoon;
 <Base active="work">
   <!-- HERO -->
   <section class="hero wrap" data-hero>
+    <HeroBackground />
     <p class="meta t-label-m" data-reveal><span class="dot" aria-hidden="true"></span><span class="m-long">{site.role} · {site.location}</span><span class="m-short">{site.role} · {site.location}</span></p>
     <h1 class="headline" data-split>
       <span class="line-mask"><span class="t-display">Complex systems,</span></span>
@@ -155,7 +157,7 @@ const soonRight = left.length <= right.length ? [] : comingSoon;
 
 <style>
   /* hero */
-  .hero { padding-top: 168px; padding-bottom: 96px; display: grid; gap: 32px; }
+  .hero { position: relative; isolation: isolate; padding-top: 168px; padding-bottom: 96px; display: grid; gap: 32px; }
   .meta { display: flex; align-items: center; gap: 16px; }
   .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--color-accent-default); flex: none;
     box-shadow: 0 0 0 0 rgb(43 68 255 / 0.4); animation: pulse 2.4s infinite; }

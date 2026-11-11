@@ -1,0 +1,86 @@
+---
+// Quiet, full-bleed background behind the Home hero. Three layers:
+//  1. a faint dot grid (the "blueprint" idea from the hero visual), fading out toward the edges;
+//  2. two soft cobalt glows that drift very slowly;
+//  3. a small spotlight that lights up the grid dots near the cursor, easing behind it.
+// Text sits on the page color, so contrast does not change. Reduced motion: static grid only.
+---
+<div class="hb" aria-hidden="true" data-hero-bg>
+  <div class="hb-glow hb-glow--a"></div>
+  <div class="hb-glow hb-glow--b"></div>
+  <div class="hb-grid"></div>
+  <div class="hb-grid hb-grid--lit"></div>
+</div>
+
+<script>
+  const bg = document.querySelector<HTMLElement>('[data-hero-bg]');
+  const hero = bg?.closest('[data-hero]') as HTMLElement | null;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  if (bg && hero && !reduce && fine) {
+    let tx = 0, ty = 0, x = 0, y = 0, on = 0, ton = 0, raf = 0;
+    const loop = () => {
+      // Ease toward the pointer so the light trails it softly.
+      x += (tx - x) * 0.12; y += (ty - y) * 0.12; on += (ton - on) * 0.08;
+      bg.style.setProperty('--mx', `${x}px`);
+      bg.style.setProperty('--my', `${y}px`);
+      bg.style.setProperty('--lit', on.toFixed(3));
+      raf = Math.abs(tx - x) + Math.abs(ty - y) + Math.abs(ton - on) > 0.3 ? requestAnimationFrame(loop) : 0;
+    };
+    const kick = () => { if (!raf) raf = requestAnimationFrame(loop); };
+    hero.addEventListener('pointermove', (e) => {
+      const r = bg.getBoundingClientRect();
+      tx = e.clientX - r.left; ty = e.clientY - r.top; ton = 1;
+      if (!on) { x = tx; y = ty; }
+      kick();
+    });
+    hero.addEventListener('pointerleave', () => { ton = 0; kick(); });
+  }
+</script>
+
+<style>
+  .hb {
+    --hb-dot: color-mix(in srgb, var(--color-text-primary) 22%, transparent);
+    --hb-lit: var(--color-accent-default);
+    --hb-glow: color-mix(in srgb, var(--color-accent-default) 14%, transparent);
+    --mx: 50%; --my: 30%; --lit: 0;
+    position: absolute; z-index: -1; pointer-events: none; overflow: hidden;
+    top: -140px; bottom: 0; left: 50%; width: 100vw; transform: translateX(-50%);
+  }
+  :global([data-theme="dark"]) .hb {
+    --hb-dot: color-mix(in srgb, var(--color-text-primary) 13%, transparent);
+    --hb-glow: color-mix(in srgb, var(--color-accent-default) 22%, transparent);
+  }
+  .hb-grid {
+    position: absolute; inset: 0;
+    background-image: radial-gradient(circle, var(--hb-dot) 1.1px, transparent 1.6px);
+    background-size: 28px 28px; background-position: center top;
+    -webkit-mask-image: radial-gradient(ellipse 75% 70% at 50% 28%, #000 20%, transparent 78%);
+    mask-image: radial-gradient(ellipse 75% 70% at 50% 28%, #000 20%, transparent 78%);
+  }
+  .hb-grid--lit {
+    --hb-dot: var(--hb-lit);
+    opacity: calc(var(--lit) * 0.9);
+    -webkit-mask-image: radial-gradient(circle 190px at var(--mx) var(--my), #000 0%, rgb(0 0 0 / 0.35) 45%, transparent 100%);
+    mask-image: radial-gradient(circle 190px at var(--mx) var(--my), #000 0%, rgb(0 0 0 / 0.35) 45%, transparent 100%);
+  }
+  .hb-glow {
+    position: absolute; width: 46vw; height: 46vw; max-width: 720px; max-height: 720px; border-radius: 50%;
+    background: radial-gradient(circle at center, var(--hb-glow), transparent 68%);
+    filter: blur(20px); will-change: transform;
+  }
+  .hb-glow--a { top: -12%; right: -6%; animation: hb-drift-a 26s ease-in-out infinite alternate; }
+  .hb-glow--b { top: 26%; left: -14%; animation: hb-drift-b 32s ease-in-out infinite alternate; opacity: 0.8; }
+  @keyframes hb-drift-a { 0% { transform: translate(0, 0) scale(1); } 50% { transform: translate(-6vw, 5vh) scale(1.08); } 100% { transform: translate(-2vw, 10vh) scale(0.96); } }
+  @keyframes hb-drift-b { 0% { transform: translate(0, 0) scale(1); } 50% { transform: translate(7vw, -4vh) scale(1.06); } 100% { transform: translate(3vw, 6vh) scale(1); } }
+
+  @media (max-width: 640px) {
+    .hb { top: -100px; }
+    .hb-grid { background-size: 22px 22px; }
+    .hb-glow { width: 90vw; height: 90vw; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hb-glow { animation: none; }
+    .hb-grid--lit { display: none; }
+  }
+</style>
