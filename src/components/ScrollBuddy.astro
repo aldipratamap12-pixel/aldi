@@ -41,7 +41,9 @@
     const SEL = 'h1 .line-mask, h2 .line-mask, h2:not([data-split]), h3, p, img, dd, .f-name, .tiles > li, .hv-kpi .card, .hv-perch, [data-perch]';
     const HV = '.hv-kpi .card, .hv-perch'; // the hero visual is skipped, except its cards
     const SKIP = '[data-perch-skip], .hv, nav, footer, .visually-hidden, [data-buddy], .tags, .ctas';
-    const isBlock = (e: Element) => e.matches('img, li, rect, [data-perch]');
+    const isBlock = (e: Element) => e.matches('img, li, rect, .btn, [data-perch]');
+    // First spot on page load: the hero's "Contact me" button.
+    const START = document.querySelector('[data-hero] .ctas .btn:last-child');
     // Live geometry in viewport px. For text: the first line only, so it stands on the words, not the empty box.
     function geo(e: P) {
       if (!(e instanceof Element)) { const q = e.host.getBoundingClientRect(); return { l: q.left + q.width * e.a[0], r: q.left + q.width * e.a[1], t: q.top + q.height * e.a[2], w: q.width * (e.a[1] - e.a[0]) }; }
@@ -60,7 +62,7 @@
       const g = all.map((e) => ({ e, ...geo(e) })).filter((q) => q.w > 40);
       // Drop near-duplicates (same top edge over the same span): keep the wider one.
       const areas = [...document.querySelectorAll<HTMLElement>('[data-perch-areas]')].flatMap((h) => h.dataset.perchAreas!.split(';').map((s) => ({ host: h.querySelector('img') ?? h, a: s.trim().split(/\s+/).map(Number) })));
-      perches = [...areas, ...g.filter((a) => !g.some((b) => b !== a && Math.abs(b.t - a.t) < 10 && b.l < a.r && a.l < b.r && (b.w > a.w || (b.w === a.w && g.indexOf(b) < g.indexOf(a))))).map((q) => q.e)];
+      perches = [...(START ? [START] : []), ...areas, ...g.filter((a) => !g.some((b) => b !== a && Math.abs(b.t - a.t) < 10 && b.l < a.r && a.l < b.r && (b.w > a.w || (b.w === a.w && g.indexOf(b) < g.indexOf(a))))).map((q) => q.e)];
     }
     collect();
     setTimeout(collect, 1500);
@@ -144,7 +146,12 @@
     const PRE = 80, LAND = 260;
     function frame(now: number) {
       let x = 0, y = 0, sx = 1, sy = 1, r = 0, bob = 0;
-      if (!cur) { cur = pick(); if (cur) { f = 0.75; el.hidden = false; body.classList.add('idle'); } }
+      if (!cur) {
+        // Start on the Contact me button once it has faded in (if it is on screen), else the spot nearest the middle.
+        const st = START && shown(START) && geo(START).t > 0 && geo(START).t < innerHeight - 40 ? START : null;
+        if (st || !START || !geo(START).w || geo(START).t >= innerHeight - 40 || geo(START).t <= 0) cur = st ?? pick();
+        if (cur) { f = cur === START ? 0.5 : 0.75; el.hidden = false; body.classList.add('idle'); }
+      }
       else if (phase === 'idle' && now - lastPick > 120) { lastPick = now; const n = pick(); if (n) leave(n, now); }
 
       if (phase === 'run') {
