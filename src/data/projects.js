@@ -379,7 +379,7 @@ export const projects = [
   {
     slug: 'zaco-law-firm',
     num: '06',
-    permission: 'unchecked',
+    permission: 'granted', // set live by Aldi on 2026-11-11
     name: 'Zaco Law Firm',
     introLabel: 'a law firm website',
     title: 'Zaco Law Firm.',
