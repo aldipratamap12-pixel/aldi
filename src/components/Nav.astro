@@ -2,6 +2,7 @@
 // Figma component "Nav": floating pill, sticky 24px from the top, translucent with blur.
 // Hides on scroll down, shows on scroll up (motion.js). Mobile: menu button opens a full-screen menu.
 import Icon from './Icon.astro';
+import ThemeToggle from './ThemeToggle.astro';
 import { site } from '../data/site.js';
 interface Props { active?: 'work' | 'about' | null; }
 const { active = null } = Astro.props;
@@ -22,11 +23,14 @@ const links = [
         <li><a href={l.href} class:list={{ active: l.key === active }} aria-current={l.key === active ? 'page' : undefined}>{l.label}</a></li>
       ))}
     </ul>
-    <a class="cta" href={`mailto:${site.email}`}>Contact me</a>
-    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="mobile-menu" data-menu-open>
+    <div class="actions">
+      <ThemeToggle />
+      <a class="cta" href={`mailto:${site.email}`}>Contact me</a>
+      <button class="menu-btn" type="button" aria-expanded="false" aria-controls="mobile-menu" data-menu-open>
       <Icon name="menu" />
-      <span class="visually-hidden">Open menu</span>
-    </button>
+        <span class="visually-hidden">Open menu</span>
+      </button>
+    </div>
   </nav>
 
   <div class="mobile-menu" id="mobile-menu" hidden data-menu>
@@ -74,6 +78,7 @@ const links = [
   }
   .links a:hover, .links a.active { color: var(--color-text-primary); }
   .links a:hover::after, .links a.active::after { transform: scaleX(1); }
+  .actions { display: flex; align-items: center; gap: 8px; }
   .cta {
     display: inline-flex; align-items: center; min-height: 44px; padding: 0 20px; border-radius: var(--radius-full);
     background: var(--color-accent-default); color: var(--color-text-on-accent); font-weight: 600; font-size: 16px; text-decoration: none;
@@ -100,6 +105,7 @@ const links = [
     .nav-shell { top: 16px; }
     .nav { width: 100%; justify-content: space-between; gap: 16px; padding: 6px 6px 6px 20px; }
     .links, .cta { display: none; }
+    .actions { gap: 10px; }
     .menu-btn { display: inline-flex; }
   }
 </style>

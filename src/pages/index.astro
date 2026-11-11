@@ -178,7 +178,7 @@ const right = otherProjects.filter((_, i) => i % 2 === 1);
   .field:hover .f-name, .field:focus-visible .f-name { color: var(--color-text-accent); }
   .field:hover .f-num, .field:focus-visible .f-num { color: var(--color-text-accent); }
   .field:hover .f-project, .field:focus-visible .f-project { opacity: 1; transform: none; }
-  .fields-list:hover .field:not(:hover) .f-name { color: var(--ink-300, #B5B2AA); }
+  .fields-list:hover .field:not(:hover) .f-name { color: color-mix(in srgb, var(--color-text-primary) 32%, var(--color-bg-page)); }
 
   /* featured */
   .f-head { display: flex; flex-wrap: wrap; gap: 32px 80px; justify-content: space-between; align-items: flex-end; }

@@ -126,8 +126,8 @@ path('M' + pts.map((p) => p.join(' ')).join(' L'), 'ink', { sw: 2 });
 grp('tip', 'hv-tip', () => {
   circle(pts[DEF][0], pts[DEF][1], 5, 'surface', { stroke: 'ink', sw: 2 });
   const tx = pts[DEF][0], ty = pts[DEF][1] - 44;
-  rect(tx - 44, ty - 20, 88, 32, 8, 'ink');
-  text(tx, ty + 1, `${months[DEF]} · ${vals[DEF]} pts`, 12, 'white', { weight: 600, anchor: 'middle', cls: 'tiptext' });
+  rect(tx - 44, ty - 20, 88, 32, 8, 'tipbg');
+  text(tx, ty + 1, `${months[DEF]} · ${vals[DEF]} pts`, 12, 'tipfg', { weight: 600, anchor: 'middle', cls: 'tiptext' });
 });
 
 // Table card
@@ -176,7 +176,7 @@ redV(232, 106, 128, '24', -1);
 const tags = els.filter((e) => e.tag).map((e) => ({ x: e.x, y: e.y, t: e.tag }));
 tags.push({ x: 16, y: 106, t: 'Nav item / active' }, { x: 420, y: 13, t: 'Input / search' }, { x: 1160, y: 82, t: 'Button / primary' });
 
-const fills = { surface: 'var(--white)', white: 'var(--white)', page: 'var(--paper-100)', subtle: 'var(--paper-200)', border: 'var(--paper-300)', ink: 'var(--ink-900)', muted: 'var(--ink-500)', accent: 'var(--cobalt-500)', accentSubtle: 'var(--cobalt-100)', none: 'none' };
+const fills = { tipbg: 'var(--hv-tip-bg, var(--ink-900))', tipfg: 'var(--hv-tip-fg, #fff)', surface: 'var(--white)', white: '#fff', page: 'var(--paper-100)', subtle: 'var(--paper-200)', border: 'var(--paper-300)', ink: 'var(--ink-900)', muted: 'var(--ink-500)', accent: 'var(--cobalt-500)', accentSubtle: 'var(--cobalt-100)', none: 'none' };
 const F = (k) => fills[k] ?? 'none';
 const skel = (e) => {
   const w = tw(e.str, e.s, e.weight);
@@ -208,7 +208,7 @@ const wireEls = els.filter((e) => !e.ui);
         <pattern id="hv-dots" width="16" height="16" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1" fill="var(--cobalt-500)" opacity="0.18" /></pattern>
         <marker id="hv-tick" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="8" markerHeight="8" orient="auto"><path d="M4 0 V8" stroke="var(--cobalt-500)" stroke-width="1.2" /></marker>
       </defs>
-      <rect x="0" y="0" width={W} height={H} rx="24" fill="#F3F5FF" />
+      <rect x="0" y="0" width={W} height={H} rx="24" fill="var(--hv-wire-bg, #F3F5FF)" />
       <rect x="0" y="0" width={W} height={H} rx="24" fill="url(#hv-dots)" />
       {cols.map((x) => <rect x={x} y="64" width={colW} height={H - 64} fill="var(--cobalt-500)" opacity="0.045" />)}
       {wireEls.map((e) => {
@@ -240,7 +240,7 @@ const wireEls = els.filter((e) => !e.ui);
       {[[8, 8], [W - 8, 8], [8, H - 8], [W - 8, H - 8]].map(([x, y]) => <path class="note" d={`M${x - 6} ${y} H${x + 6} M${x} ${y - 6} V${y + 6}`} stroke="var(--cobalt-500)" stroke-width="1" />)}
     </svg>
     <svg class="layer ui" viewBox={`0 0 ${W} ${H}`} aria-hidden="true" preserveAspectRatio="xMidYMid meet" data-hv-ui>
-      <defs><filter id="hv-shadow" x="-10%" y="-10%" width="120%" height="140%"><feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#141414" flood-opacity="0.06" /></filter></defs>
+      <defs><filter id="hv-shadow" x="-10%" y="-10%" width="120%" height="140%"><feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#141414" flood-opacity="var(--hv-shadow, 0.06)" /></filter></defs>
       {nodes.map((nd) => {
         const items = nd.items.map((e) => {
           const c = e.cls || undefined;

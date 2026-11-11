@@ -26,6 +26,14 @@ const fullTitle = title ? `${title} · ${site.name}` : `${site.name} · UI/UX De
       // Turn motion on before first paint, only when the visitor allows it.
       // `?nomotion` shows the final state, for checking layouts and screenshots.
       if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches && !/[?&]nomotion/.test(location.search)) document.documentElement.classList.add('motion');
+      // Theme before first paint (no flash): saved choice, then `?theme=dark|light`, then the system setting.
+      (function () {
+        var t = null; try { t = localStorage.getItem('theme'); } catch (e) {}
+        var q = location.search.match(/[?&]theme=(dark|light)/); if (q) t = q[1];
+        if (t !== 'dark' && t !== 'light') t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        document.documentElement.dataset.theme = t;
+        if (t === 'dark') document.querySelector('meta[name="theme-color"]').setAttribute('content', '#11100E');
+      })();
     </script>
   </head>
   <body>
