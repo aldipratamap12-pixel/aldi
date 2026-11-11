@@ -23,14 +23,13 @@ const pillars = [
   ['Design for scanning.', 'Internal tools are used for hours every day. I aim for clear hierarchy and clear status, not decoration.', 'MineVISPERA: dense tables and dashboards redesigned without changing the business logic.'],
   ['Make it ready to build.', 'A design is done when developers can build it without guessing. Every project gets a component library.', 'MineVISPERA handoff: hi-fi mockups, component library, UX copy and walkthrough prototypes.'],
 ];
-// Intro follows what is visible: client work, the bootcamp project, or both.
-const hasClientWork = otherProjects.some((p) => p.slug !== 'simaksiku');
+// Intro follows what is visible: built from each project's introLabel, so it never names a hidden project.
+const clientWork = otherProjects.filter((p) => p.slug !== 'simaksiku').map((p) => p.introLabel);
 const hasBootcamp = otherProjects.some((p) => p.slug === 'simaksiku');
-const workIntro = hasClientWork && hasBootcamp
-  ? 'Business systems I designed in 2025: dashboards, HR, IoT, CRM and one law firm website. Plus my bootcamp final project.'
-  : hasClientWork
-    ? 'Business systems I designed in 2025: dashboards, HR, IoT, CRM, and one law firm website.'
-    : 'My Hacktiv8 final project: a mobile app, from the first journey map to a usability test.';
+const listOf = (a) => (a.length <= 1 ? a.join('') : `${a.slice(0, -1).join(', ')} and ${a[a.length - 1]}`);
+const workIntro = clientWork.length
+  ? `Business systems I designed for clients: ${listOf(clientWork)}.${hasBootcamp ? ' Plus my bootcamp final project.' : ''}`
+  : 'My Hacktiv8 final project: a mobile app, from the first journey map to a usability test.';
 const left = otherProjects.filter((_, i) => i % 2 === 0);
 const right = otherProjects.filter((_, i) => i % 2 === 1);
 ---

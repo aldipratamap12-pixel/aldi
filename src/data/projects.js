@@ -9,6 +9,7 @@ export const projects = [
     num: '01',
     permission: 'granted',
     name: 'FASTTRACK Legal',
+    introLabel: 'a legal services website',
     title: 'FASTTRACK Legal.',
     subtitle: '100+ pages, one clear structure.',
     summary: 'I designed the information architecture and UI for a legal services website: 100+ pages, 25 service types and 5 interactive tools.',
@@ -100,8 +101,9 @@ export const projects = [
   {
     slug: 'minevispera',
     num: '02',
-    permission: 'pending',
+    permission: 'granted', // set live by Aldi on 2026-11-11
     name: 'MineVISPERA',
+    introLabel: 'a mining operations platform',
     title: 'MineVISPERA.',
     subtitle: 'About 100 screens, redesigned in one month.',
     summary: 'I redesigned 3 modules of a mining operations platform, about 100 screens, in 1 month, without changing the business logic behind them.',
@@ -174,8 +176,9 @@ export const projects = [
   {
     slug: 'hris-bimaselindo',
     num: '03',
-    permission: 'pending',
+    permission: 'granted', // set live by Aldi on 2026-11-11
     name: 'HRIS for Bimaselindo',
+    introLabel: 'an HRIS',
     title: 'HRIS for Bimaselindo.',
     subtitle: 'One system, three kinds of users.',
     summary: 'I designed a web and mobile HRIS for employee data, attendance and payroll, with separate flows for Admin, HR and employees.',
@@ -243,8 +246,9 @@ export const projects = [
   {
     slug: 'super-app-iot',
     num: '04',
-    permission: 'pending',
+    permission: 'granted', // set live by Aldi on 2026-11-11
     name: 'Super App IoT',
+    introLabel: 'a smart home super app',
     title: 'Super App IoT.',
     subtitle: '100+ screens in 14 days.',
     summary: 'I designed 100+ mobile screens for a smart home super app: device control, a shop and home services, in one app and in 14 days.',
@@ -317,6 +321,7 @@ export const projects = [
     num: '05',
     permission: 'unchecked',
     name: 'LPPOM CRM & QOM',
+    introLabel: 'CRM modules',
     title: 'LPPOM CRM & QOM.',
     subtitle: 'From quotation to order, step by step.',
     summary: 'During a 4-month internship, I designed the UI for the CRM and quotation-to-order modules of two enterprise apps.',
@@ -375,6 +380,7 @@ export const projects = [
     num: '06',
     permission: 'unchecked',
     name: 'Zaco Law Firm',
+    introLabel: 'a law firm website',
     title: 'Zaco Law Firm.',
     subtitle: 'A website that earns trust before the first call.',
     summary: 'I designed a responsive company profile website for a law firm in Jakarta, in about 2 weeks.',
@@ -439,6 +445,7 @@ export const projects = [
     // goals, Maze usability test scores, insights, conclusion, next steps). Approved for the live site by Aldi on 2026-11-11.
     permission: 'granted',
     name: 'SimaksiKu',
+    introLabel: 'my bootcamp final project',
     title: 'SimaksiKu.',
     subtitle: 'From paper sketches to a hiking app.',
     summary: 'My Hacktiv8 final project: a mobile app to explore Indonesian national parks, book a climbing permit (SIMAKSI), plan the trip and report problems on the trail.',
