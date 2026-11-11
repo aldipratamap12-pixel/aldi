@@ -21,6 +21,8 @@ const fullTitle = title ? `${title} · ${site.name}` : `${site.name} · UI/UX De
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content={new URL(Astro.url.pathname, Astro.site)} />
+    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <script is:inline>
       // Turn motion on before first paint, only when the visitor allows it.

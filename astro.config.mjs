@@ -1,7 +1,8 @@
 import { defineConfig } from 'astro/config';
 
-// Static site. `site` is set after hosting is chosen (step 7).
+// Static site, hosted on Vercel at the custom domain.
 export default defineConfig({
+  site: 'https://aldipratamaputra.my.id',
   output: 'static',
   trailingSlash: 'never',
   build: { format: 'directory' },
