@@ -334,7 +334,10 @@ export const projects = [
     card: { summary: 'UI for the CRM and quotation-to-order modules of two enterprise apps, during a 4-month internship.', meta: 'Enterprise web · 2025 · UI/UX Designer Intern', tags: ['CRM', 'User flows'] },
     meta: [['Company', 'PT Ragdalion Revolusi Industri'], ['Role', 'UI/UX Designer (intern)'], ['Time', '4 months, Jul – Oct 2025'], ['Platform', 'Web and mobile']],
     links: [],
-    cover: { kind: 'web', note: '1 CRM screen + 1 QOM screen' },
+    cover: { kind: 'web', note: 'the Overview dashboard on a laptop and the Leads Company dashboard on a tablet' },
+    // Visuals: Aldi's own mockups of the Overview and Leads Company dashboards, plus the Master Data Customer screens
+    // from the Figma file NEW (page "Portfolio Visuals · LPPOM"). The company Figma file is no longer accessible.
+    images: { cover: 'lppom/cover.jpg', card: 'lppom/card.jpg' },
     tiles: [
       ['Process first.', 'I mapped how quotations become orders before designing the screens.'],
       ['Clear stages.', 'I designed QOM so each quotation shows its stage and the next action.'],
@@ -366,13 +369,14 @@ export const projects = [
       ['Check with BAs and developers.', 'I reviewed the flows and prototypes with the Business Analysts and developers, so the design matched the requirements and could be built.'],
       ['Iterate.', 'I refined the interfaces based on their feedback.'],
     ],
-    processImage: { alt: 'How a quotation moves to an order', caption: 'How a quotation moves to an order.' },
-    solutionHead: 'An overview for customers, clear stages for quotations.',
+    // No process image: no flow diagram is available (the company Figma file is no longer accessible).
+    processImages: [],
+    solutionHead: 'Dashboards for the sales team, clear forms for the data behind them.',
     solution: [
-      { t: 'CRM: customers at a glance.', b: 'The CRM is organized around the link between customer data, activities and ongoing business. Users see the overview first and open details when they need them.',
-        img: { alt: 'CRM customer list and detail', caption: 'Customer overview and customer detail.' } },
-      { t: 'QOM: a clear path from quotation to order.', b: 'Each quotation shows its current stage, the important information for that stage, and the actions available next.',
-        img: { alt: 'Quotation detail with its stage', caption: 'A quotation with its current stage and next action.' } },
+      { t: 'Dashboards for leads and halal partners.', b: 'The Overview shows total leads split into new and existing clients and cold, warm and hot leads, with leads performance per month, leads by source, and the top halal partners. Leads Company follows each lead through the pipeline, from raw leads to closed won or lost, with SLA status per stage.',
+        imgs: [{ src: 'lppom/dashboards.jpg', alt: 'The LPPOM Overview dashboard and the Leads Company dashboard', caption: 'The Overview and Leads Company dashboards.' }] },
+      { t: 'Customer data, from list to detail.', b: 'Master data for customers follows one pattern: a list with search and actions, a detail page with outlets, and create and edit forms. Confirm and success pop-ups close every change.',
+        imgs: [{ src: 'lppom/customer.jpg', alt: 'Customer list, customer detail, create and edit forms, and confirm and success pop-ups', caption: 'Customer list, detail, create and edit, with confirm and success pop-ups.' }] },
       { t: 'Readable data.', b: 'Tables, forms, status indicators and actions follow one visual hierarchy, so users can see what needs attention.' },
       { t: 'Shared patterns.', b: 'Navigation, data presentation, forms, actions and workflow states use the same patterns in both modules, while each module keeps its own process.' },
     ],
