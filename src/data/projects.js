@@ -239,7 +239,7 @@ export const projects = [
     images: { cover: 'iot/cover.jpg', card: 'iot/card.jpg' },
     tiles: [
       ['14 days.', 'I designed 100+ screens across 3 modules, starting from wireframes.'],
-      ['Home, not brand.', 'I organized devices from 7 brands as Home → Room → Device.'],
+      ['Home, not brand.', 'I organized devices from 5 brands as Home → Room → Device.'],
       ['One control pattern.', 'I gave every device the same way to work, with room for its own features.'],
       ['One journey.', 'I connected buying, installing and controlling a device in one app.'],
     ],
@@ -249,7 +249,7 @@ export const projects = [
     ],
     problemHead: 'Three product areas, one small screen.',
     problem: [
-      ['7 device brands', 'BARDI, Evomab, ARBIT, Tuya, DMSS, Airbot and Solarman each have their own features and terms.'],
+      ['5 device brands', 'BARDI, Tuya, DMSS, Airbot and Solarman each have their own features and terms.'],
       ['Different controls', 'A lamp, an air conditioner and a CCTV camera need very different controls.'],
       ['Shopping', 'It had to feel familiar.'],
       ['Home services', 'They had to be easy to request from a phone.'],
@@ -290,7 +290,7 @@ export const projects = [
       { t: 'Built for one hand.', b: 'Bottom navigation, bottom sheets, large touch targets and clear device states.' },
     ],
     stats: [['100+', 'screens'], ['14', 'days'], ['3', 'modules: smart home, shop, services']],
-    resultList: [['Devices', 'Devices from 7 brands in one structure.'], ['Handoff', 'Interactive prototypes and design documentation.'], ['Components', 'Device cards, product cards, service cards, toggles, sliders and bottom sheets.']],
+    resultList: [['Devices', 'Devices from 5 brands in one structure.'], ['Handoff', 'Interactive prototypes and design documentation.'], ['Components', 'Device cards, product cards, service cards, toggles, sliders and bottom sheets.']],
     quote: ['Connect the whole journey, not just the devices.', 'A smart home app is not only about controlling devices. It is about the whole journey of living with them.'],
   },
 
