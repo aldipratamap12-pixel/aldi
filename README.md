@@ -10,8 +10,8 @@ npm run dev      (buka http://localhost:4321)
 npm run build    (hasil siap online ada di folder dist/)
 ```
 
-- Di `npm run dev`, semua 6 proyek tampil, dengan tag "Dev only" untuk proyek yang izinnya belum ada.
-- Di `npm run build`, hanya proyek dengan `permission: 'granted'` yang ikut dibangun. Saat ini: FastTrack Legal.
+- Di `npm run dev`, semua proyek tampil, dengan tag "Dev only" untuk proyek yang izinnya belum ada.
+- Di `npm run build`, hanya proyek dengan `permission: 'granted'` yang ikut dibangun. Saat ini: semua 7 proyek (MBA Order Management tampil sebagai "Coming soon").
 - Tambahkan `?nomotion` di alamat untuk melihat halaman tanpa animasi (untuk mengecek layout).
 
 ## Mengubah isi
