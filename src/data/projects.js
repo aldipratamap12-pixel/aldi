@@ -435,7 +435,7 @@ export const projects = [
       ['Journey first.', 'I mapped the registration journey to find where hikers get stuck.'],
       ['From sketch to prototype.', 'I went from Crazy 8 and paper sketches to wireframes and a high-fidelity prototype.'],
       ['Five features, one app.', 'Explore parks, book a SIMAKSI, plan a trip, track a climb and report problems.'],
-      ['Tested with Maze.', 'I tested 4 scenarios with hikers at 3 experience levels. 11 of 12 scores were 3 out of 3.'],
+      ['Tested with Maze.', 'I tested 4 scenarios with 3 hikers. 11 of 12 scores were 3 out of 3.'],
     ],
     context: [
       'SimaksiKu is a mobile app concept for registering a climb and learning about the national parks in Indonesia.',
@@ -464,7 +464,7 @@ export const projects = [
       ['Sketch fast, then pick.', 'I used Crazy 8 to sketch ideas quickly, then drew the main screens on paper: home, explore, park detail, trip planning, live tracking and the environment report.'],
       ['Plan the content and the flows.', 'A UI mindmap listed what each screen needs. The user flows covered logging in and booking a SIMAKSI, including the checks for a valid account and an available quota.'],
       ['Wireframes, then the UI.', 'I built low-fi wireframes in Whimsical, then set up the colors, type, spacing and components in Figma before the high-fidelity screens.'],
-      ['Test with users.', 'I tested 4 scenarios in Maze with hikers at three experience levels: extreme, semi-extreme and non-extreme. Each task was scored from 1 (could not finish it) to 3 (finished quickly, with no trouble).'],
+      ['Test with users.', 'I tested 4 scenarios in Maze with 3 hikers, one at each experience level: extreme, semi-extreme and non-extreme. Each task was scored from 1 (could not finish it) to 3 (finished quickly, with no trouble).'],
     ],
     processImages: [
       { src: 'simaksiku/journey.jpg', alt: 'User journey map for hiking registration, with user actions, pain points and possible solutions', caption: 'The user journey map: two pain points, documents and saving a draft.' },
@@ -490,9 +490,9 @@ export const projects = [
       { t: 'A design system.', b: 'Colors, type, spacing, shadows and components, set up in Figma before the final screens.',
         imgs: [{ src: 'simaksiku/design-system.jpg', alt: 'Design system components: buttons, inputs, cards, tabs, navigation and dialogs', caption: 'The components behind the screens.' }] },
     ],
-    stats: [['4', 'scenarios tested in Maze'], ['3', 'hiker levels: extreme, semi-extreme, non-extreme'], ['11', 'of 12 scores were 3 out of 3']],
+    stats: [['4', 'scenarios tested in Maze'], ['3', 'hikers: extreme, semi-extreme, non-extreme'], ['11', 'of 12 scores were 3 out of 3']],
     resultList: [
-      ['Registration', 'All three hiker levels finished it with no trouble. Hikers found it easy to understand.'],
+      ['Registration', 'All 3 hikers finished it with no trouble. Hikers found it easy to understand.'],
       ['Trip planning', 'Experienced hikers valued it most. The non-extreme hiker could not finish this task.'],
       ['Live tracking', 'Positive for every level, especially on new or unfamiliar trails.'],
       ['Environment report', 'Seen as useful, but the visuals and interaction need work.'],
