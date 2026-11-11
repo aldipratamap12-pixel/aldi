@@ -1,6 +1,6 @@
 ---
-// A small cursor character that stands near the top right of each section and jumps to the next
-// section's spot when you scroll past a section border (down or up).
+// A small cursor character that stands on the visible border line at the top of each section (right side)
+// and jumps to the next border when it comes into view as you scroll (down or up).
 // Extra perches: data-perch. Areas to avoid: data-perch-skip.
 // Decoration only: aria-hidden, no pointer events. Desktop with a mouse only; off with reduced motion or ?nomotion.
 ---
@@ -70,43 +70,25 @@
     queueMicrotask(refresh);
     setTimeout(refresh, 1500);
     addEventListener('resize', refresh);
+    // Light and dark theme can hide or show a border (same background), so rebuild on a theme switch.
+    new MutationObserver(() => setTimeout(refresh, 1200)).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
     const foot = (e: P, f: number) => { const g = geo(e); return { x: g.l + g.w * f, y: g.t + 2 }; };
 
-    // The route: one spot per section, near its top right corner, so it only jumps at a section border.
-    // (The stair search below picks that first spot; the route used to continue down to the left.)
+    // The route: the Contact me button, then the border line at the top of each section that has one
+    // you can see (a rule, or a change of background). It only jumps when a new section border comes in.
     type Step = { p: P; f: number };
     let path: Step[] = [];
-    const MIN_DY = 56;
-    const hostOf = (p: P) => (p instanceof Element ? p : p.host);
+    const bg = (e: Element) => { const c = getComputedStyle(e).backgroundColor; return c === 'rgba(0, 0, 0, 0)' || c === 'transparent' ? 'page' : c; };
     function buildPath() {
-      const nodes = perches.map((p) => { const g = geo(p); return { p, l: g.l, r: g.r, t: g.t + scrollY, sec: hostOf(p).closest('section') }; })
-        .filter((n) => n.r - n.l > 2 * INSET && n.sec);
-      const secs = [...new Set(nodes.map((n) => n.sec))].sort((a, b) => a!.getBoundingClientRect().top - b!.getBoundingClientRect().top);
-      const out: Step[] = [];
-      for (const sec of secs) {
-        let mine = nodes.filter((n) => n.sec === sec);
-        const startNode = START ? mine.find((n) => n.p === START) : undefined;
-        if (startNode) mine = mine.filter((n) => n.t >= startNode.t); // the hero starts at Contact me
-        if (!mine.length) continue;
-        const L = Math.min(...mine.map((n) => n.l)) + INSET, R = Math.max(...mine.map((n) => n.r)) - INSET;
-        const T = Math.min(...mine.map((n) => n.t)), B = Math.max(...mine.map((n) => n.t));
-        const lineX = (t: number) => R - ((t - T) / (B - T || 1)) * (R - L);
-        const at = (n: typeof mine[0]) => Math.min(Math.max(lineX(n.t), n.l + INSET), n.r - INSET);
-        let last = startNode ?? null, lastT = startNode ? startNode.t : T - MIN_DY;
-        if (startNode) { out.push({ p: startNode.p, f: 0.5 }); continue; } // hero: just the Contact me button
-        for (;;) {
-          let best: typeof mine[0] | null = null, bc = Infinity;
-          for (const n of mine) {
-            if (n === last || n.t < lastT + MIN_DY) continue;
-            const c = (n.t - lastT) + 1.5 * Math.abs(at(n) - lineX(n.t));
-            if (c < bc) { bc = c; best = n; }
-          }
-          if (!best) break;
-          out.push({ p: best.p, f: (at(best) - best.l) / (best.r - best.l) });
-          break; // one spot per section: it only jumps when a new section comes in
-        }
-      }
+      const secs = [...document.querySelectorAll('main section, footer')].filter((e) => !e.parentElement?.closest('section'))
+        .sort((x, y) => x.getBoundingClientRect().top - y.getBoundingClientRect().top);
+      const out: Step[] = START ? [{ p: START, f: 0.5 }] : [];
+      secs.forEach((sec, i) => {
+        if (i === 0) return; // the hero: page top, behind the nav
+        const visible = parseFloat(getComputedStyle(sec).borderTopWidth) > 0 || bg(sec) !== bg(secs[i - 1]);
+        if (visible) out.push({ p: { host: sec, a: [0.8, 0.9, 0] }, f: 0.5 }); // stand on the line, right side
+      });
       path = out;
     }
 
