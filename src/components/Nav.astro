@@ -15,8 +15,7 @@ const links = [
 <header class="nav-shell" data-nav>
   <nav class="nav" aria-label="Main">
     <a class="brand" href="/" aria-label={`${site.name}, home`}>
-      <span class="mark" aria-hidden="true"></span>
-      <span>{site.name}</span>
+      <span class="logo" aria-hidden="true">aldi<span class="logo-dot">.</span></span>
     </a>
     <ul class="links">
       {links.map((l) => (
@@ -35,7 +34,7 @@ const links = [
 
   <div class="mobile-menu" id="mobile-menu" role="dialog" aria-modal="true" aria-label="Menu" hidden data-menu>
     <div class="mm-top">
-      <a class="brand" href="/"><span class="mark" aria-hidden="true"></span><span>{site.name}</span></a>
+      <a class="brand" href="/" aria-label={`${site.name}, home`}><span class="logo" aria-hidden="true">aldi<span class="logo-dot">.</span></span></a>
       <button class="menu-btn menu-btn--close" type="button" data-menu-close>
         <Icon name="close" /><span class="visually-hidden">Close menu</span>
       </button>
@@ -65,8 +64,10 @@ const links = [
     box-shadow: 0 8px 24px rgb(20 20 20 / 0.06);
   }
   .brand { display: inline-flex; align-items: center; gap: 10px; font-weight: 600; text-decoration: none; white-space: nowrap; }
-  .mark { width: 10px; height: 10px; border-radius: 50%; background: var(--color-accent-default); transition: transform 300ms var(--ease-out); }
-  .brand:hover .mark { transform: scale(1.4); }
+  /* Logo: the wordmark "aldi." (Archivo 800) with a cobalt dot. */
+  .logo { font-family: var(--font-sans); font-weight: 800; font-size: 24px; line-height: 1; letter-spacing: -0.045em; color: var(--color-text-primary); }
+  .logo-dot { display: inline-block; color: var(--color-text-accent); transition: transform 300ms var(--ease-out); }
+  .brand:hover .logo-dot { transform: translateY(-3px); }
   .links { display: flex; gap: 28px; }
   .links a {
     position: relative; display: inline-block; padding-block: 10px; font-size: 15px; text-decoration: none; color: var(--color-text-secondary);

@@ -23,7 +23,15 @@ const fullTitle = title ? `${title} · ${site.name}` : `${site.name} · UI/UX De
     <meta property="og:type" content="website" />
     <meta property="og:url" content={new URL(Astro.url.pathname, Astro.site)} />
     <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <!-- Logo "aldi." as icons and the link preview image (rendered from the brand fonts). -->
+    <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+    <link rel="icon" href="/icon-512.png" type="image/png" sizes="512x512" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta property="og:image" content={new URL('/og-image.png', Astro.site)} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="aldi. Complex systems, made clear. Aldi Pratama Putra, UI/UX Designer" />
+    <meta name="twitter:card" content="summary_large_image" />
     <script is:inline>
       // Turn motion on before first paint, only when the visitor allows it.
       // `?nomotion` shows the final state, for checking layouts and screenshots.
