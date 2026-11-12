@@ -25,7 +25,7 @@ export const projects = [
       ['Time', '3 months, 2026'],
       ['Platform', 'Website, desktop and mobile'],
     ],
-    links: [{ label: 'fasttrack.legal', href: 'https://fasttrack.legal/', kind: 'Live site', confirmed: false }],
+    links: [{ label: 'fasttrack.legal', href: 'https://fasttrack.legal/', kind: 'Live site', confirmed: true }],
     cover: { kind: 'web', note: 'the home page, the service mega menu and the mobile home page' },
     // Visuals from the Figma page "Visuals · FastTrack". Desktop screens come from the FastTrack Figma file,
     // mobile screens from the live site. The Solution images use the live site (fasttrack.legal).
@@ -259,7 +259,7 @@ export const projects = [
     summary: 'I designed 100+ mobile screens for a smart home super app: device control, a shop and home services, in one app and in 14 days.',
     card: { summary: '100+ mobile screens across smart home, shop and home services, designed in 14 days.', meta: 'Mobile app · 2025 · UI/UX Designer', tags: ['IoT', 'Mobile'] },
     meta: [['Client', 'PT Harmoni Mitra Tekno, for Bimaselindo'], ['Role', 'UI/UX Designer (freelance)'], ['Time', '14 days, May – Jun 2025'], ['Platform', 'Mobile app']],
-    links: [{ label: 'View in Figma', href: 'https://www.figma.com/proto/qmsNWjazRAFS2QVHaqM0Ke/Bimaselindo-Homes?node-id=413-14766&starting-point-node-id=413%3A14766', kind: 'Prototype', confirmed: false }],
+    links: [{ label: 'View in Figma', href: 'https://www.figma.com/proto/qmsNWjazRAFS2QVHaqM0Ke/Bimaselindo-Homes?node-id=413-14766&starting-point-node-id=413%3A14766', kind: 'Prototype', confirmed: true }],
     cover: { kind: 'mobile', note: '3 mobile screens (dashboard, device control, shop)' },
     // Visuals from the Bimasakti Homes Figma copy (page "Portfolio Visuals"). Every phone shows a real screen
     // from the project file, rendered as an image. The wireframes are the project's own low-fi wireframes.
@@ -398,7 +398,7 @@ export const projects = [
     summary: 'I designed a responsive company profile website for a law firm in Jakarta, in about 2 weeks.',
     card: { summary: 'A responsive company profile website for a law firm in Jakarta.', meta: 'Website · 2025 · UI Designer', tags: ['Website', 'Responsive'] },
     meta: [['Client', 'Zaco Law Firm'], ['Role', 'UI Designer'], ['Time', 'About 2 weeks, Jul 2025'], ['Platform', 'Responsive website']],
-    links: [{ label: 'zacolawfirm.com', href: 'https://zacolawfirm.com/', kind: 'Live site', confirmed: false }],
+    links: [{ label: 'zacolawfirm.com', href: 'https://zacolawfirm.com/', kind: 'Live site', confirmed: true }],
     cover: { kind: 'web', note: 'the homepage on desktop and mobile' },
     // Visuals from the Zaco page of the Figma file NEW (page "Portfolio Visuals · Zaco"). Real full-length pages from the design file.
     images: { cover: 'zaco/cover.jpg', card: 'zaco/card.jpg' },
