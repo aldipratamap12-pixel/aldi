@@ -6,7 +6,7 @@ export const site = {
   location: 'Depok, Indonesia',
   timezone: 'GMT+7',
   email: 'aldipratamap12@gmail.com',
-  linkedin: 'https://www.linkedin.com/in/aldi-pratama-putra-3349931b5',
+  linkedin: 'https://www.linkedin.com/in/aldipratamap',
   // Resume PDF without the phone number. Put the file in public/ and set the path, e.g. '/resume-aldi-pratama-putra.pdf'.
   resume: null,
   positioning:
