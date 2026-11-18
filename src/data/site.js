@@ -10,8 +10,8 @@ export const site = {
   // Resume PDF without the phone number. Put the file in public/ and set the path, e.g. '/resume-aldi-pratama-putra.pdf'.
   resume: null,
   positioning:
-    'I help software teams turn complex business systems (dashboards, admin panels and internal tools) into clear UI that users understand and developers can build.',
-  description: 'UI/UX designer for dashboards, web apps and internal systems. Case studies: FASTTRACK Legal, MineVISPERA, HRIS, Super App IoT, LPPOM, Zaco Law Firm and SimaksiKu. Coming soon: MBA Order Management.',
+    'I design B2B web apps and internal tools, like dashboards and admin panels, plus B2C mobile apps and service websites. Most of my work happens before the screens: deciding who each screen is for and what they need to see first.',
+  description: 'UI/UX designer for B2B web apps and internal tools, plus B2C mobile apps and service websites. Case studies: FASTTRACK Legal, MineVISPERA, HRIS, Super App IoT, LPPOM, Zaco Law Firm and SimaksiKu. Coming soon: MBA Order Management.',
 };
 
 // Projects are shown on the live site only when permission is "granted".

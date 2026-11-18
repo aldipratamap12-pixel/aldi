@@ -16,7 +16,7 @@ import { featured, otherProjects, visibleProjects, comingSoon, showLink, display
 
 const pillars = [
   ['Sort out the structure.', 'Before I design a screen, I map who uses it, what they need to get done, and where each piece of information goes.', 'IoT app: devices from 5 brands, organized as Home → Room → Device instead of by brand.'],
-  ['Design for scanning.', 'Internal tools are used for hours every day. I aim for clear hierarchy and clear status, not decoration.', 'MineVISPERA: dense tables and dashboards redesigned without changing the business logic.'],
+  ['Design for scanning.', 'Internal tools are used for hours every day. I aim for clear hierarchy and clear status, not decoration.', 'MineVISPERA: every screen split into the current state, the supporting details and the next action.'],
   ['Make it ready to build.', 'A design is done when developers can build it without guessing. I set up shared components before I design the pages.', 'MineVISPERA handoff: hi-fi mockups, component library, UX copy and walkthrough prototypes.'],
 ];
 // Intro follows what is visible: built from each project's introLabel, so it never names a hidden project.
@@ -24,7 +24,7 @@ const clientWork = otherProjects.filter((p) => p.slug !== 'simaksiku').map((p) =
 const hasBootcamp = otherProjects.some((p) => p.slug === 'simaksiku');
 const listOf = (a) => (a.length <= 1 ? a.join('') : `${a.slice(0, -1).join(', ')} and ${a[a.length - 1]}`);
 const workIntro = clientWork.length
-  ? `Business systems I designed for clients: ${listOf(clientWork)}.${hasBootcamp ? ' Plus my bootcamp final project.' : ''}`
+  ? `Products I designed for clients: ${listOf(clientWork)}.${hasBootcamp ? ' Plus my bootcamp final project.' : ''}`
   : 'My Hacktiv8 final project: a mobile app, from the first journey map to a usability test.';
 const left = otherProjects.filter((_, i) => i % 2 === 0);
 const right = otherProjects.filter((_, i) => i % 2 === 1);
@@ -76,7 +76,7 @@ const soonRight = left.length <= right.length ? [] : comingSoon;
             <p class="t-label-m c-accent" data-reveal>Featured project · {displayNum(featured)}</p>
             <h2 class="f-title" id="featured-title" data-split>
               <span class="line-mask"><span class="t-h1">FASTTRACK Legal.</span></span>
-              <span class="line-mask"><span><span class="t-h1">100+ pages, </span><span class="t-h1-serif c-accent">one clear structure.</span></span></span>
+              <span class="line-mask"><span><span class="t-h1">25 services, </span><span class="t-h1-serif c-accent">sorted by business stage.</span></span></span>
             </h2>
           </div>
           <dl class="f-meta" data-reveal>
@@ -149,7 +149,7 @@ const soonRight = left.length <= right.length ? [] : comingSoon;
     <div class="a-text">
       <p class="t-label-m c-accent" data-reveal>About</p>
       <h2 id="about-title" class="t-h1" data-reveal>Hi, I'm Aldi.</h2>
-      <p class="t-body-l measure" data-reveal>I'm a UI/UX designer in Depok, Indonesia. Most of my work is on business systems: HRIS, CRM and order management, IoT apps, and dashboards for operations teams.</p>
+      <p class="t-body-l measure" data-reveal>I'm a UI/UX designer in Depok, Indonesia. Most of my work is on B2B web apps and internal tools: dashboards, admin panels, HRIS, CRM and order management. I also design B2C mobile apps and service websites.</p>
       <p class="t-body-m c-secondary measure" data-reveal>Through my studio, Jendela Cakra Digital, I work directly with clients, from the first brief to the developer handoff.</p>
       <div data-reveal><Button href="/about" variant="ghost">More about me</Button></div>
     </div>
