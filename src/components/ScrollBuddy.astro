@@ -142,6 +142,8 @@
 
     const PRE = 80, LAND = 260;
     function frame(now: number) {
+      // During the first-visit intro, src/scripts/intro.js moves the character and lands it on the start button.
+      if (document.documentElement.classList.contains('intro')) { requestAnimationFrame(frame); return; }
       let x = 0, y = 0, sx = 1, sy = 1, r = 0;
       const bob = 0;
       if (idx < 0 && path.length) {

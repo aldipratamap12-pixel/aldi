@@ -1,0 +1,53 @@
+---
+// First-visit intro: the "aldi." wordmark builds like the end of the launch video.
+// "ald" rises letter by letter, the cobalt dot drops into the empty spot of the "i",
+// then the "i" rises underneath it and tips it over: the dot rolls a quarter turn into place as the full stop.
+// Shown once per browser session, only when motion is allowed (Base.astro adds .intro to <html> before first paint).
+// The animation lives in src/scripts/intro.js. Without JS the overlay never shows; if JS fails it hides itself after 5 s.
+import { site } from '../data/site.js';
+---
+<div class="intro" data-intro aria-hidden="true">
+  <div class="intro-lockup" data-intro-lockup>
+  <div class="intro-word" data-intro-word>
+    <span class="m"><span class="g" data-g>a</span></span><span class="m"><span class="g" data-g>l</span></span><span class="m"><span class="g" data-g>d</span></span><span class="m"><span class="g" data-i>i</span></span><span class="base" data-base></span>
+    <span class="intro-dot" data-dot></span>
+  </div>
+  <p class="intro-tag" data-intro-tag>{site.role} · {site.location}</p>
+  </div>
+  <p class="intro-hint">Click to skip</p>
+</div>
+
+<style>
+  .intro { display: none; }
+  :global(html.intro) { overflow: hidden; }
+  :global(html.intro) .intro {
+    position: fixed; inset: 0; z-index: 200; display: grid; place-items: center;
+    background: var(--color-bg-page); color: var(--color-text-primary);
+    clip-path: inset(0 0 0 0);
+    animation: intro-failsafe 0s linear 5s forwards; /* if the script never runs, get out of the way */
+  }
+  @keyframes intro-failsafe { to { visibility: hidden; } }
+  .intro-lockup { display: flex; flex-direction: column; align-items: center; }
+  .intro-tag {
+    margin: 2em 0 0; font-family: var(--font-mono); font-weight: 500; font-size: clamp(12px, 1.3vw, 15px); line-height: 1.4;
+    letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-text-secondary); opacity: 0;
+  }
+  .intro-word {
+    position: relative; display: flex; align-items: baseline;
+    font-family: var(--font-sans); font-weight: 800; font-size: clamp(96px, 19vw, 220px); line-height: 1; letter-spacing: -0.045em;
+  }
+  /* Each letter rises out of a mask whose bottom edge sits just under the baseline. */
+  .m { display: inline-block; overflow: hidden; padding-top: 0.12em; margin-top: -0.12em; line-height: 0.76; }
+  .g { display: inline-block; transform: translateY(140%); } /* far enough that the tittle of the "i" stays hidden too */
+  .base { display: inline-block; width: 0; height: 0; }
+  .intro-dot {
+    position: absolute; left: 0; top: 0; width: 0.1796em; height: 0.1796em; border-radius: 0.012em;
+    background: var(--color-text-accent); opacity: 0; transform-origin: 100% 100%;
+  }
+  .intro-hint {
+    position: absolute; bottom: 32px; left: 0; right: 0; text-align: center; margin: 0;
+    font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-text-secondary);
+    opacity: 0; animation: intro-hint 400ms 900ms ease-out forwards;
+  }
+  @keyframes intro-hint { to { opacity: 0.7; } }
+</style>

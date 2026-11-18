@@ -5,6 +5,7 @@ import '@fontsource/jetbrains-mono/500.css';
 import '../styles/global.css';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
+import IntroLoader from '../components/IntroLoader.astro';
 import { site } from '../data/site.js';
 interface Props { title?: string; description?: string; active?: 'work' | 'about' | null; }
 const { title, description = site.description, active = null } = Astro.props;
@@ -36,6 +37,13 @@ const fullTitle = title ? `${title} · ${site.name}` : `${site.name} · UI/UX De
       // Turn motion on before first paint, only when the visitor allows it.
       // `?nomotion` shows the final state, for checking layouts and screenshots.
       if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches && !/[?&]nomotion/.test(location.search)) document.documentElement.classList.add('motion');
+      // The "aldi." intro (IntroLoader.astro): once per browser session, only with motion. `?nointro` skips it.
+      (function () {
+        var r = document.documentElement;
+        if (!r.classList.contains('motion') || /[?&]nointro/.test(location.search)) return;
+        try { if (sessionStorage.getItem('aldi-intro')) return; sessionStorage.setItem('aldi-intro', '1'); } catch (e) { return; }
+        r.classList.add('intro');
+      })();
       // Theme before first paint (no flash): saved choice, then `?theme=dark|light`, then the system setting.
       (function () {
         var t = null; try { t = localStorage.getItem('theme'); } catch (e) {}
@@ -47,6 +55,7 @@ const fullTitle = title ? `${title} · ${site.name}` : `${site.name} · UI/UX De
     </script>
   </head>
   <body>
+    <IntroLoader />
     <span id="top"></span>
     <a class="skip-link" href="#main">Skip to content</a>
     <Nav active={active} />

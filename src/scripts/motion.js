@@ -3,8 +3,9 @@
 import Lenis from 'lenis';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { playIntro } from './intro.js';
 
-export function initMotion() {
+export async function initMotion() {
   setupMenu();
   setupEmailCopy();
   setupNavHide();
@@ -34,6 +35,9 @@ export function initMotion() {
       history.pushState(null, '', id);
     });
   });
+
+  // On the first visit the "aldi." intro plays first; the page's own entrance starts as it leaves.
+  await playIntro();
 
   // Headline lines rise out of a mask (Endcap style). CSS hides them below the mask first.
   document.querySelectorAll('[data-split]').forEach((el) => {
